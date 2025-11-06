@@ -1,5 +1,5 @@
 <p align="center">
-  <h2 align="center">MMDocRAG: Benchmarking Retrieval-Augmented Multimomal Generation for Document Question Answering</h2>
+  <h2 align="center">MMDocRAG: Benchmarking Retrieval-Augmented Multimodal Generation for Document Question Answering</h2>
     <p align="center">
     <strong>Kuicai Dong*</strong></a>
     ·
@@ -255,8 +255,8 @@ This will generate new jsonl file with detailed qualitative scores by LLM-Judge.
 
 ## 💾Citation
 ```
-@misc{dong2025benchmarkingretrievalaugmentedmultimomalgeneration,
-      title={Benchmarking Retrieval-Augmented Multimomal Generation for Document Question Answering}, 
+@misc{dong2025mmdocrag,
+      title={Benchmarking Retrieval-Augmented Multimodal Generation for Document Question Answering}, 
       author={Kuicai Dong and Yujing Chang and Shijie Huang and Yasheng Wang and Ruiming Tang and Yong Liu},
       year={2025},
       eprint={2505.16470},
