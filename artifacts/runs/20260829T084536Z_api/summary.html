@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>运行报告 20260829T084536Z_api</title><style>
+:root{--bg:#fbfaf8;--ink:#1c1b19;--ink2:#5d5a54;--rule:#dcd8d0;--card:#fff;
+--ok:#2f6f4e;--err:#a33a2c;--warn:#8a6d1f;--accent:#3b5a7a;}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161513;
+--ink:#eceae6;--ink2:#a5a099;--rule:#33302c;--card:#1e1d1a;--ok:#7fc39b;
+--err:#e08b7c;--warn:#d4b45e;--accent:#8fb4d9;}}
+:root[data-theme=dark]{--bg:#161513;--ink:#eceae6;--ink2:#a5a099;--rule:#33302c;
+--card:#1e1d1a;--ok:#7fc39b;--err:#e08b7c;--warn:#d4b45e;--accent:#8fb4d9;}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:15px/1.65 -apple-system,"Segoe UI","Noto Sans SC",sans-serif;padding:2rem 1rem}
+.wrap{max-width:64rem;margin:0 auto}h1{font-size:1.5rem;margin:0 0 .3rem}
+h2{font-size:1.05rem;margin:2rem 0 .5rem;padding-top:1rem;border-top:1px solid var(--rule)}
+.meta{color:var(--ink2);font-size:13px;margin-bottom:1rem}
+.note{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--accent);
+padding:.7rem .9rem;border-radius:4px;font-size:13.5px;color:var(--ink2);margin:1rem 0}
+.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;
+border:1px solid var(--rule);margin-right:.4rem}
+.ok{color:var(--ok)}.err{color:var(--err)}.warn{color:var(--warn)}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:.2rem .8rem;margin:.6rem 0;font-size:14px}
+dt{color:var(--ink2)}dd{margin:0}
+.scroll{overflow-x:auto;margin:.8rem 0}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:34rem}
+th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid var(--rule)}
+th{color:var(--ink2);font-weight:600;font-size:12px;letter-spacing:.03em}
+td.num{font-variant-numeric:tabular-nums;text-align:right}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;
+background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:1px 5px}
+.limits{font-size:13px;color:var(--ink2);border-left:2px solid var(--rule);
+padding-left:.8rem;margin:.8rem 0}
+footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+color:var(--ink2);font-size:12.5px}
+</style></head><body><div class="wrap"><h1>运行报告 · 20260829T084536Z_api</h1><p class="meta">套件 <code>api</code>　离线 False　允许 API True　commit <code>2fd7505c6a57</code>　工作区脏 True</p><p class="meta">source fingerprint <code>3b8b74f748f59ef3</code>　20 个源文件 + 注册表快照　清单 <code>artifacts/runs/20260829T084536Z_api/source_manifest.json</code>　补丁 <code>artifacts/runs/20260829T084536Z_api/source.patch</code></p><p class="meta">source bundle <code>artifacts/runs/20260829T084536Z_api/source_bundle.zip</code>　20 个文件 / 105892 B　sha256 <code>1bec0c3342e277986b272c12063e73bdb1dc254805d859b7f7c678fd6cd97900</code></p><div class="note">重建测试 <b>pass</b>：20/20 个源文件在隔离目录 <code>artifacts/test-runs/20260829T084536Z_api-reconstruct/tree</code> 中逐字节还原。协议是 <code>git archive &lt;commit&gt;</code> → <code>git apply source.patch</code> → 解压 <code>source_bundle.zip</code> → 重算 SHA-256。source.patch 只覆盖 Git 已跟踪的文件，<b>单独不足以还原本次运行</b>；bundle 才是最终源码快照。一条命令：<code>python -m expkit.source reconstruct --run 20260829T084536Z_api</code></div><p><span class="pill">已运行（仅日志） 1</span></p><div class="note">本报告中的每个数字都取自本次运行落盘的 <code>metrics.json</code>，不复制 <code>experiments.py</code> 里的历史文字。标记为「已运行（仅日志）」的实验尚未接入结构化输出，其数字请看对应的 <code>stdout.log</code>，不要从这里引用。</div><h2>E29　端到端：检索改进能否传导到生成质量</h2><p class="meta"><span class="warn">已运行（仅日志）</span>　耗时 81.4s</p><dl><dt>问什么</dt><dd>k=10 上 +0.054 的检索优势，能否变成 quote-selection F1 的提升？</dd><dt>怎么做</dt><dd>把两种检索配置的 top-k 写成官方 schema，用同一模型同一批题配对生成。</dd><dt>指标含义</dt><dd>未检索到的 gold 用哨兵 id 计入分母，因此 F1 对检索质量敏感。</dd><dt>统计单位</dt><dd>document</dd></dl><p class="meta">尚未接入 metrics.json，见日志 <code>artifacts/runs/20260829T084536Z_api/experiments/E29/cmd0/stdout.log</code></p><p class="limits"><b>限制</b>：BLEU/ROUGE 在此无效不可报告。gemini-3.6-flash 不在论文模型表里，因此绝对 F1 不可与论文任何一行比较；有效的只有两臂的配对比较。成本口径：2026-08-29 已对照官方定价页核验并写入 router/prices.json（标准付费层 $0.75/Mtok 输入、$3.75/Mtok 输出，verified=true）。此前曾用 gemini-2.0-flash 的未核验价 $0.10/$0.40 代算，输入低估 7.5 倍、输出低估 9.4 倍——价格表里没有该模型时，正确做法是不报美元，而不是拿最像的一条顶上。</p><footer><code>*</code> 表示 95% 置信区间不跨 0。区间下界贴近 0 时不要写「显著」。多重比较未作校正时应一并说明。</footer></div></body></html>

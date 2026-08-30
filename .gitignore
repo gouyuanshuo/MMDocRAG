@@ -1,3 +1,80 @@
 .DS_Store
 __pycache__/
 /.idea/
+
+# build artifacts
+canonical/*.sqlite
+manifests/.checksum_cache.json
+
+# Experiment run system (expkit). Full policy: docs/artifacts-git-policy.md
+#
+# artifacts/ is NOT ignored wholesale. Everything stays on disk; Git keeps only
+# what is small, diffable and worth citing -- run.json, source_manifest.json,
+# summaries, metrics.jsonl, per-experiment metrics/status/command/manifest JSON,
+# verify results and the derived-artifact registry.
+#
+# Excluded below: bulk logs, per-question CSVs, vectors, indexes, the model
+# cache, and raw API traffic. To publish one run's complete evidence, name it
+# explicitly:  git add -f artifacts/runs/<run_id>/
+artifacts/model_cache/
+artifacts/derived/embeddings/
+artifacts/derived/indexes/
+artifacts/derived/corpora/
+artifacts/test-runs/
+artifacts/runs/*/summary.csv
+artifacts/runs/*/source.patch
+artifacts/runs/**/stdout.log
+artifacts/runs/**/stderr.log
+artifacts/runs/**/per_question.csv
+
+# NOTE: artifacts/runs/*/source_bundle.zip is deliberately NOT ignored.
+# It is binary and undiffable, which normally earns exclusion, but the manifest
+# is useless without it: source_manifest.json can DETECT that code differs while
+# being unable to PRODUCE the code that ran, because 18 of the 25 fingerprinted
+# source files in this repo are untracked and therefore absent from source.patch.
+# Committing the manifest and ignoring the bundle would ship exactly that half-
+# record. The bundle is ~100 KB per run; that is a cheap price for a run that can
+# actually be restored.
+
+# Raw API requests and responses. Treated as potentially SENSITIVE: they hold
+# full prompts (document text and image descriptions, whose dataset licence may
+# restrict redistribution) and verbatim model output, alongside provider request
+# ids and quota details. Secrets are redacted by expkit/apilog.py, but redaction
+# is not a licence to publish. Review before adding any of it with -f.
+artifacts/api/
+
+# Phase 3 (E35/E36) caches. Both are regenerable and neither is evidence:
+# the action table rebuilds from canonical/ + retrieval/ in ~20 s, the per-cell
+# checkpoints rebuild in ~40 min, and the authoritative record of every number
+# is the run's metrics.json. Measured 2026-08-30: router/cache = 9.8 MB
+# (two ~5 MB action tables plus 16 small cell JSONs). If it ever stops being
+# small, that is the signal to bound it -- see docs/HANDOFF.md 5.4-19.
+router/cache/
+
+# ---------------------------------------------------------------------------
+# Local research working set. Everything below stays on disk; none of it is
+# evidence, and all of it is either downloadable or regenerable from what IS
+# committed. Sizes measured 2026-08-31.
+# ---------------------------------------------------------------------------
+
+# Model weights, 9.6 GB. Re-fetchable, and fetch.json pins the exact revision
+# plus a per-file SHA-256, so identity survives without the bytes:
+#   python -m retrieval.fetch_model BAAI/bge-large-en-v1.5 --check
+models/
+!models/*/fetch.json
+
+# Corpora, indexes and vectors, ~1.2 GB. Rebuilt by retrieval/corpus.py,
+# quote_corpus.py, dense.py and dense_chunks.py from canonical/ + the dataset.
+retrieval/embeddings/
+retrieval/e2e/
+retrieval/*.sqlite
+retrieval/*.pkl
+
+# Phase 1A.5 outcome database and feature cache, 48 MB. Rebuilt by
+# router/build_outcomes.py and router/features.py.
+router/outcomes.sqlite
+router/*.npz
+
+# This session's scratch logs. Never evidence -- the authoritative record of
+# every number is the run's metrics.json under artifacts/runs/.
+tmp/

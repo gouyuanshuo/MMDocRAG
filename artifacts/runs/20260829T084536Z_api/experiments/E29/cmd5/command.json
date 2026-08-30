@@ -1,0 +1,28 @@
+{
+  "label": "E29#5",
+  "argv": [
+    "D:\\Python313\\python.exe",
+    "eval_all.py",
+    "--model",
+    "gemini-3.6-flash",
+    "--setting",
+    "oursk10",
+    "--mode",
+    "pure-text",
+    "--no-judge"
+  ],
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "python": "D:\\Python313\\python.exe",
+  "stdout_log": "artifacts/runs/20260829T084536Z_api/experiments/E29/cmd5/stdout.log",
+  "stderr_log": "artifacts/runs/20260829T084536Z_api/experiments/E29/cmd5/stderr.log",
+  "started_utc": "2026-08-29T08:46:39Z",
+  "env_overlay": {
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONUTF8": "1"
+  },
+  "returncode": 0,
+  "elapsed_sec": 18.207,
+  "ended_utc": "2026-08-29T08:46:58Z",
+  "timed_out": false,
+  "status": "ok"
+}

@@ -1,0 +1,121 @@
+{
+  "name": "eval_all/gemini-3.6-flash_pure-text_paperk10",
+  "created_utc": "2026-08-29T08:46:21Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_oursk10_sidecar.json",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_paperk10_sidecar.json",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotesoursk10.txt",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotesoursk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tests/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "dataset\\evaluation_paperk10.jsonl",
+      "sha256": "d1cb633f66a3f6592034a34043cb18ed133450d0d6829d166b6a680a59788a7c",
+      "bytes": 4944355
+    },
+    {
+      "path": "response\\gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "sha256": "6550a15fa89941cc73a7d5f4a00e890a2159a3ea57f797f03a3449b1f5f2ea6e",
+      "bytes": 799394
+    }
+  ],
+  "config": {
+    "model": "gemini-3.6-flash",
+    "mode": "pure-text",
+    "setting": "paperk10",
+    "eval_path": "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+    "judge_path": null,
+    "gold_path": "dataset/evaluation_paperk10.jsonl",
+    "require_full": false
+  },
+  "results": {
+    "n_gold": 600,
+    "n_scored": 600,
+    "n_judged": 0,
+    "in_tok_len": 1944.0266666666666,
+    "out_tok_len": 279.3233333333333,
+    "img_precision": 63.808463251670375,
+    "img_recall": 63.95089285714286,
+    "img_f1": 63.87959866220736,
+    "txt_precision": 29.350893697083723,
+    "txt_recall": 47.5609756097561,
+    "txt_f1": 36.3001745200698,
+    "final_f1": 55.21331454493219,
+    "bleu": 0.13596433623686568,
+    "rougel": 0.2843430041705361,
+    "judge_fluency": 0.0,
+    "judge_citation": 0.0,
+    "judge_coherence": 0.0,
+    "judge_logic": 0.0,
+    "judge_factuality": 0.0,
+    "judge_total": 0.0
+  },
+  "argv": [
+    "eval_all.py",
+    "--model",
+    "gemini-3.6-flash",
+    "--setting",
+    "paperk10",
+    "--mode",
+    "pure-text",
+    "--no-judge"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "name": "eval_all/qwen2.5-3b_pure-text_20",
+  "created_utc": "2026-08-25T08:42:19Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "dataset\\evaluation_20.jsonl",
+      "sha256": "7ba72aaa94407127955fa1a693897f500b2d9cb42b1ed629e424ba3e458608b9",
+      "bytes": 31612492
+    },
+    {
+      "path": "response\\qwen2.5-3b_pure-text_quotes20_response.jsonl",
+      "sha256": "133cb8f74cd9e0b4e76e2b800724dc1dc81c65cdf10efb81f5eafba0385b66d7",
+      "bytes": 3922753
+    },
+    {
+      "path": "response\\evaluation\\qwen2.5-3b_pure-text_quotes20_llm-judge.jsonl",
+      "sha256": "485e37f0311cef8f7cc3554b407faa35e06041c7fa59b4cc151705ffd42c646d",
+      "bytes": 199802
+    }
+  ],
+  "config": {
+    "model": "qwen2.5-3b",
+    "mode": "pure-text",
+    "setting": "20",
+    "eval_path": "response/qwen2.5-3b_pure-text_quotes20_response.jsonl",
+    "judge_path": "response/evaluation/qwen2.5-3b_pure-text_quotes20_llm-judge.jsonl",
+    "gold_path": "dataset/evaluation_20.jsonl",
+    "require_full": false
+  },
+  "results": {
+    "n_gold": 2000,
+    "n_scored": 2000,
+    "n_judged": 1203,
+    "in_tok_len": 3579.2335,
+    "out_tok_len": 414.325,
+    "img_precision": 50.32981530343008,
+    "img_recall": 23.614979882389353,
+    "img_f1": 32.146618917210866,
+    "txt_precision": 17.783505154639176,
+    "txt_recall": 10.689388071262588,
+    "txt_f1": 13.352685050798257,
+    "final_f1": 25.002640692640693,
+    "bleu": 0.12333454743477118,
+    "rougel": 0.27065901114364155,
+    "judge_fluency": 4.016625103906899,
+    "judge_citation": 2.515378221113882,
+    "judge_coherence": 2.7298420615128847,
+    "judge_logic": 2.8736492103075646,
+    "judge_factuality": 2.5868661679135494,
+    "judge_total": 2.944472152950956
+  },
+  "argv": [
+    "eval_all.py",
+    "--model",
+    "qwen2.5-3b",
+    "--setting",
+    "20",
+    "--mode",
+    "pure-text",
+    "--no-judge"
+  ]
+}

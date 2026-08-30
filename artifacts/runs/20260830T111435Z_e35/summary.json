@@ -1,0 +1,42 @@
+{
+  "run_id": "20260830T111435Z_e35",
+  "created_utc": "2026-08-30T11:16:41Z",
+  "suite": "single:E35",
+  "offline": false,
+  "counts": {
+    "ok": 1
+  },
+  "n_metrics": 164,
+  "experiments": [
+    {
+      "id": "E35",
+      "title": "路由的天花板：tie-aware oracle 与匹配预算的置换对照",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 8.479,
+      "n_commands": 6,
+      "logs": [
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd0/stdout.log",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd1/stdout.log",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd2/stdout.log",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd3/stdout.log",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd4/stdout.log",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd5/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd2/metrics.json",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd3/metrics.json",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd4/metrics.json",
+        "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd5/metrics.json"
+      ],
+      "asks": "在训练任何路由器之前——逐题挑检索动作到底有没有可学的空间？表观上界里有多少只是 tie 和动作配比造成的假象？在只花一半 CPU 预算的动作集合里，完美选择能不能打过静态 RRF？",
+      "how": "router.actions 复用 eval_stack_v2.build（keep_scores=True）缓存逐题的 12 个动作 × recall × 成本；router.tie_audit 在每个预算子空间上报最优固定动作、tie-aware oracle、保配比的置换对照，并按文档 cluster bootstrap 给区间。",
+      "metric_meaning": "oracle 与最优固定动作之差是表观空间；与置换对照之差扣掉了动作配比带来的部分；约束下界取两者中更强的那个。预算是 (cpu pass, gpu pass) 一对上限，两种货币不相加。",
+      "limits": "exploratory：该切分自 E9 起被反复观察并用于挑方法。配额固定为 BALANCED_QUOTA，--include-quota 可展开为检索器 × 配额的联合空间，但配额是免费的，那只是空间上界而不是预算问题。",
+      "primary_metric": "oracle / 最优固定 / 置换对照 的 Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    }
+  ]
+}

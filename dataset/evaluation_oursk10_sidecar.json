@@ -1,0 +1,4220 @@
+{
+  "config": "ours",
+  "k": 10,
+  "quota": [
+    4,
+    6
+  ],
+  "text_retriever": "rrf",
+  "visual_retriever": "rrf",
+  "pool": "canonical",
+  "n_questions": 600,
+  "n_documents": 220,
+  "n_gold_total": 1552,
+  "n_gold_retrieved": 1064,
+  "retrieval_recall_check": 0.6856,
+  "bleu_rouge_valid": false,
+  "note": "gold_quotes includes unretrieved gold under sentinel ids so F1 is unconditional on retrieval",
+  "rows": [
+    {
+      "q_id": 1618,
+      "question_uid": "evaluation:1618",
+      "doc_name": "Bergen-Brochure-en-2022-23",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 298,
+      "question_uid": "evaluation:298",
+      "doc_name": "2023.findings-emnlp.248",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1663,
+      "question_uid": "evaluation:1663",
+      "doc_name": "NUS-FASS-Graduate-Guidebook-2021-small",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1531,
+      "question_uid": "evaluation:1531",
+      "doc_name": "P19-1164",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1280,
+      "question_uid": "evaluation:1280",
+      "doc_name": "N19-1308",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1558,
+      "question_uid": "evaluation:1558",
+      "doc_name": "STEPBACK",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1301,
+      "question_uid": "evaluation:1301",
+      "doc_name": "N18-2072",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1629,
+      "question_uid": "evaluation:1629",
+      "doc_name": "User_Manual_1500S_Classic_EN",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1770,
+      "question_uid": "evaluation:1770",
+      "doc_name": "ddoseattle-150627210357-lva1-app6891_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1792,
+      "question_uid": "evaluation:1792",
+      "doc_name": "news_combined",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1847,
+      "question_uid": "evaluation:1847",
+      "doc_name": "bariumswallowpresentation-090810084400-phpapp01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1400,
+      "question_uid": "evaluation:1400",
+      "doc_name": "D18-1003",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 971,
+      "question_uid": "evaluation:971",
+      "doc_name": "ADOBE_2015_10K",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1127,
+      "question_uid": "evaluation:1127",
+      "doc_name": "reportq32015-151009093138-lva1-app6891_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1132,
+      "question_uid": "evaluation:1132",
+      "doc_name": "PP_2019.01.17_Trump-economy_FINAL2",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1550,
+      "question_uid": "evaluation:1550",
+      "doc_name": "P19-1355",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 12,
+      "question_uid": "evaluation:12",
+      "doc_name": "nielsen2015musicbizpresentation-final-150526143534-lva1-app6891_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 258,
+      "question_uid": "evaluation:258",
+      "doc_name": "ecommerceopportunityindia-141124010546-conversion-gate01_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 759,
+      "question_uid": "evaluation:759",
+      "doc_name": "siemens-healthineers_2021",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1078,
+      "question_uid": "evaluation:1078",
+      "doc_name": "dr-vorapptchapter1emissionsources-121120210508-phpapp02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1746,
+      "question_uid": "evaluation:1746",
+      "doc_name": "b3m5kaeqm2w8n4bwcesw-140602121350-phpapp02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1437,
+      "question_uid": "evaluation:1437",
+      "doc_name": "P19-1470",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1371,
+      "question_uid": "evaluation:1371",
+      "doc_name": "P19-1078",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1787,
+      "question_uid": "evaluation:1787",
+      "doc_name": "2021687417",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 74,
+      "question_uid": "evaluation:74",
+      "doc_name": "11-21-16-Updated-Post-Election-Release",
+      "n_gold_total": 8,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 323,
+      "question_uid": "evaluation:323",
+      "doc_name": "P18-4013",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1958,
+      "question_uid": "evaluation:1958",
+      "doc_name": "t480_ug_en",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1968,
+      "question_uid": "evaluation:1968",
+      "doc_name": "formwork-150318073913-conversion-gate01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1215,
+      "question_uid": "evaluation:1215",
+      "doc_name": "D18-1360",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 689,
+      "question_uid": "evaluation:689",
+      "doc_name": "NASDAQ_TSLA_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 894,
+      "question_uid": "evaluation:894",
+      "doc_name": "NYSE_ACN_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 35,
+      "question_uid": "evaluation:35",
+      "doc_name": "finalmediafindingspdf-141228031149-conversion-gate02_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 954,
+      "question_uid": "evaluation:954",
+      "doc_name": "f86d073b0d735ac873a65d906ba82758",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1528,
+      "question_uid": "evaluation:1528",
+      "doc_name": "W19-5302",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1671,
+      "question_uid": "evaluation:1671",
+      "doc_name": "san-francisco-11-contents",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 968,
+      "question_uid": "evaluation:968",
+      "doc_name": "ACTIVISIONBLIZZARD_2019_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 678,
+      "question_uid": "evaluation:678",
+      "doc_name": "NYSE_DHR_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1580,
+      "question_uid": "evaluation:1580",
+      "doc_name": "GPL-Graduate-Studies-Professional-Learning-Brochure-Jul-2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1415,
+      "question_uid": "evaluation:1415",
+      "doc_name": "2020.acl-main.45",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 846,
+      "question_uid": "evaluation:846",
+      "doc_name": "NYSE_PM_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1435,
+      "question_uid": "evaluation:1435",
+      "doc_name": "P19-1561",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 796,
+      "question_uid": "evaluation:796",
+      "doc_name": "afe620b9beac86c1027b96d31d396407",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1440,
+      "question_uid": "evaluation:1440",
+      "doc_name": "f1f5242528411b262be447e61e2eb10f",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1336,
+      "question_uid": "evaluation:1336",
+      "doc_name": "D18-1287",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1495,
+      "question_uid": "evaluation:1495",
+      "doc_name": "D18-1034",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1961,
+      "question_uid": "evaluation:1961",
+      "doc_name": "Sinopolis-Chengdu",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1183,
+      "question_uid": "evaluation:1183",
+      "doc_name": "caltraincapacitymountainview1-150701205750-lva1-app6891_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 190,
+      "question_uid": "evaluation:190",
+      "doc_name": "PP_2020.08.06_COVID-19-Restrictions_FINAL-1",
+      "n_gold_total": 8,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 311,
+      "question_uid": "evaluation:311",
+      "doc_name": "2307.09288v2",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1621,
+      "question_uid": "evaluation:1621",
+      "doc_name": "NUS-Business-School-BBA-Brochure-2024",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1969,
+      "question_uid": "evaluation:1969",
+      "doc_name": "guojixueshengshenghuozhinanyingwen9.1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 278,
+      "question_uid": "evaluation:278",
+      "doc_name": "indonesiamobilemarketresearch-ag-150106055934-conversion-gate02_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1140,
+      "question_uid": "evaluation:1140",
+      "doc_name": "PG_2021.03.04_US-Views-on-China_FINAL",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1523,
+      "question_uid": "evaluation:1523",
+      "doc_name": "2020.acl-main.423",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1306,
+      "question_uid": "evaluation:1306",
+      "doc_name": "2023.acl-long.386",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 330,
+      "question_uid": "evaluation:330",
+      "doc_name": "2005.12872v3",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 806,
+      "question_uid": "evaluation:806",
+      "doc_name": "q1-2023-bilibili-inc-investor-presentation",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1577,
+      "question_uid": "evaluation:1577",
+      "doc_name": "Campaign_038_Introducing_AC_Whitepaper_v5e",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1613,
+      "question_uid": "evaluation:1613",
+      "doc_name": "PWC_opportunity_of_lifetime",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 26,
+      "question_uid": "evaluation:26",
+      "doc_name": "germanwingsdigitalcrisisanalysis-150403064828-conversion-gate01_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 264,
+      "question_uid": "evaluation:264",
+      "doc_name": "fdac8d1e9ef56519371df7e6532df27d",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 609,
+      "question_uid": "evaluation:609",
+      "doc_name": "ASX_AJY_2020",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1430,
+      "question_uid": "evaluation:1430",
+      "doc_name": "2020.acl-main.653",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1347,
+      "question_uid": "evaluation:1347",
+      "doc_name": "P18-1041",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 960,
+      "question_uid": "evaluation:960",
+      "doc_name": "NASDAQ_AMGN_2020",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 216,
+      "question_uid": "evaluation:216",
+      "doc_name": "PS_2018.01.09_STEM_FINAL",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1508,
+      "question_uid": "evaluation:1508",
+      "doc_name": "W18-5713",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1222,
+      "question_uid": "evaluation:1222",
+      "doc_name": "2020.acl-main.408",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 868,
+      "question_uid": "evaluation:868",
+      "doc_name": "3M_2018_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1511,
+      "question_uid": "evaluation:1511",
+      "doc_name": "C18-1117",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 239,
+      "question_uid": "evaluation:239",
+      "doc_name": "asdaaburson-marstellerarabyouthsurvey2014-140407100615-phpapp01_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1510,
+      "question_uid": "evaluation:1510",
+      "doc_name": "P18-1046",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 947,
+      "question_uid": "evaluation:947",
+      "doc_name": "roche-holdings_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 297,
+      "question_uid": "evaluation:297",
+      "doc_name": "2310.05634v2",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 489,
+      "question_uid": "evaluation:489",
+      "doc_name": "NYSE_MS_2020",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 27,
+      "question_uid": "evaluation:27",
+      "doc_name": "Independents-Report",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1441,
+      "question_uid": "evaluation:1441",
+      "doc_name": "2310.09158v1",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1786,
+      "question_uid": "evaluation:1786",
+      "doc_name": "2019713402",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 807,
+      "question_uid": "evaluation:807",
+      "doc_name": "NYSE_AXP_2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1823,
+      "question_uid": "evaluation:1823",
+      "doc_name": "watch_d",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 557,
+      "question_uid": "evaluation:557",
+      "doc_name": "NYSE_HSBC_2020",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 169,
+      "question_uid": "evaluation:169",
+      "doc_name": "PI_2018.11.19_algorithms_FINAL",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 25,
+      "question_uid": "evaluation:25",
+      "doc_name": "PG_2020.03.09_US-Germany_FINAL",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1358,
+      "question_uid": "evaluation:1358",
+      "doc_name": "RAR",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1479,
+      "question_uid": "evaluation:1479",
+      "doc_name": "2312.04350v3",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1955,
+      "question_uid": "evaluation:1955",
+      "doc_name": "stereo_headset",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 829,
+      "question_uid": "evaluation:829",
+      "doc_name": "COSTCO_2021_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1882,
+      "question_uid": "evaluation:1882",
+      "doc_name": "52b3137455e7ca4df65021a200aef724",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1079,
+      "question_uid": "evaluation:1079",
+      "doc_name": "PIP_Seniors-and-Tech-Use_040314",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 709,
+      "question_uid": "evaluation:709",
+      "doc_name": "ASX_LOV_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1990,
+      "question_uid": "evaluation:1990",
+      "doc_name": "measuringsuccessonfacebooktwitterlinkedin-160317142140_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 581,
+      "question_uid": "evaluation:581",
+      "doc_name": "NYSE_XOM_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 310,
+      "question_uid": "evaluation:310",
+      "doc_name": "2306.05425v1",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1748,
+      "question_uid": "evaluation:1748",
+      "doc_name": "amb-siteaudits-ds15-150204174043-conversion-gate01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1253,
+      "question_uid": "evaluation:1253",
+      "doc_name": "2020.acl-main.48",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1632,
+      "question_uid": "evaluation:1632",
+      "doc_name": "StudentSupport_Guidebook",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1346,
+      "question_uid": "evaluation:1346",
+      "doc_name": "N18-1008",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 30,
+      "question_uid": "evaluation:30",
+      "doc_name": "PH_2016.06.08_Economy-Final",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1383,
+      "question_uid": "evaluation:1383",
+      "doc_name": "P19-1598",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1256,
+      "question_uid": "evaluation:1256",
+      "doc_name": "2312.09390v1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1809,
+      "question_uid": "evaluation:1809",
+      "doc_name": "avalaunchpresentationsthatkickasteriskv3copy-150318114804-conversion-gate01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 867,
+      "question_uid": "evaluation:867",
+      "doc_name": "NYSE_BAC_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1798,
+      "question_uid": "evaluation:1798",
+      "doc_name": "catvsdogdlpycon15se-150512122612-lva1-app6891_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1657,
+      "question_uid": "evaluation:1657",
+      "doc_name": "nova_y70",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1403,
+      "question_uid": "evaluation:1403",
+      "doc_name": "2020.emnlp-main.213",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 770,
+      "question_uid": "evaluation:770",
+      "doc_name": "NYSE_MCD_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1883,
+      "question_uid": "evaluation:1883",
+      "doc_name": "owners-manual-2170416",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1498,
+      "question_uid": "evaluation:1498",
+      "doc_name": "P19-1416",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1379,
+      "question_uid": "evaluation:1379",
+      "doc_name": "2020.findings-emnlp.139",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 55,
+      "question_uid": "evaluation:55",
+      "doc_name": "efd88e41c5f2606c57929cac6c1c0605",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1785,
+      "question_uid": "evaluation:1785",
+      "doc_name": "2023555934",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 418,
+      "question_uid": "evaluation:418",
+      "doc_name": "D19-1539",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1690,
+      "question_uid": "evaluation:1690",
+      "doc_name": "e79deb02a0c0e87511080836c5d4347b",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1417,
+      "question_uid": "evaluation:1417",
+      "doc_name": "N18-1187",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 88,
+      "question_uid": "evaluation:88",
+      "doc_name": "12-15-15-ISIS-and-terrorism-release-final",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 886,
+      "question_uid": "evaluation:886",
+      "doc_name": "OTC_LVMUY_2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 344,
+      "question_uid": "evaluation:344",
+      "doc_name": "2305.14160v4",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 498,
+      "question_uid": "evaluation:498",
+      "doc_name": "NASDAQ_ATLX_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 405,
+      "question_uid": "evaluation:405",
+      "doc_name": "2020.sltu-1.28",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 554,
+      "question_uid": "evaluation:554",
+      "doc_name": "NYSE_HDB_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1718,
+      "question_uid": "evaluation:1718",
+      "doc_name": "936c0e2c2e6c8e0c07c51bfaf7fd0a83",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 822,
+      "question_uid": "evaluation:822",
+      "doc_name": "NYSE_IBM_2020",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 500,
+      "question_uid": "evaluation:500",
+      "doc_name": "OTC_NSRGY_2020",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 998,
+      "question_uid": "evaluation:998",
+      "doc_name": "8e7c4cb542ad160f80fb3d795ada35d8",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 463,
+      "question_uid": "evaluation:463",
+      "doc_name": "NYSE_BRK-A_2021",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1935,
+      "question_uid": "evaluation:1935",
+      "doc_name": "DSA-278777",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 455,
+      "question_uid": "evaluation:455",
+      "doc_name": "NASDAQ_TXN_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1391,
+      "question_uid": "evaluation:1391",
+      "doc_name": "2312.10997v5",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1960,
+      "question_uid": "evaluation:1960",
+      "doc_name": "chapter8-geneticscompatibilitymode-141214140247-conversion-gate02_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1789,
+      "question_uid": "evaluation:1789",
+      "doc_name": "2023555906",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 582,
+      "question_uid": "evaluation:582",
+      "doc_name": "NYSE_TME_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1263,
+      "question_uid": "evaluation:1263",
+      "doc_name": "tacl_a_00660",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1654,
+      "question_uid": "evaluation:1654",
+      "doc_name": "SAO-StudentSupport_Guidebook-Content",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1578,
+      "question_uid": "evaluation:1578",
+      "doc_name": "NYU_graduate",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1099,
+      "question_uid": "evaluation:1099",
+      "doc_name": "earthlinkweb-150213112111-conversion-gate02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 967,
+      "question_uid": "evaluation:967",
+      "doc_name": "BESTBUY_2023_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1298,
+      "question_uid": "evaluation:1298",
+      "doc_name": "2310.07609v1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1855,
+      "question_uid": "evaluation:1855",
+      "doc_name": "8dfc21ec151fb9d3578fc32d5c4e5df9",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1483,
+      "question_uid": "evaluation:1483",
+      "doc_name": "N18-1012",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1719,
+      "question_uid": "evaluation:1719",
+      "doc_name": "digitalmeasurementframework22feb2011v6novideo-110221233835-phpapp01_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1060,
+      "question_uid": "evaluation:1060",
+      "doc_name": "698bba535087fa9a7f9009e172a7f763",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1683,
+      "question_uid": "evaluation:1683",
+      "doc_name": "Macbook_air",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 337,
+      "question_uid": "evaluation:337",
+      "doc_name": "2305.13186v3",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1491,
+      "question_uid": "evaluation:1491",
+      "doc_name": "2405.09818v1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1793,
+      "question_uid": "evaluation:1793",
+      "doc_name": "DOS-FY2023-Agency-Financial-Report-508",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1998,
+      "question_uid": "evaluation:1998",
+      "doc_name": "bdf54dxa",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 991,
+      "question_uid": "evaluation:991",
+      "doc_name": "PG_2020.05.21_International-Cooperation-COVID_FINAL",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 551,
+      "question_uid": "evaluation:551",
+      "doc_name": "NETFLIX_2015_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1259,
+      "question_uid": "evaluation:1259",
+      "doc_name": "P18-1009",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 597,
+      "question_uid": "evaluation:597",
+      "doc_name": "OTC_TCS_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 486,
+      "question_uid": "evaluation:486",
+      "doc_name": "NYSE_UNH_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 356,
+      "question_uid": "evaluation:356",
+      "doc_name": "2311.16502v3",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 696,
+      "question_uid": "evaluation:696",
+      "doc_name": "NASDAQ_CMCSA_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 924,
+      "question_uid": "evaluation:924",
+      "doc_name": "NYSE_PEP_2020",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 945,
+      "question_uid": "evaluation:945",
+      "doc_name": "inditex_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1475,
+      "question_uid": "evaluation:1475",
+      "doc_name": "D18-1334",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1975,
+      "question_uid": "evaluation:1975",
+      "doc_name": "disciplined-agile-business-analysis-160218012713_95",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 931,
+      "question_uid": "evaluation:931",
+      "doc_name": "NYSE_NVO_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1570,
+      "question_uid": "evaluation:1570",
+      "doc_name": "transform-software-delivery-with-valueedge-brochure",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1089,
+      "question_uid": "evaluation:1089",
+      "doc_name": "Pew-Research-Center_Hispanic-Identity-Report_12.20.2017",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 375,
+      "question_uid": "evaluation:375",
+      "doc_name": "2401.18059v1",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 447,
+      "question_uid": "evaluation:447",
+      "doc_name": "Q18-1021",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 6
+    },
+    {
+      "q_id": 1673,
+      "question_uid": "evaluation:1673",
+      "doc_name": "honor_watch_gs_pro",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1582,
+      "question_uid": "evaluation:1582",
+      "doc_name": "finalpresentationdeck-whatwhyhowofcertificationsocial-160324220748_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1543,
+      "question_uid": "evaluation:1543",
+      "doc_name": "W18-4401",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1037,
+      "question_uid": "evaluation:1037",
+      "doc_name": "PP_2021.04.22_voting-access_REPORT",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1348,
+      "question_uid": "evaluation:1348",
+      "doc_name": "SnapNTell",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1839,
+      "question_uid": "evaluation:1839",
+      "doc_name": "bigdatatrends-120723191058-phpapp02_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 5
+    },
+    {
+      "q_id": 735,
+      "question_uid": "evaluation:735",
+      "doc_name": "AMAZON_2017_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1930,
+      "question_uid": "evaluation:1930",
+      "doc_name": "camry_ebrochure",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 856,
+      "question_uid": "evaluation:856",
+      "doc_name": "NYSE_TM_2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 541,
+      "question_uid": "evaluation:541",
+      "doc_name": "NYSE_SHLX_2020",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 502,
+      "question_uid": "evaluation:502",
+      "doc_name": "NASDAQ_COST_2022",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1462,
+      "question_uid": "evaluation:1462",
+      "doc_name": "2020.starsem-1.17",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1428,
+      "question_uid": "evaluation:1428",
+      "doc_name": "2309.17421v2",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1804,
+      "question_uid": "evaluation:1804",
+      "doc_name": "91521110100M_4K_UHD_Display_User_Manual_V1.1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1254,
+      "question_uid": "evaluation:1254",
+      "doc_name": "C18-1182",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 692,
+      "question_uid": "evaluation:692",
+      "doc_name": "NYSE_WFC_2021",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 394,
+      "question_uid": "evaluation:394",
+      "doc_name": "2020.acl-main.207",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 6
+    },
+    {
+      "q_id": 1442,
+      "question_uid": "evaluation:1442",
+      "doc_name": "P19-1033",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 157,
+      "question_uid": "evaluation:157",
+      "doc_name": "PI_2017.10.04_Automation_FINAL",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1788,
+      "question_uid": "evaluation:1788",
+      "doc_name": "2023555917",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1357,
+      "question_uid": "evaluation:1357",
+      "doc_name": "2210.02442v1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 899,
+      "question_uid": "evaluation:899",
+      "doc_name": "NIKE_2021_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1251,
+      "question_uid": "evaluation:1251",
+      "doc_name": "P19-1459",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1468,
+      "question_uid": "evaluation:1468",
+      "doc_name": "P18-2092",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1293,
+      "question_uid": "evaluation:1293",
+      "doc_name": "N19-1421",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1704,
+      "question_uid": "evaluation:1704",
+      "doc_name": "0b85477387a9d0cc33fca0f4becaa0e5",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1641,
+      "question_uid": "evaluation:1641",
+      "doc_name": "mmdetection-readthedocs-io-en-v2.18.0",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1950,
+      "question_uid": "evaluation:1950",
+      "doc_name": "c31e6580d0175ab3f9d99d1ff0bfa000",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 834,
+      "question_uid": "evaluation:834",
+      "doc_name": "NYSE_CRM_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 920,
+      "question_uid": "evaluation:920",
+      "doc_name": "NASDAQ_QCOM_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 809,
+      "question_uid": "evaluation:809",
+      "doc_name": "NYSE_CVX_2021",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1956,
+      "question_uid": "evaluation:1956",
+      "doc_name": "efis-140411041451-phpapp01_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1765,
+      "question_uid": "evaluation:1765",
+      "doc_name": "competitiveoutcomes-091006065143-phpapp01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 951,
+      "question_uid": "evaluation:951",
+      "doc_name": "NYSE_PG_2022",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 98,
+      "question_uid": "evaluation:98",
+      "doc_name": "PG_20.07.30_U.S.-Views-China_final",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1626,
+      "question_uid": "evaluation:1626",
+      "doc_name": "BRO-GL-MMONEY",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1319,
+      "question_uid": "evaluation:1319",
+      "doc_name": "N19-1170",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 65,
+      "question_uid": "evaluation:65",
+      "doc_name": "05-03-18-political-release",
+      "n_gold_total": 12,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1817,
+      "question_uid": "evaluation:1817",
+      "doc_name": "ISEP_student_handbook_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1002,
+      "question_uid": "evaluation:1002",
+      "doc_name": "PRE_2022.09.29_NSL-politics_REPORT",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1220,
+      "question_uid": "evaluation:1220",
+      "doc_name": "fd76bbefe469561966e5387aa709c482",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 584,
+      "question_uid": "evaluation:584",
+      "doc_name": "LSE_BHP_2021",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1355,
+      "question_uid": "evaluation:1355",
+      "doc_name": "N18-2084",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 681,
+      "question_uid": "evaluation:681",
+      "doc_name": "NYSE_CAT_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1620,
+      "question_uid": "evaluation:1620",
+      "doc_name": "welcome-to-nus",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1780,
+      "question_uid": "evaluation:1780",
+      "doc_name": "2023555914",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 52,
+      "question_uid": "evaluation:52",
+      "doc_name": "earlybird-110722143746-phpapp02_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1713,
+      "question_uid": "evaluation:1713",
+      "doc_name": "3276a5b991c49cf5f9a4af0f7d6fce67",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1419,
+      "question_uid": "evaluation:1419",
+      "doc_name": "2303.05039v2",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1590,
+      "question_uid": "evaluation:1590",
+      "doc_name": "2024.ug.eprospectus",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 335,
+      "question_uid": "evaluation:335",
+      "doc_name": "2303.08559v2",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1636,
+      "question_uid": "evaluation:1636",
+      "doc_name": "obs-productdesc-en",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1277,
+      "question_uid": "evaluation:1277",
+      "doc_name": "N19-1240",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1609,
+      "question_uid": "evaluation:1609",
+      "doc_name": "csewt7zsecmmbzjufbyx-signature-24d91a254426c21c3079384270e1f138dc43a271cfe15d6d520d68205855b2a3-poli-150306115347-conversion-gate01",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1427,
+      "question_uid": "evaluation:1427",
+      "doc_name": "P19-1041",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 645,
+      "question_uid": "evaluation:645",
+      "doc_name": "NYSE_NVS_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1841,
+      "question_uid": "evaluation:1841",
+      "doc_name": "0e94b4197b10096b1f4c699701570fbf",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1837,
+      "question_uid": "evaluation:1837",
+      "doc_name": "mi_phone",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1846,
+      "question_uid": "evaluation:1846",
+      "doc_name": "Bergen-Brochure-en-2022-23",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1368,
+      "question_uid": "evaluation:1368",
+      "doc_name": "2023.findings-emnlp.248",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1630,
+      "question_uid": "evaluation:1630",
+      "doc_name": "NUS-FASS-Graduate-Guidebook-2021-small",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 441,
+      "question_uid": "evaluation:441",
+      "doc_name": "P19-1164",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1407,
+      "question_uid": "evaluation:1407",
+      "doc_name": "N19-1308",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 302,
+      "question_uid": "evaluation:302",
+      "doc_name": "STEPBACK",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1679,
+      "question_uid": "evaluation:1679",
+      "doc_name": "User_Manual_1500S_Classic_EN",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1749,
+      "question_uid": "evaluation:1749",
+      "doc_name": "ddoseattle-150627210357-lva1-app6891_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1791,
+      "question_uid": "evaluation:1791",
+      "doc_name": "news_combined",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1813,
+      "question_uid": "evaluation:1813",
+      "doc_name": "bariumswallowpresentation-090810084400-phpapp01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1477,
+      "question_uid": "evaluation:1477",
+      "doc_name": "D18-1003",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 835,
+      "question_uid": "evaluation:835",
+      "doc_name": "ADOBE_2015_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 289,
+      "question_uid": "evaluation:289",
+      "doc_name": "reportq32015-151009093138-lva1-app6891_95",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 184,
+      "question_uid": "evaluation:184",
+      "doc_name": "PP_2019.01.17_Trump-economy_FINAL2",
+      "n_gold_total": 8,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1350,
+      "question_uid": "evaluation:1350",
+      "doc_name": "P19-1355",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1148,
+      "question_uid": "evaluation:1148",
+      "doc_name": "nielsen2015musicbizpresentation-final-150526143534-lva1-app6891_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 2,
+      "question_uid": "evaluation:2",
+      "doc_name": "ecommerceopportunityindia-141124010546-conversion-gate01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 501,
+      "question_uid": "evaluation:501",
+      "doc_name": "siemens-healthineers_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1172,
+      "question_uid": "evaluation:1172",
+      "doc_name": "dr-vorapptchapter1emissionsources-121120210508-phpapp02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1397,
+      "question_uid": "evaluation:1397",
+      "doc_name": "P19-1470",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1227,
+      "question_uid": "evaluation:1227",
+      "doc_name": "P19-1078",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1783,
+      "question_uid": "evaluation:1783",
+      "doc_name": "2021687417",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1156,
+      "question_uid": "evaluation:1156",
+      "doc_name": "11-21-16-Updated-Post-Election-Release",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1478,
+      "question_uid": "evaluation:1478",
+      "doc_name": "P18-4013",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1686,
+      "question_uid": "evaluation:1686",
+      "doc_name": "t480_ug_en",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1948,
+      "question_uid": "evaluation:1948",
+      "doc_name": "formwork-150318073913-conversion-gate01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1246,
+      "question_uid": "evaluation:1246",
+      "doc_name": "D18-1360",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 732,
+      "question_uid": "evaluation:732",
+      "doc_name": "NASDAQ_TSLA_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 957,
+      "question_uid": "evaluation:957",
+      "doc_name": "NYSE_ACN_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 271,
+      "question_uid": "evaluation:271",
+      "doc_name": "finalmediafindingspdf-141228031149-conversion-gate02_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 706,
+      "question_uid": "evaluation:706",
+      "doc_name": "f86d073b0d735ac873a65d906ba82758",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 329,
+      "question_uid": "evaluation:329",
+      "doc_name": "W19-5302",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1927,
+      "question_uid": "evaluation:1927",
+      "doc_name": "san-francisco-11-contents",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 858,
+      "question_uid": "evaluation:858",
+      "doc_name": "ACTIVISIONBLIZZARD_2019_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 461,
+      "question_uid": "evaluation:461",
+      "doc_name": "NYSE_DHR_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1623,
+      "question_uid": "evaluation:1623",
+      "doc_name": "GPL-Graduate-Studies-Professional-Learning-Brochure-Jul-2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1229,
+      "question_uid": "evaluation:1229",
+      "doc_name": "2020.acl-main.45",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 865,
+      "question_uid": "evaluation:865",
+      "doc_name": "NYSE_PM_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 446,
+      "question_uid": "evaluation:446",
+      "doc_name": "P19-1561",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 617,
+      "question_uid": "evaluation:617",
+      "doc_name": "afe620b9beac86c1027b96d31d396407",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 414,
+      "question_uid": "evaluation:414",
+      "doc_name": "D18-1287",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1404,
+      "question_uid": "evaluation:1404",
+      "doc_name": "D18-1034",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1799,
+      "question_uid": "evaluation:1799",
+      "doc_name": "Sinopolis-Chengdu",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 240,
+      "question_uid": "evaluation:240",
+      "doc_name": "caltraincapacitymountainview1-150701205750-lva1-app6891_95",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 188,
+      "question_uid": "evaluation:188",
+      "doc_name": "PP_2020.08.06_COVID-19-Restrictions_FINAL-1",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1444,
+      "question_uid": "evaluation:1444",
+      "doc_name": "2307.09288v2",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1593,
+      "question_uid": "evaluation:1593",
+      "doc_name": "NUS-Business-School-BBA-Brochure-2024",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1912,
+      "question_uid": "evaluation:1912",
+      "doc_name": "guojixueshengshenghuozhinanyingwen9.1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 275,
+      "question_uid": "evaluation:275",
+      "doc_name": "indonesiamobilemarketresearch-ag-150106055934-conversion-gate02_95",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 133,
+      "question_uid": "evaluation:133",
+      "doc_name": "PG_2021.03.04_US-Views-on-China_FINAL",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1409,
+      "question_uid": "evaluation:1409",
+      "doc_name": "2020.acl-main.423",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 333,
+      "question_uid": "evaluation:333",
+      "doc_name": "2023.acl-long.386",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1356,
+      "question_uid": "evaluation:1356",
+      "doc_name": "2005.12872v3",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 531,
+      "question_uid": "evaluation:531",
+      "doc_name": "q1-2023-bilibili-inc-investor-presentation",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1900,
+      "question_uid": "evaluation:1900",
+      "doc_name": "Campaign_038_Introducing_AC_Whitepaper_v5e",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1893,
+      "question_uid": "evaluation:1893",
+      "doc_name": "PWC_opportunity_of_lifetime",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 36,
+      "question_uid": "evaluation:36",
+      "doc_name": "germanwingsdigitalcrisisanalysis-150403064828-conversion-gate01_95",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1161,
+      "question_uid": "evaluation:1161",
+      "doc_name": "fdac8d1e9ef56519371df7e6532df27d",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 519,
+      "question_uid": "evaluation:519",
+      "doc_name": "ASX_AJY_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1399,
+      "question_uid": "evaluation:1399",
+      "doc_name": "2020.acl-main.653",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 435,
+      "question_uid": "evaluation:435",
+      "doc_name": "P18-1041",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 687,
+      "question_uid": "evaluation:687",
+      "doc_name": "NASDAQ_AMGN_2020",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 48,
+      "question_uid": "evaluation:48",
+      "doc_name": "PS_2018.01.09_STEM_FINAL",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1257,
+      "question_uid": "evaluation:1257",
+      "doc_name": "W18-5713",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1376,
+      "question_uid": "evaluation:1376",
+      "doc_name": "2020.acl-main.408",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 936,
+      "question_uid": "evaluation:936",
+      "doc_name": "3M_2018_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1033,
+      "question_uid": "evaluation:1033",
+      "doc_name": "asdaaburson-marstellerarabyouthsurvey2014-140407100615-phpapp01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1509,
+      "question_uid": "evaluation:1509",
+      "doc_name": "P18-1046",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 724,
+      "question_uid": "evaluation:724",
+      "doc_name": "roche-holdings_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 349,
+      "question_uid": "evaluation:349",
+      "doc_name": "2310.05634v2",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 5
+    },
+    {
+      "q_id": 702,
+      "question_uid": "evaluation:702",
+      "doc_name": "NYSE_MS_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 90,
+      "question_uid": "evaluation:90",
+      "doc_name": "Independents-Report",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1223,
+      "question_uid": "evaluation:1223",
+      "doc_name": "2310.09158v1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 781,
+      "question_uid": "evaluation:781",
+      "doc_name": "NYSE_AXP_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1814,
+      "question_uid": "evaluation:1814",
+      "doc_name": "watch_d",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 639,
+      "question_uid": "evaluation:639",
+      "doc_name": "NYSE_HSBC_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 175,
+      "question_uid": "evaluation:175",
+      "doc_name": "PI_2018.11.19_algorithms_FINAL",
+      "n_gold_total": 9,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1110,
+      "question_uid": "evaluation:1110",
+      "doc_name": "PG_2020.03.09_US-Germany_FINAL",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1445,
+      "question_uid": "evaluation:1445",
+      "doc_name": "RAR",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1238,
+      "question_uid": "evaluation:1238",
+      "doc_name": "2312.04350v3",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1642,
+      "question_uid": "evaluation:1642",
+      "doc_name": "stereo_headset",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 779,
+      "question_uid": "evaluation:779",
+      "doc_name": "COSTCO_2021_10K",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1856,
+      "question_uid": "evaluation:1856",
+      "doc_name": "52b3137455e7ca4df65021a200aef724",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 146,
+      "question_uid": "evaluation:146",
+      "doc_name": "PIP_Seniors-and-Tech-Use_040314",
+      "n_gold_total": 8,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 741,
+      "question_uid": "evaluation:741",
+      "doc_name": "ASX_LOV_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1753,
+      "question_uid": "evaluation:1753",
+      "doc_name": "measuringsuccessonfacebooktwitterlinkedin-160317142140_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 887,
+      "question_uid": "evaluation:887",
+      "doc_name": "NYSE_XOM_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1218,
+      "question_uid": "evaluation:1218",
+      "doc_name": "2306.05425v1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1985,
+      "question_uid": "evaluation:1985",
+      "doc_name": "amb-siteaudits-ds15-150204174043-conversion-gate01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1233,
+      "question_uid": "evaluation:1233",
+      "doc_name": "2020.acl-main.48",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1655,
+      "question_uid": "evaluation:1655",
+      "doc_name": "StudentSupport_Guidebook",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1235,
+      "question_uid": "evaluation:1235",
+      "doc_name": "N18-1008",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 143,
+      "question_uid": "evaluation:143",
+      "doc_name": "PH_2016.06.08_Economy-Final",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1518,
+      "question_uid": "evaluation:1518",
+      "doc_name": "P19-1598",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1796,
+      "question_uid": "evaluation:1796",
+      "doc_name": "avalaunchpresentationsthatkickasteriskv3copy-150318114804-conversion-gate01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 673,
+      "question_uid": "evaluation:673",
+      "doc_name": "NYSE_BAC_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1729,
+      "question_uid": "evaluation:1729",
+      "doc_name": "catvsdogdlpycon15se-150512122612-lva1-app6891_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1939,
+      "question_uid": "evaluation:1939",
+      "doc_name": "nova_y70",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1365,
+      "question_uid": "evaluation:1365",
+      "doc_name": "2020.emnlp-main.213",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 686,
+      "question_uid": "evaluation:686",
+      "doc_name": "NYSE_MCD_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1885,
+      "question_uid": "evaluation:1885",
+      "doc_name": "owners-manual-2170416",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1331,
+      "question_uid": "evaluation:1331",
+      "doc_name": "P19-1416",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1370,
+      "question_uid": "evaluation:1370",
+      "doc_name": "2020.findings-emnlp.139",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1268,
+      "question_uid": "evaluation:1268",
+      "doc_name": "D19-1539",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1700,
+      "question_uid": "evaluation:1700",
+      "doc_name": "e79deb02a0c0e87511080836c5d4347b",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1273,
+      "question_uid": "evaluation:1273",
+      "doc_name": "N18-1187",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 84,
+      "question_uid": "evaluation:84",
+      "doc_name": "12-15-15-ISIS-and-terrorism-release-final",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 853,
+      "question_uid": "evaluation:853",
+      "doc_name": "OTC_LVMUY_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1226,
+      "question_uid": "evaluation:1226",
+      "doc_name": "2305.14160v4",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 869,
+      "question_uid": "evaluation:869",
+      "doc_name": "NASDAQ_ATLX_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1389,
+      "question_uid": "evaluation:1389",
+      "doc_name": "2020.sltu-1.28",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 475,
+      "question_uid": "evaluation:475",
+      "doc_name": "NYSE_HDB_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 608,
+      "question_uid": "evaluation:608",
+      "doc_name": "NYSE_IBM_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 802,
+      "question_uid": "evaluation:802",
+      "doc_name": "OTC_NSRGY_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 997,
+      "question_uid": "evaluation:997",
+      "doc_name": "8e7c4cb542ad160f80fb3d795ada35d8",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 521,
+      "question_uid": "evaluation:521",
+      "doc_name": "NYSE_BRK-A_2021",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1903,
+      "question_uid": "evaluation:1903",
+      "doc_name": "DSA-278777",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 575,
+      "question_uid": "evaluation:575",
+      "doc_name": "NASDAQ_TXN_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 363,
+      "question_uid": "evaluation:363",
+      "doc_name": "2312.10997v5",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1778,
+      "question_uid": "evaluation:1778",
+      "doc_name": "chapter8-geneticscompatibilitymode-141214140247-conversion-gate02_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1790,
+      "question_uid": "evaluation:1790",
+      "doc_name": "2023555906",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 893,
+      "question_uid": "evaluation:893",
+      "doc_name": "NYSE_TME_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1505,
+      "question_uid": "evaluation:1505",
+      "doc_name": "tacl_a_00660",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1973,
+      "question_uid": "evaluation:1973",
+      "doc_name": "SAO-StudentSupport_Guidebook-Content",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 245,
+      "question_uid": "evaluation:245",
+      "doc_name": "earthlinkweb-150213112111-conversion-gate02_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 574,
+      "question_uid": "evaluation:574",
+      "doc_name": "BESTBUY_2023_10K",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1499,
+      "question_uid": "evaluation:1499",
+      "doc_name": "2310.07609v1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1644,
+      "question_uid": "evaluation:1644",
+      "doc_name": "8dfc21ec151fb9d3578fc32d5c4e5df9",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1544,
+      "question_uid": "evaluation:1544",
+      "doc_name": "N18-1012",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1943,
+      "question_uid": "evaluation:1943",
+      "doc_name": "digitalmeasurementframework22feb2011v6novideo-110221233835-phpapp01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 32,
+      "question_uid": "evaluation:32",
+      "doc_name": "698bba535087fa9a7f9009e172a7f763",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1929,
+      "question_uid": "evaluation:1929",
+      "doc_name": "Macbook_air",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 338,
+      "question_uid": "evaluation:338",
+      "doc_name": "2305.13186v3",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1213,
+      "question_uid": "evaluation:1213",
+      "doc_name": "2405.09818v1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1794,
+      "question_uid": "evaluation:1794",
+      "doc_name": "DOS-FY2023-Agency-Financial-Report-508",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1944,
+      "question_uid": "evaluation:1944",
+      "doc_name": "bdf54dxa",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 126,
+      "question_uid": "evaluation:126",
+      "doc_name": "PG_2020.05.21_International-Cooperation-COVID_FINAL",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 879,
+      "question_uid": "evaluation:879",
+      "doc_name": "NETFLIX_2015_10K",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 322,
+      "question_uid": "evaluation:322",
+      "doc_name": "P18-1009",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 634,
+      "question_uid": "evaluation:634",
+      "doc_name": "OTC_TCS_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 839,
+      "question_uid": "evaluation:839",
+      "doc_name": "NYSE_UNH_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1447,
+      "question_uid": "evaluation:1447",
+      "doc_name": "2311.16502v3",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 872,
+      "question_uid": "evaluation:872",
+      "doc_name": "NASDAQ_CMCSA_2021",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 737,
+      "question_uid": "evaluation:737",
+      "doc_name": "NYSE_PEP_2020",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 648,
+      "question_uid": "evaluation:648",
+      "doc_name": "inditex_2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1248,
+      "question_uid": "evaluation:1248",
+      "doc_name": "D18-1334",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1805,
+      "question_uid": "evaluation:1805",
+      "doc_name": "disciplined-agile-business-analysis-160218012713_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 457,
+      "question_uid": "evaluation:457",
+      "doc_name": "NYSE_NVO_2020",
+      "n_gold_total": 8,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1608,
+      "question_uid": "evaluation:1608",
+      "doc_name": "transform-software-delivery-with-valueedge-brochure",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1023,
+      "question_uid": "evaluation:1023",
+      "doc_name": "Pew-Research-Center_Hispanic-Identity-Report_12.20.2017",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1425,
+      "question_uid": "evaluation:1425",
+      "doc_name": "2401.18059v1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1489,
+      "question_uid": "evaluation:1489",
+      "doc_name": "Q18-1021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1897,
+      "question_uid": "evaluation:1897",
+      "doc_name": "honor_watch_gs_pro",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1863,
+      "question_uid": "evaluation:1863",
+      "doc_name": "finalpresentationdeck-whatwhyhowofcertificationsocial-160324220748_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1262,
+      "question_uid": "evaluation:1262",
+      "doc_name": "W18-4401",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 203,
+      "question_uid": "evaluation:203",
+      "doc_name": "PP_2021.04.22_voting-access_REPORT",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 388,
+      "question_uid": "evaluation:388",
+      "doc_name": "SnapNTell",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1775,
+      "question_uid": "evaluation:1775",
+      "doc_name": "bigdatatrends-120723191058-phpapp02_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 5
+    },
+    {
+      "q_id": 539,
+      "question_uid": "evaluation:539",
+      "doc_name": "AMAZON_2017_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1602,
+      "question_uid": "evaluation:1602",
+      "doc_name": "camry_ebrochure",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 670,
+      "question_uid": "evaluation:670",
+      "doc_name": "NYSE_TM_2021",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 747,
+      "question_uid": "evaluation:747",
+      "doc_name": "NYSE_SHLX_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 794,
+      "question_uid": "evaluation:794",
+      "doc_name": "NASDAQ_COST_2022",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 406,
+      "question_uid": "evaluation:406",
+      "doc_name": "2020.starsem-1.17",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1340,
+      "question_uid": "evaluation:1340",
+      "doc_name": "2309.17421v2",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1681,
+      "question_uid": "evaluation:1681",
+      "doc_name": "91521110100M_4K_UHD_Display_User_Manual_V1.1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1339,
+      "question_uid": "evaluation:1339",
+      "doc_name": "C18-1182",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 725,
+      "question_uid": "evaluation:725",
+      "doc_name": "NYSE_WFC_2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1534,
+      "question_uid": "evaluation:1534",
+      "doc_name": "2020.acl-main.207",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1387,
+      "question_uid": "evaluation:1387",
+      "doc_name": "P19-1033",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 167,
+      "question_uid": "evaluation:167",
+      "doc_name": "PI_2017.10.04_Automation_FINAL",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1784,
+      "question_uid": "evaluation:1784",
+      "doc_name": "2023555917",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1360,
+      "question_uid": "evaluation:1360",
+      "doc_name": "2210.02442v1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 841,
+      "question_uid": "evaluation:841",
+      "doc_name": "NIKE_2021_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1230,
+      "question_uid": "evaluation:1230",
+      "doc_name": "P19-1459",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 436,
+      "question_uid": "evaluation:436",
+      "doc_name": "P18-2092",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1524,
+      "question_uid": "evaluation:1524",
+      "doc_name": "N19-1421",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1711,
+      "question_uid": "evaluation:1711",
+      "doc_name": "0b85477387a9d0cc33fca0f4becaa0e5",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1869,
+      "question_uid": "evaluation:1869",
+      "doc_name": "mmdetection-readthedocs-io-en-v2.18.0",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1904,
+      "question_uid": "evaluation:1904",
+      "doc_name": "c31e6580d0175ab3f9d99d1ff0bfa000",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 454,
+      "question_uid": "evaluation:454",
+      "doc_name": "NYSE_CRM_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 927,
+      "question_uid": "evaluation:927",
+      "doc_name": "NASDAQ_QCOM_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 587,
+      "question_uid": "evaluation:587",
+      "doc_name": "NYSE_CVX_2021",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1759,
+      "question_uid": "evaluation:1759",
+      "doc_name": "efis-140411041451-phpapp01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1959,
+      "question_uid": "evaluation:1959",
+      "doc_name": "competitiveoutcomes-091006065143-phpapp01_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 595,
+      "question_uid": "evaluation:595",
+      "doc_name": "NYSE_PG_2022",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 93,
+      "question_uid": "evaluation:93",
+      "doc_name": "PG_20.07.30_U.S.-Views-China_final",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1627,
+      "question_uid": "evaluation:1627",
+      "doc_name": "BRO-GL-MMONEY",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1375,
+      "question_uid": "evaluation:1375",
+      "doc_name": "N19-1170",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 60,
+      "question_uid": "evaluation:60",
+      "doc_name": "05-03-18-political-release",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1586,
+      "question_uid": "evaluation:1586",
+      "doc_name": "ISEP_student_handbook_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 987,
+      "question_uid": "evaluation:987",
+      "doc_name": "PRE_2022.09.29_NSL-politics_REPORT",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 306,
+      "question_uid": "evaluation:306",
+      "doc_name": "fd76bbefe469561966e5387aa709c482",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 776,
+      "question_uid": "evaluation:776",
+      "doc_name": "LSE_BHP_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 423,
+      "question_uid": "evaluation:423",
+      "doc_name": "N18-2084",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 824,
+      "question_uid": "evaluation:824",
+      "doc_name": "NYSE_CAT_2021",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 985,
+      "question_uid": "evaluation:985",
+      "doc_name": "earlybird-110722143746-phpapp02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1706,
+      "question_uid": "evaluation:1706",
+      "doc_name": "3276a5b991c49cf5f9a4af0f7d6fce67",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1299,
+      "question_uid": "evaluation:1299",
+      "doc_name": "2303.05039v2",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1605,
+      "question_uid": "evaluation:1605",
+      "doc_name": "2024.ug.eprospectus",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1492,
+      "question_uid": "evaluation:1492",
+      "doc_name": "2303.08559v2",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1640,
+      "question_uid": "evaluation:1640",
+      "doc_name": "obs-productdesc-en",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 428,
+      "question_uid": "evaluation:428",
+      "doc_name": "N19-1240",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1266,
+      "question_uid": "evaluation:1266",
+      "doc_name": "P19-1041",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 644,
+      "question_uid": "evaluation:644",
+      "doc_name": "NYSE_NVS_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1724,
+      "question_uid": "evaluation:1724",
+      "doc_name": "0e94b4197b10096b1f4c699701570fbf",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1991,
+      "question_uid": "evaluation:1991",
+      "doc_name": "mi_phone",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1568,
+      "question_uid": "evaluation:1568",
+      "doc_name": "Bergen-Brochure-en-2022-23",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1450,
+      "question_uid": "evaluation:1450",
+      "doc_name": "2023.findings-emnlp.248",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 440,
+      "question_uid": "evaluation:440",
+      "doc_name": "P19-1164",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1317,
+      "question_uid": "evaluation:1317",
+      "doc_name": "N19-1308",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 386,
+      "question_uid": "evaluation:386",
+      "doc_name": "STEPBACK",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1637,
+      "question_uid": "evaluation:1637",
+      "doc_name": "User_Manual_1500S_Classic_EN",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1964,
+      "question_uid": "evaluation:1964",
+      "doc_name": "ddoseattle-150627210357-lva1-app6891_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1745,
+      "question_uid": "evaluation:1745",
+      "doc_name": "bariumswallowpresentation-090810084400-phpapp01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 320,
+      "question_uid": "evaluation:320",
+      "doc_name": "D18-1003",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 826,
+      "question_uid": "evaluation:826",
+      "doc_name": "ADOBE_2015_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 290,
+      "question_uid": "evaluation:290",
+      "doc_name": "reportq32015-151009093138-lva1-app6891_95",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 181,
+      "question_uid": "evaluation:181",
+      "doc_name": "PP_2019.01.17_Trump-economy_FINAL2",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1463,
+      "question_uid": "evaluation:1463",
+      "doc_name": "P19-1355",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1047,
+      "question_uid": "evaluation:1047",
+      "doc_name": "nielsen2015musicbizpresentation-final-150526143534-lva1-app6891_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 256,
+      "question_uid": "evaluation:256",
+      "doc_name": "ecommerceopportunityindia-141124010546-conversion-gate01_95",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 563,
+      "question_uid": "evaluation:563",
+      "doc_name": "siemens-healthineers_2021",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1022,
+      "question_uid": "evaluation:1022",
+      "doc_name": "dr-vorapptchapter1emissionsources-121120210508-phpapp02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1341,
+      "question_uid": "evaluation:1341",
+      "doc_name": "P19-1470",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 438,
+      "question_uid": "evaluation:438",
+      "doc_name": "P19-1078",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 6
+    },
+    {
+      "q_id": 1083,
+      "question_uid": "evaluation:1083",
+      "doc_name": "11-21-16-Updated-Post-Election-Release",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1554,
+      "question_uid": "evaluation:1554",
+      "doc_name": "P18-4013",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1838,
+      "question_uid": "evaluation:1838",
+      "doc_name": "t480_ug_en",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1824,
+      "question_uid": "evaluation:1824",
+      "doc_name": "formwork-150318073913-conversion-gate01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1234,
+      "question_uid": "evaluation:1234",
+      "doc_name": "D18-1360",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 456,
+      "question_uid": "evaluation:456",
+      "doc_name": "NASDAQ_TSLA_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 612,
+      "question_uid": "evaluation:612",
+      "doc_name": "NYSE_ACN_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1175,
+      "question_uid": "evaluation:1175",
+      "doc_name": "finalmediafindingspdf-141228031149-conversion-gate02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1308,
+      "question_uid": "evaluation:1308",
+      "doc_name": "W19-5302",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 902,
+      "question_uid": "evaluation:902",
+      "doc_name": "ACTIVISIONBLIZZARD_2019_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 862,
+      "question_uid": "evaluation:862",
+      "doc_name": "NYSE_DHR_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1996,
+      "question_uid": "evaluation:1996",
+      "doc_name": "GPL-Graduate-Studies-Professional-Learning-Brochure-Jul-2021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1295,
+      "question_uid": "evaluation:1295",
+      "doc_name": "2020.acl-main.45",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 777,
+      "question_uid": "evaluation:777",
+      "doc_name": "NYSE_PM_2020",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1466,
+      "question_uid": "evaluation:1466",
+      "doc_name": "P19-1561",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 854,
+      "question_uid": "evaluation:854",
+      "doc_name": "afe620b9beac86c1027b96d31d396407",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 321,
+      "question_uid": "evaluation:321",
+      "doc_name": "D18-1287",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 410,
+      "question_uid": "evaluation:410",
+      "doc_name": "D18-1034",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1662,
+      "question_uid": "evaluation:1662",
+      "doc_name": "Sinopolis-Chengdu",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1188,
+      "question_uid": "evaluation:1188",
+      "doc_name": "caltraincapacitymountainview1-150701205750-lva1-app6891_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1193,
+      "question_uid": "evaluation:1193",
+      "doc_name": "PP_2020.08.06_COVID-19-Restrictions_FINAL-1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1548,
+      "question_uid": "evaluation:1548",
+      "doc_name": "2307.09288v2",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1571,
+      "question_uid": "evaluation:1571",
+      "doc_name": "NUS-Business-School-BBA-Brochure-2024",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1688,
+      "question_uid": "evaluation:1688",
+      "doc_name": "guojixueshengshenghuozhinanyingwen9.1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 988,
+      "question_uid": "evaluation:988",
+      "doc_name": "indonesiamobilemarketresearch-ag-150106055934-conversion-gate02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 131,
+      "question_uid": "evaluation:131",
+      "doc_name": "PG_2021.03.04_US-Views-on-China_FINAL",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1252,
+      "question_uid": "evaluation:1252",
+      "doc_name": "2020.acl-main.423",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 331,
+      "question_uid": "evaluation:331",
+      "doc_name": "2023.acl-long.386",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1311,
+      "question_uid": "evaluation:1311",
+      "doc_name": "2005.12872v3",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 688,
+      "question_uid": "evaluation:688",
+      "doc_name": "q1-2023-bilibili-inc-investor-presentation",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1970,
+      "question_uid": "evaluation:1970",
+      "doc_name": "Campaign_038_Introducing_AC_Whitepaper_v5e",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1810,
+      "question_uid": "evaluation:1810",
+      "doc_name": "PWC_opportunity_of_lifetime",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 31,
+      "question_uid": "evaluation:31",
+      "doc_name": "germanwingsdigitalcrisisanalysis-150403064828-conversion-gate01_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1007,
+      "question_uid": "evaluation:1007",
+      "doc_name": "fdac8d1e9ef56519371df7e6532df27d",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 904,
+      "question_uid": "evaluation:904",
+      "doc_name": "ASX_AJY_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1416,
+      "question_uid": "evaluation:1416",
+      "doc_name": "2020.acl-main.653",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1275,
+      "question_uid": "evaluation:1275",
+      "doc_name": "P18-1041",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 765,
+      "question_uid": "evaluation:765",
+      "doc_name": "NASDAQ_AMGN_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 221,
+      "question_uid": "evaluation:221",
+      "doc_name": "PS_2018.01.09_STEM_FINAL",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1334,
+      "question_uid": "evaluation:1334",
+      "doc_name": "W18-5713",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1359,
+      "question_uid": "evaluation:1359",
+      "doc_name": "2020.acl-main.408",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 820,
+      "question_uid": "evaluation:820",
+      "doc_name": "3M_2018_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 236,
+      "question_uid": "evaluation:236",
+      "doc_name": "asdaaburson-marstellerarabyouthsurvey2014-140407100615-phpapp01_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1373,
+      "question_uid": "evaluation:1373",
+      "doc_name": "P18-1046",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 459,
+      "question_uid": "evaluation:459",
+      "doc_name": "roche-holdings_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1547,
+      "question_uid": "evaluation:1547",
+      "doc_name": "2310.05634v2",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 833,
+      "question_uid": "evaluation:833",
+      "doc_name": "NYSE_MS_2020",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 10,
+      "question_uid": "evaluation:10",
+      "doc_name": "Independents-Report",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 350,
+      "question_uid": "evaluation:350",
+      "doc_name": "2310.09158v1",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 483,
+      "question_uid": "evaluation:483",
+      "doc_name": "NYSE_AXP_2021",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1675,
+      "question_uid": "evaluation:1675",
+      "doc_name": "watch_d",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 906,
+      "question_uid": "evaluation:906",
+      "doc_name": "NYSE_HSBC_2020",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 989,
+      "question_uid": "evaluation:989",
+      "doc_name": "PI_2018.11.19_algorithms_FINAL",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 106,
+      "question_uid": "evaluation:106",
+      "doc_name": "PG_2020.03.09_US-Germany_FINAL",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1497,
+      "question_uid": "evaluation:1497",
+      "doc_name": "RAR",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1367,
+      "question_uid": "evaluation:1367",
+      "doc_name": "2312.04350v3",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 905,
+      "question_uid": "evaluation:905",
+      "doc_name": "COSTCO_2021_10K",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1829,
+      "question_uid": "evaluation:1829",
+      "doc_name": "52b3137455e7ca4df65021a200aef724",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 150,
+      "question_uid": "evaluation:150",
+      "doc_name": "PIP_Seniors-and-Tech-Use_040314",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 948,
+      "question_uid": "evaluation:948",
+      "doc_name": "ASX_LOV_2020",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1994,
+      "question_uid": "evaluation:1994",
+      "doc_name": "measuringsuccessonfacebooktwitterlinkedin-160317142140_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 720,
+      "question_uid": "evaluation:720",
+      "doc_name": "NYSE_XOM_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 345,
+      "question_uid": "evaluation:345",
+      "doc_name": "2306.05425v1",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1913,
+      "question_uid": "evaluation:1913",
+      "doc_name": "amb-siteaudits-ds15-150204174043-conversion-gate01_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1519,
+      "question_uid": "evaluation:1519",
+      "doc_name": "2020.acl-main.48",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1659,
+      "question_uid": "evaluation:1659",
+      "doc_name": "StudentSupport_Guidebook",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 142,
+      "question_uid": "evaluation:142",
+      "doc_name": "PH_2016.06.08_Economy-Final",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1471,
+      "question_uid": "evaluation:1471",
+      "doc_name": "P19-1598",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1744,
+      "question_uid": "evaluation:1744",
+      "doc_name": "avalaunchpresentationsthatkickasteriskv3copy-150318114804-conversion-gate01_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 573,
+      "question_uid": "evaluation:573",
+      "doc_name": "NYSE_BAC_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1726,
+      "question_uid": "evaluation:1726",
+      "doc_name": "catvsdogdlpycon15se-150512122612-lva1-app6891_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1666,
+      "question_uid": "evaluation:1666",
+      "doc_name": "nova_y70",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1219,
+      "question_uid": "evaluation:1219",
+      "doc_name": "2020.emnlp-main.213",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 477,
+      "question_uid": "evaluation:477",
+      "doc_name": "NYSE_MCD_2020",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1648,
+      "question_uid": "evaluation:1648",
+      "doc_name": "owners-manual-2170416",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1335,
+      "question_uid": "evaluation:1335",
+      "doc_name": "P19-1416",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1390,
+      "question_uid": "evaluation:1390",
+      "doc_name": "2020.findings-emnlp.139",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 421,
+      "question_uid": "evaluation:421",
+      "doc_name": "D19-1539",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1703,
+      "question_uid": "evaluation:1703",
+      "doc_name": "e79deb02a0c0e87511080836c5d4347b",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1245,
+      "question_uid": "evaluation:1245",
+      "doc_name": "N18-1187",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 23,
+      "question_uid": "evaluation:23",
+      "doc_name": "12-15-15-ISIS-and-terrorism-release-final",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 844,
+      "question_uid": "evaluation:844",
+      "doc_name": "OTC_LVMUY_2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1377,
+      "question_uid": "evaluation:1377",
+      "doc_name": "2305.14160v4",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 749,
+      "question_uid": "evaluation:749",
+      "doc_name": "NASDAQ_ATLX_2020",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 5
+    },
+    {
+      "q_id": 1282,
+      "question_uid": "evaluation:1282",
+      "doc_name": "2020.sltu-1.28",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 817,
+      "question_uid": "evaluation:817",
+      "doc_name": "NYSE_HDB_2021",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 717,
+      "question_uid": "evaluation:717",
+      "doc_name": "NYSE_IBM_2020",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 571,
+      "question_uid": "evaluation:571",
+      "doc_name": "OTC_NSRGY_2020",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 6,
+      "question_uid": "evaluation:6",
+      "doc_name": "8e7c4cb542ad160f80fb3d795ada35d8",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 722,
+      "question_uid": "evaluation:722",
+      "doc_name": "NYSE_BRK-A_2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1896,
+      "question_uid": "evaluation:1896",
+      "doc_name": "DSA-278777",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 485,
+      "question_uid": "evaluation:485",
+      "doc_name": "NASDAQ_TXN_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1211,
+      "question_uid": "evaluation:1211",
+      "doc_name": "2312.10997v5",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1899,
+      "question_uid": "evaluation:1899",
+      "doc_name": "chapter8-geneticscompatibilitymode-141214140247-conversion-gate02_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 711,
+      "question_uid": "evaluation:711",
+      "doc_name": "NYSE_TME_2021",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1493,
+      "question_uid": "evaluation:1493",
+      "doc_name": "tacl_a_00660",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1976,
+      "question_uid": "evaluation:1976",
+      "doc_name": "SAO-StudentSupport_Guidebook-Content",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1017,
+      "question_uid": "evaluation:1017",
+      "doc_name": "earthlinkweb-150213112111-conversion-gate02_95",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 756,
+      "question_uid": "evaluation:756",
+      "doc_name": "BESTBUY_2023_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1432,
+      "question_uid": "evaluation:1432",
+      "doc_name": "2310.07609v1",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1649,
+      "question_uid": "evaluation:1649",
+      "doc_name": "8dfc21ec151fb9d3578fc32d5c4e5df9",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1217,
+      "question_uid": "evaluation:1217",
+      "doc_name": "N18-1012",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1835,
+      "question_uid": "evaluation:1835",
+      "doc_name": "digitalmeasurementframework22feb2011v6novideo-110221233835-phpapp01_95",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1036,
+      "question_uid": "evaluation:1036",
+      "doc_name": "698bba535087fa9a7f9009e172a7f763",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1886,
+      "question_uid": "evaluation:1886",
+      "doc_name": "Macbook_air",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 340,
+      "question_uid": "evaluation:340",
+      "doc_name": "2305.13186v3",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 5
+    },
+    {
+      "q_id": 379,
+      "question_uid": "evaluation:379",
+      "doc_name": "2405.09818v1",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1795,
+      "question_uid": "evaluation:1795",
+      "doc_name": "DOS-FY2023-Agency-Financial-Report-508",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1822,
+      "question_uid": "evaluation:1822",
+      "doc_name": "bdf54dxa",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 17,
+      "question_uid": "evaluation:17",
+      "doc_name": "PG_2020.05.21_International-Cooperation-COVID_FINAL",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1244,
+      "question_uid": "evaluation:1244",
+      "doc_name": "P18-1009",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 578,
+      "question_uid": "evaluation:578",
+      "doc_name": "OTC_TCS_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 614,
+      "question_uid": "evaluation:614",
+      "doc_name": "NYSE_UNH_2020",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 357,
+      "question_uid": "evaluation:357",
+      "doc_name": "2311.16502v3",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 798,
+      "question_uid": "evaluation:798",
+      "doc_name": "NASDAQ_CMCSA_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 775,
+      "question_uid": "evaluation:775",
+      "doc_name": "NYSE_PEP_2020",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 655,
+      "question_uid": "evaluation:655",
+      "doc_name": "inditex_2021",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1808,
+      "question_uid": "evaluation:1808",
+      "doc_name": "disciplined-agile-business-analysis-160218012713_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 731,
+      "question_uid": "evaluation:731",
+      "doc_name": "NYSE_NVO_2020",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1916,
+      "question_uid": "evaluation:1916",
+      "doc_name": "transform-software-delivery-with-valueedge-brochure",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1044,
+      "question_uid": "evaluation:1044",
+      "doc_name": "Pew-Research-Center_Hispanic-Identity-Report_12.20.2017",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 313,
+      "question_uid": "evaluation:313",
+      "doc_name": "2401.18059v1",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 5
+    },
+    {
+      "q_id": 1342,
+      "question_uid": "evaluation:1342",
+      "doc_name": "Q18-1021",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1906,
+      "question_uid": "evaluation:1906",
+      "doc_name": "honor_watch_gs_pro",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1581,
+      "question_uid": "evaluation:1581",
+      "doc_name": "finalpresentationdeck-whatwhyhowofcertificationsocial-160324220748_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 199,
+      "question_uid": "evaluation:199",
+      "doc_name": "PP_2021.04.22_voting-access_REPORT",
+      "n_gold_total": 6,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 304,
+      "question_uid": "evaluation:304",
+      "doc_name": "SnapNTell",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1727,
+      "question_uid": "evaluation:1727",
+      "doc_name": "bigdatatrends-120723191058-phpapp02_95",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 909,
+      "question_uid": "evaluation:909",
+      "doc_name": "AMAZON_2017_10K",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1612,
+      "question_uid": "evaluation:1612",
+      "doc_name": "camry_ebrochure",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 827,
+      "question_uid": "evaluation:827",
+      "doc_name": "NYSE_TM_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 488,
+      "question_uid": "evaluation:488",
+      "doc_name": "NYSE_SHLX_2020",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 543,
+      "question_uid": "evaluation:543",
+      "doc_name": "NASDAQ_COST_2022",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1469,
+      "question_uid": "evaluation:1469",
+      "doc_name": "2020.starsem-1.17",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1488,
+      "question_uid": "evaluation:1488",
+      "doc_name": "2309.17421v2",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1884,
+      "question_uid": "evaluation:1884",
+      "doc_name": "91521110100M_4K_UHD_Display_User_Manual_V1.1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1322,
+      "question_uid": "evaluation:1322",
+      "doc_name": "C18-1182",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 548,
+      "question_uid": "evaluation:548",
+      "doc_name": "NYSE_WFC_2021",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 392,
+      "question_uid": "evaluation:392",
+      "doc_name": "2020.acl-main.207",
+      "n_gold_total": 4,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1388,
+      "question_uid": "evaluation:1388",
+      "doc_name": "P19-1033",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1001,
+      "question_uid": "evaluation:1001",
+      "doc_name": "PI_2017.10.04_Automation_FINAL",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 1782,
+      "question_uid": "evaluation:1782",
+      "doc_name": "2023555917",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1520,
+      "question_uid": "evaluation:1520",
+      "doc_name": "2210.02442v1",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 0
+    },
+    {
+      "q_id": 443,
+      "question_uid": "evaluation:443",
+      "doc_name": "P19-1459",
+      "n_gold_total": 7,
+      "n_gold_retrieved": 4
+    },
+    {
+      "q_id": 1494,
+      "question_uid": "evaluation:1494",
+      "doc_name": "P18-2092",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1327,
+      "question_uid": "evaluation:1327",
+      "doc_name": "N19-1421",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 1698,
+      "question_uid": "evaluation:1698",
+      "doc_name": "0b85477387a9d0cc33fca0f4becaa0e5",
+      "n_gold_total": 5,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1861,
+      "question_uid": "evaluation:1861",
+      "doc_name": "c31e6580d0175ab3f9d99d1ff0bfa000",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 726,
+      "question_uid": "evaluation:726",
+      "doc_name": "NYSE_CRM_2020",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 884,
+      "question_uid": "evaluation:884",
+      "doc_name": "NASDAQ_QCOM_2021",
+      "n_gold_total": 1,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 590,
+      "question_uid": "evaluation:590",
+      "doc_name": "NYSE_CVX_2021",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    },
+    {
+      "q_id": 1879,
+      "question_uid": "evaluation:1879",
+      "doc_name": "efis-140411041451-phpapp01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 1
+    },
+    {
+      "q_id": 1881,
+      "question_uid": "evaluation:1881",
+      "doc_name": "competitiveoutcomes-091006065143-phpapp01_95",
+      "n_gold_total": 2,
+      "n_gold_retrieved": 2
+    },
+    {
+      "q_id": 707,
+      "question_uid": "evaluation:707",
+      "doc_name": "NYSE_PG_2022",
+      "n_gold_total": 3,
+      "n_gold_retrieved": 3
+    }
+  ]
+}

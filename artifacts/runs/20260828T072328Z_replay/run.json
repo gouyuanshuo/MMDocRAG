@@ -1,0 +1,180 @@
+{
+  "suite": "replay",
+  "offline": true,
+  "allow_api": false,
+  "include_expensive": false,
+  "fail_fast": false,
+  "dry_run": false,
+  "run_id": "20260828T072328Z_replay",
+  "created_utc": "2026-08-28T07:28:55Z",
+  "python": "D:\\Python313\\python.exe",
+  "python_version": "3.13.7",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "artifact_root": "D:\\Playground\\MMDocRAG\\artifacts",
+  "experiments": [
+    "E1",
+    "E2",
+    "E3",
+    "E24",
+    "E27",
+    "E28",
+    "E30"
+  ],
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_mocktest.jsonl",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "response/mock-model-v1_pure-text_fail_quotesmocktest.txt",
+      "response/mock-model-v1_pure-text_quotesmocktest_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "dependency_plan": [
+    {
+      "artifact": "corpora/canonical-db",
+      "label": "canonical evidence DB",
+      "state": "present",
+      "path": "canonical/mmdocrag.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at canonical/mmdocrag.sqlite",
+      "expensive": false,
+      "dependencies": [],
+      "build_cmd": [
+        "-m",
+        "canonical.build"
+      ]
+    },
+    {
+      "artifact": "corpora/quotes-selfbuilt",
+      "label": "self-built chunk corpus (~92.7k chunks)",
+      "state": "present",
+      "path": "retrieval/quotes.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/quotes.sqlite",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.quote_corpus"
+      ]
+    },
+    {
+      "artifact": "embeddings/bge-small-chunks",
+      "label": "BGE-small vectors over self-built chunks",
+      "state": "present",
+      "path": "retrieval/embeddings/bge-small-en-v1.5_quotes_chunks.npz",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/embeddings/bge-small-en-v1.5_quotes_chunks.npz",
+      "expensive": true,
+      "dependencies": [
+        "corpora/quotes-selfbuilt"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.dense_chunks"
+      ]
+    },
+    {
+      "artifact": "embeddings/bge-small-vlm",
+      "label": "BGE-small vectors over canonical evidence (VLM descriptions)",
+      "state": "present",
+      "path": "retrieval/embeddings/bge-small-en-v1.5_vlm_passages.npz",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/embeddings/bge-small-en-v1.5_vlm_passages.npz",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.dense",
+        "--image-repr",
+        "vlm"
+      ]
+    },
+    {
+      "artifact": "indexes/colqwen-rankings",
+      "label": "ColQwen2 late-interaction rankings (GPU, ~62 min)",
+      "state": "present",
+      "path": "retrieval/colqwen_scores.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/colqwen_scores.sqlite",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        ".venv-colpali/Scripts/python.exe",
+        "-m",
+        "retrieval.colqwen_index"
+      ]
+    }
+  ],
+  "legacy_adopted": [
+    {
+      "name": "embeddings/bge-small-vlm",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-small-query",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-small-chunks",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-small-ocr",
+      "action": "already registered"
+    },
+    {
+      "name": "corpora/page-corpus",
+      "action": "already registered"
+    },
+    {
+      "name": "indexes/colqwen-rankings",
+      "action": "already registered"
+    },
+    {
+      "name": "corpora/canonical-db",
+      "action": "already registered"
+    },
+    {
+      "name": "corpora/quotes-selfbuilt",
+      "action": "already registered"
+    }
+  ]
+}

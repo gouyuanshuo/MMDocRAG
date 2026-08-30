@@ -1,0 +1,147 @@
+{
+  "name": "E30",
+  "created_utc": "2026-08-29T03:21:41Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tests/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    },
+    {
+      "path": "retrieval\\quotes.sqlite",
+      "sha256": "efbb2602397f23a623ba0e4ae74f201cf234106509767bb1b223fd84d82570bc",
+      "bytes": 58863616
+    },
+    {
+      "path": "retrieval\\colqwen_scores.sqlite",
+      "sha256": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+      "bytes": 8933376
+    }
+  ],
+  "config": {
+    "experiment": "E30",
+    "run_id": "20260829T032005Z_replay",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\ablation.py",
+      "--all-cells"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "analysis": "factorial_attribution",
+    "multiplicity": "holm",
+    "family_size": 12,
+    "alpha": 0.05,
+    "pool": "all(selfbuilt,canonical)",
+    "k": "all(10,20)",
+    "seed": 20260825,
+    "bootstrap": 4000,
+    "sample_unit": "document",
+    "design": "2x2x2 factorial per cell, 4 cells",
+    "scope": "internal component attribution, not external validation"
+  },
+  "results": {
+    "cell_recall@10[text=dense,visual=colqwen,quota=7/3]": 0.6786349567099567,
+    "cell_recall@10[text=dense,visual=colqwen,quota=5/5]": 0.7038728354978354,
+    "cell_recall@10[text=dense,visual=rrf,quota=7/3]": 0.6931688852813852,
+    "cell_recall@10[text=dense,visual=rrf,quota=5/5]": 0.7212802128427129,
+    "cell_recall@10[text=rrf,visual=colqwen,quota=7/3]": 0.6890323773448774,
+    "cell_recall@10[text=rrf,visual=colqwen,quota=5/5]": 0.7135131132756133,
+    "cell_recall@10[text=rrf,visual=rrf,quota=7/3]": 0.7035663059163059,
+    "cell_recall@10[text=rrf,visual=rrf,quota=5/5]": 0.7309204906204907,
+    "total_E_to_all_three@10": 0.052285533910533914,
+    "main_effect: text branch: BGE-small dense -> BM25+BGE RRF": 0.009498421717171718,
+    "main_effect: visual branch: ColQwen over images -> BM25+BGE RRF over VLM descriptions": 0.01409040404040404,
+    "main_effect: modality quota: official -> balanced": 0.005001073232323233,
+    "interaction_residual": -3.469446951953614e-18,
+    "one_at_a_time: text branch only": 0.010028373015873015,
+    "one_at_a_time: visual branch only": 0.015666901154401155,
+    "one_at_a_time: quota only": 0.007107521645021645,
+    "cell_recall@20[text=dense,visual=colqwen,quota=12/8]": 0.8196331168831169,
+    "cell_recall@20[text=dense,visual=colqwen,quota=10/10]": 0.8267406385281384,
+    "cell_recall@20[text=dense,visual=rrf,quota=12/8]": 0.8353000180375181,
+    "cell_recall@20[text=dense,visual=rrf,quota=10/10]": 0.8392545454545455,
+    "cell_recall@20[text=rrf,visual=colqwen,quota=12/8]": 0.8296614898989899,
+    "cell_recall@20[text=rrf,visual=colqwen,quota=10/10]": 0.8357091089466089,
+    "cell_recall@20[text=rrf,visual=rrf,quota=12/8]": 0.845328391053391,
+    "cell_recall@20[text=rrf,visual=rrf,quota=10/10]": 0.8482230158730159,
+    "total_E_to_all_three@20": 0.028589898989898988,
+    "holm[selfbuilt/k=10] text branch: BGE-small dense -> BM25+BGE RRF": 0.012075992063492063,
+    "holm[selfbuilt/k=10] visual branch: ColQwen over images -> BM25+BGE RRF over VLM descriptions": 0.015970652958152958,
+    "holm[selfbuilt/k=10] modality quota: official -> balanced": 0.028339303751803754,
+    "holm[selfbuilt/k=20] text branch: BGE-small dense -> BM25+BGE RRF": 0.01276230158730159,
+    "holm[selfbuilt/k=20] visual branch: ColQwen over images -> BM25+BGE RRF over VLM descriptions": 0.01409040404040404,
+    "holm[selfbuilt/k=20] modality quota: official -> balanced": 0.006200270562770564,
+    "holm[canonical/k=10] text branch: BGE-small dense -> BM25+BGE RRF": 0.010018849206349205,
+    "holm[canonical/k=10] visual branch: ColQwen over images -> BM25+BGE RRF over VLM descriptions": 0.015970652958152958,
+    "holm[canonical/k=10] modality quota: official -> balanced": 0.026296031746031744,
+    "holm[canonical/k=20] text branch: BGE-small dense -> BM25+BGE RRF": 0.009498421717171718,
+    "holm[canonical/k=20] visual branch: ColQwen over images -> BM25+BGE RRF over VLM descriptions": 0.01409040404040404,
+    "holm[canonical/k=20] modality quota: official -> balanced": 0.005001073232323233,
+    "n_significant_raw": 12.0,
+    "n_significant_holm": 12.0
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\ablation.py",
+    "--all-cells"
+  ]
+}

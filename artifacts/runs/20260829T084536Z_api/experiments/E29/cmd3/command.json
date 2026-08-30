@@ -1,0 +1,28 @@
+{
+  "label": "E29#3",
+  "argv": [
+    "D:\\Python313\\python.exe",
+    "inference_api.py",
+    "gemini-3.6-flash",
+    "--setting",
+    "oursk10",
+    "--mode",
+    "pure-text",
+    "--rpm",
+    "10"
+  ],
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "python": "D:\\Python313\\python.exe",
+  "stdout_log": "artifacts/runs/20260829T084536Z_api/experiments/E29/cmd3/stdout.log",
+  "stderr_log": "artifacts/runs/20260829T084536Z_api/experiments/E29/cmd3/stderr.log",
+  "started_utc": "2026-08-29T08:45:49Z",
+  "env_overlay": {
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONUTF8": "1"
+  },
+  "returncode": 0,
+  "elapsed_sec": 1.378,
+  "ended_utc": "2026-08-29T08:45:50Z",
+  "timed_out": false,
+  "status": "ok"
+}

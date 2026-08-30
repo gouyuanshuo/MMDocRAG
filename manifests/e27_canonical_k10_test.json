@@ -1,0 +1,221 @@
+{
+  "experiment": "E27 re-audit",
+  "status": "EXPLORATORY",
+  "pool": "canonical",
+  "k": 10,
+  "eval_split": "test",
+  "quota_paper": [
+    7,
+    3
+  ],
+  "quota_balanced": [
+    5,
+    5
+  ],
+  "git_commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+  "git_dirty": true,
+  "seed": 20260825,
+  "bootstrap": 4000,
+  "rrf_c": 60,
+  "text_retrievers": [
+    "BM25 (retrieval/bm25.py, k1=1.5 b=0.75)",
+    "BAAI/bge-small-en-v1.5"
+  ],
+  "visual_retriever": "vidore/colqwen2-v1.0 (local copy; paper uses v0.1)",
+  "image_representation_for_bm25_dense": "VLM img_description text (NOT pixels)",
+  "paper_models_not_reproduced": [
+    "BAAI/bge-large-en-v1.5",
+    "vidore/colqwen2-v0.1"
+  ],
+  "n_questions": 396,
+  "n_documents": 55,
+  "n_gold": 1110,
+  "n_unmapped_gold_counted_as_miss": 0,
+  "n_questions_dropped_zero_gold": 0,
+  "n_text_units": 19151,
+  "n_image_units": 6565,
+  "image_pool_note": "6,504 distinct images; 13,999 exist for these 220 docs, so 54% of document images are absent from both pools",
+  "files": {
+    "canonical/mmdocrag.sqlite": "553d37cf3d7db963",
+    "retrieval/quotes.sqlite": "36bf4858a0f5fbc9",
+    "retrieval/colqwen_scores.sqlite": "0875579bcc81f290",
+    "manifests/split_doc_disjoint.json": "7708e8d6c3443def"
+  },
+  "python": "3.13.7",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "systems": {
+    "A  dense-only, paper quota 7/3": {
+      "text": "dense",
+      "visual": "dense",
+      "quota": [
+        7,
+        3
+      ],
+      "recall_uncond": 0.7005967867710292,
+      "recall_cond": 0.7005967867710292
+    },
+    "B  dense-only, balanced 5/5": {
+      "text": "dense",
+      "visual": "dense",
+      "quota": [
+        5,
+        5
+      ],
+      "recall_uncond": 0.7245685571443148,
+      "recall_cond": 0.7245685571443148
+    },
+    "C  RRF(bm25,dense), paper quota 7/3": {
+      "text": "rrf",
+      "visual": "rrf",
+      "quota": [
+        7,
+        3
+      ],
+      "recall_uncond": 0.7218499023423266,
+      "recall_cond": 0.7218499023423266
+    },
+    "D  RRF(bm25,dense), balanced 5/5": {
+      "text": "rrf",
+      "visual": "rrf",
+      "quota": [
+        5,
+        5
+      ],
+      "recall_uncond": 0.7457865997638724,
+      "recall_cond": 0.7457865997638724
+    },
+    "E  dense text + ColQwen visual, paper 7/3": {
+      "text": "dense",
+      "visual": "colqwen",
+      "quota": [
+        7,
+        3
+      ],
+      "recall_uncond": 0.7095373832116257,
+      "recall_cond": 0.7095373832116257
+    },
+    "E2 dense text + ColQwen visual, balanced 5/5": {
+      "text": "dense",
+      "visual": "colqwen",
+      "quota": [
+        5,
+        5
+      ],
+      "recall_uncond": 0.7514244173335083,
+      "recall_cond": 0.7514244173335083
+    },
+    "F  BM25-only, paper quota 7/3": {
+      "text": "bm25",
+      "visual": "bm25",
+      "quota": [
+        7,
+        3
+      ],
+      "recall_uncond": 0.6645104544725757,
+      "recall_cond": 0.6645104544725757
+    },
+    "G  RRF text + ColQwen visual, balanced 5/5": {
+      "text": "rrf",
+      "visual": "colqwen",
+      "quota": [
+        5,
+        5
+      ],
+      "recall_uncond": 0.7558916182022243,
+      "recall_cond": 0.7558916182022243
+    }
+  },
+  "comparisons": [
+    {
+      "comparison": "D - A   full stack vs dense-only baseline",
+      "delta": 0.04518981299284329,
+      "doc_lo": 0.015931293961466374,
+      "doc_hi": 0.07286203035009717,
+      "q_lo": 0.01894715781552903,
+      "q_hi": 0.07171406297826753,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "D - E   full stack vs closest paper-style",
+      "delta": 0.03624921655224685,
+      "doc_lo": 0.00973732956193792,
+      "doc_hi": 0.06498122263391301,
+      "q_lo": 0.008014839047036013,
+      "q_hi": 0.0657958781538327,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "G - E   best local hybrid vs paper-style",
+      "delta": 0.04635423499059863,
+      "doc_lo": 0.021360495541377898,
+      "doc_hi": 0.07324434253617394,
+      "q_lo": 0.022808304910577636,
+      "q_hi": 0.07082002155392307,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "B - A   quota alone",
+      "delta": 0.023971770373285524,
+      "doc_lo": 0.0007858495117805574,
+      "doc_hi": 0.04419631566403721,
+      "q_lo": 0.006380833497310771,
+      "q_hi": 0.0421807678152375,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "C - A   fusion alone",
+      "delta": 0.02125311557129739,
+      "doc_lo": -0.004220885390980328,
+      "doc_hi": 0.045125960411575156,
+      "q_lo": -0.0011042809953794813,
+      "q_hi": 0.043787295756992736,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "D - C   quota on top of fusion",
+      "delta": 0.02393669742154591,
+      "doc_lo": 0.00534072310012611,
+      "doc_hi": 0.04317148368133326,
+      "q_lo": 0.007144280558106316,
+      "q_hi": 0.04208171633361028,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "D - B   fusion on top of quota",
+      "delta": 0.02121804261955777,
+      "doc_lo": -0.0015572657300638186,
+      "doc_hi": 0.045086085268819506,
+      "q_lo": -5.669975366944842e-05,
+      "q_hi": 0.04327047531592987,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "E - A   ColQwen visual vs image-description",
+      "delta": 0.008940596440596436,
+      "doc_lo": -0.019564484985022085,
+      "doc_hi": 0.03712708529739579,
+      "q_lo": -0.015644841269841267,
+      "q_hi": 0.03441926707551707,
+      "n_docs": 55,
+      "n_questions": 396
+    },
+    {
+      "comparison": "E2 - E  quota on paper-style hybrid",
+      "delta": 0.041887034121882605,
+      "doc_lo": 0.015206933852861796,
+      "doc_hi": 0.07086838494081615,
+      "q_lo": 0.019913866296442054,
+      "q_hi": 0.06546882515632516,
+      "n_docs": 55,
+      "n_questions": 396
+    }
+  ],
+  "command": "D:\\Playground\\MMDocRAG\\retrieval\\eval_stack_v2.py --k 10 --pool canonical --dump"
+}

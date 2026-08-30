@@ -1,0 +1,35 @@
+# Byte-exactness, scoped to the files this research project owns.
+#
+# `core.autocrlf` is true on this machine, so by default Git rewrites LF to
+# CRLF on checkout. That is normally harmless, but not here: every run records
+# a SHA-256 per source file in `artifacts/runs/*/source_manifest.json`, and
+# `expkit/source.py` rebuilds a tree and recomputes those hashes to prove the
+# run can be restored. A checkout that silently changed the bytes would make
+# every one of those hashes wrong, and the failure would look like tampering
+# rather than like a line-ending setting.
+#
+# The rules are PATH-SCOPED on purpose. This repository is a fork of the
+# MMDocRAG benchmark, and a blanket `* -text` would restage ~700 MB of upstream
+# dataset and response files whose blobs are already normalised -- rewriting
+# history that this project neither produced nor needs to guarantee. Only the
+# paths added by this project are pinned.
+canonical/**    -text
+expkit/**       -text
+retrieval/**    -text
+router/**       -text
+tests/**        -text
+docs/**         -text
+manifests/**    -text
+artifacts/**    -text
+experiments.py  -text
+manifest.py     -text
+cost_estimate.py -text
+eval_e29_paired.py -text
+requirements.txt -text
+
+# The source bundle is the only artefact that can actually reproduce a run's
+# source, so no filter or diff driver may ever touch it.
+*.zip binary
+*.sqlite binary
+*.npz binary
+*.pkl binary

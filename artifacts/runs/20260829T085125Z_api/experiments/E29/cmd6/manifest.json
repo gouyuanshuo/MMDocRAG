@@ -1,0 +1,101 @@
+{
+  "name": "E29",
+  "created_utc": "2026-08-29T08:51:55Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_oursk10_sidecar.json",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_paperk10_sidecar.json",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_e29_paired.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotesoursk10.txt",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotesoursk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tests/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [],
+  "config": {
+    "experiment": "E29",
+    "run_id": "20260829T085125Z_api",
+    "argv": [
+      "eval_e29_paired.py"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "model": "gemini-3.6-flash",
+    "mode": "pure-text",
+    "k": 10,
+    "n_questions": 600,
+    "sample_unit": "document",
+    "n_documents": 220,
+    "bootstrap": 4000,
+    "estimator": "mean of per-question F1 (eval_all.final_f1)",
+    "scorer": "eval_all.extract_citations + get_scores",
+    "comparable_to_paper": false
+  },
+  "results": {
+    "final_f1_paper": 55.213314544932196,
+    "final_f1_ours": 58.1123593998594,
+    "delta_final_f1[ours - paper]": 2.899044854927207,
+    "delta_final_f1_question_bootstrap": 2.899044854927207,
+    "questions_better": 210.0,
+    "questions_worse": 156.0,
+    "questions_equal": 234.0
+  },
+  "argv": [
+    "eval_e29_paired.py"
+  ]
+}

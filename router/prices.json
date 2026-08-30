@@ -1,0 +1,105 @@
+{
+  "checked": "2026-08-24",
+  "currency": "USD per 1M tokens",
+  "note": [
+    "Every entry starts with verified=false. These are list prices as best known",
+    "to the author at the time of writing, NOT prices confirmed against the",
+    "provider's page on the date above. router/cost_quality.py prints a banner",
+    "naming every unverified model it used, and any figure derived from one",
+    "must not be cited until the entry is checked and flipped to verified=true.",
+    "",
+    "The Gemini models are priced here for completeness but are excluded from",
+    "all cost tables anyway: the release's reported in_tok for those models",
+    "omits image tokens (multimodal is only 1.02-1.04x pure-text), so a dollar",
+    "figure computed from it would understate the multimodal arm.",
+    "",
+    "2026-08-29: gemini-3.6-flash added and VERIFIED against the pricing page.",
+    "It was previously absent, and an E29 cost was reported using gemini-2.0-",
+    "flash's unverified $0.10/$0.40 instead -- 7.5x low on input and 9.4x low",
+    "on output. A missing entry must produce no dollar figure at all, not a",
+    "substitution from the nearest-looking model."
+  ],
+  "models": {
+    "claude-3.5-sonnet": {
+      "in": 3.0,
+      "out": 15.0,
+      "verified": false,
+      "source": "https://www.anthropic.com/pricing"
+    },
+    "gpt-4o": {
+      "in": 2.5,
+      "out": 10.0,
+      "verified": false,
+      "source": "https://platform.openai.com/docs/pricing"
+    },
+    "gpt-4o-mini": {
+      "in": 0.15,
+      "out": 0.6,
+      "verified": false,
+      "source": "https://platform.openai.com/docs/pricing"
+    },
+    "gpt-4.1": {
+      "in": 2.0,
+      "out": 8.0,
+      "verified": false,
+      "source": "https://platform.openai.com/docs/pricing"
+    },
+    "gpt-4.1-mini": {
+      "in": 0.4,
+      "out": 1.6,
+      "verified": false,
+      "source": "https://platform.openai.com/docs/pricing"
+    },
+    "gpt-4.1-nano": {
+      "in": 0.1,
+      "out": 0.4,
+      "verified": false,
+      "source": "https://platform.openai.com/docs/pricing"
+    },
+    "llama4-scout-17b-16e": {
+      "in": 0.08,
+      "out": 0.3,
+      "verified": false,
+      "source": "https://deepinfra.com/pricing"
+    },
+    "llama4-mave-17b-128e": {
+      "in": 0.2,
+      "out": 0.6,
+      "verified": false,
+      "source": "https://deepinfra.com/pricing"
+    },
+    "gemini-1.5-pro": {
+      "in": 1.25,
+      "out": 5.0,
+      "verified": false,
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "gemini-2.0-flash": {
+      "in": 0.1,
+      "out": 0.4,
+      "verified": false,
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "gemini-2.5-flash": {
+      "in": 0.3,
+      "out": 2.5,
+      "verified": false,
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "gemini-2.5-pro": {
+      "in": 1.25,
+      "out": 10.0,
+      "verified": false,
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "gemini-3.6-flash": {
+      "in": 0.75,
+      "out": 3.75,
+      "verified": true,
+      "checked": "2026-08-29",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "tier": "standard paid tier",
+      "note": "Output price INCLUDES thinking tokens; no separate reasoning rate. Batch and Flex tiers are half price ($0.375 in / $1.875 out) and would suit E29's 1,200 independent calls. Standard-tier prices double on 2027-01-01 ($1.50 / $7.50) -- re-check after that date."
+    }
+  }
+}

@@ -1,0 +1,3252 @@
+<title>MMDocRAG 实验记录簿</title>
+<style>
+  :root {
+    --ground:    #F4F6F4;
+    --surface:   #FFFFFF;
+    --surface-2: #EAEEEB;
+    --ink:       #141A18;
+    --ink-2:     #55605C;
+    --ink-3:     #808B87;
+    --rule:      #D8DEDA;
+    --pass:      #0F6B5C;
+    --correct:   #A8442A;
+    --live:      #3A5BA0;
+    --shadow:    0 1px 2px rgba(20,26,24,.05), 0 4px 14px rgba(20,26,24,.045);
+
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "SF Mono", SFMono-Regular, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0F1412; --surface: #171E1B; --surface-2: #1F2724;
+      --ink: #E4EAE7; --ink-2: #9FAAA5; --ink-3: #74807B; --rule: #2A332F;
+      --pass: #4FC0A8; --correct: #E58A62; --live: #86A6E8;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0F1412; --surface: #171E1B; --surface-2: #1F2724;
+    --ink: #E4EAE7; --ink-2: #9FAAA5; --ink-3: #74807B; --rule: #2A332F;
+    --pass: #4FC0A8; --correct: #E58A62; --live: #86A6E8;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--ground); color: var(--ink); font-family: var(--sans);
+    font-size: 15.5px; line-height: 1.65; margin: 0; padding: 0 22px 100px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  header { padding: 56px 0 30px; border-bottom: 2px solid var(--ink); margin-bottom: 12px; }
+  .kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-3); margin: 0 0 16px;
+  }
+  h1 {
+    font-size: clamp(28px, 4.2vw, 40px); font-weight: 680; letter-spacing: -.022em;
+    line-height: 1.12; margin: 0 0 14px; text-wrap: balance;
+  }
+  .standfirst { font-size: 16.5px; color: var(--ink-2); margin: 0; max-width: 66ch; }
+  .meta {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+    margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 6px 20px;
+  }
+
+  h2 {
+    font-size: 13px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase;
+    color: var(--ink-2); margin: 54px 0 20px; padding-bottom: 9px;
+    border-bottom: 1px solid var(--rule);
+  }
+  h3 { font-size: 16px; font-weight: 660; margin: 26px 0 10px; letter-spacing: -.01em; }
+  p { margin: 0 0 13px; max-width: 74ch; text-wrap: pretty; }
+  a { color: var(--live); }
+  a:focus-visible { outline: 2px solid var(--correct); outline-offset: 3px; }
+
+  /* ---- ledger entry ---- */
+  .entry {
+    display: grid; grid-template-columns: 92px 1fr; gap: 0 22px;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 6px; padding: 18px 22px; margin-bottom: 14px; box-shadow: var(--shadow);
+  }
+  .gutter { border-right: 1px solid var(--rule); padding-right: 18px; }
+  .eid {
+    font-family: var(--mono); font-size: 15px; font-weight: 700;
+    letter-spacing: -.02em; display: block; margin-bottom: 8px;
+  }
+  .status {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .07em;
+    display: inline-block; padding: 2px 7px; border-radius: 3px;
+    border: 1px solid var(--rule); background: var(--surface-2); color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .status.pass    { color: var(--pass);    border-color: color-mix(in srgb, var(--pass) 42%, var(--rule)); }
+  .status.neg     { color: var(--ink-2); }
+  .status.correct { color: var(--correct); border-color: color-mix(in srgb, var(--correct) 45%, var(--rule)); }
+  .status.live    { color: var(--live);    border-color: color-mix(in srgb, var(--live) 42%, var(--rule)); }
+  .body > :first-child { margin-top: 0; }
+  .body > :last-child { margin-bottom: 0; }
+  .entry-title { font-size: 17px; font-weight: 660; margin: 0 0 4px; letter-spacing: -.012em; }
+  .why {
+    font-size: 13.5px; color: var(--ink-3); font-style: italic; margin: 0 0 12px;
+  }
+  .body p { font-size: 14.5px; }
+  .verdict {
+    margin-top: 12px !important; padding-top: 10px; border-top: 1px dashed var(--rule);
+    font-size: 14.5px;
+  }
+  .verdict b { color: var(--ink); }
+
+  /* ---- tables ---- */
+  .scroll {
+    overflow-x: auto; margin: 12px 0 14px; border: 1px solid var(--rule);
+    border-radius: 5px; background: var(--surface);
+  }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--rule); }
+  thead th {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--ink-2); background: var(--surface-2);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.n, th.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  .good { color: var(--pass); font-weight: 650; }
+  .bad  { color: var(--correct); font-weight: 650; }
+
+  code {
+    font-family: var(--mono); font-size: .87em; background: var(--surface-2);
+    padding: 1px 5px; border-radius: 3px; border: 1px solid var(--rule);
+  }
+  pre {
+    font-family: var(--mono); font-size: 12.5px; line-height: 1.55;
+    background: var(--surface-2); border: 1px solid var(--rule); border-radius: 5px;
+    padding: 13px 16px; overflow-x: auto; margin: 0 0 14px;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: inherit; }
+
+  .callout {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-left: 3px solid var(--correct); border-radius: 5px;
+    padding: 15px 19px; margin: 14px 0;
+  }
+  .callout-label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--correct); margin: 0 0 7px;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout.correction { border-left-color: var(--correct); background: var(--surface-2); }
+  .callout.correction .callout-label { color: var(--correct); }
+  .superseded { text-decoration: line-through; color: var(--ink-3); }
+  .callout.lesson { border-left-color: var(--pass); }
+  .callout.lesson .callout-label { color: var(--pass); }
+
+  ul { margin: 0 0 14px; padding-left: 20px; max-width: 74ch; }
+  li { margin-bottom: 7px; }
+
+  footer {
+    margin-top: 70px; padding-top: 20px; border-top: 1px solid var(--rule);
+    font-size: 13px; color: var(--ink-3);
+  }
+  @media (max-width: 640px) {
+    .entry { grid-template-columns: 1fr; gap: 12px; }
+    .gutter { border-right: none; border-bottom: 1px solid var(--rule); padding: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+    .eid { margin-bottom: 0; }
+  }
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="kicker">32933 Research Project · Spring 2026 · 实验记录簿</p>
+  <h1>分层查询条件路由：从复现到 Phase 1B</h1>
+  <p class="standfirst">
+    按时间顺序记录每一次尝试、每一个结果、每一处更正。
+    包含七个负结果和七处对我自己先前判断的推翻——这些和正面结果一样是产出。
+  </p>
+  <p class="meta">
+    <span>代码库 D:\Playground\MMDocRAG</span>
+    <span>数据 D:\Dataset\MMDocRAG</span>
+    <span>最后更新 2026-08-30 · E35/E36 Phase 3 逐题路由：图片侧的升级决策可学，文本侧的融合决策不可学</span>
+  </p>
+</header>
+
+<h2>怎么读这份记录</h2>
+<p>
+  每条实验有稳定编号 <code>E<i>n</i></code>，后续讨论可以直接引用。状态含义：
+  <span class="status pass">通过</span> 达到预设门槛；
+  <span class="status neg">负结果</span> 假设被证伪，结论有效；
+  <span class="status correct">已更正</span> 推翻了本项目先前的判断；
+  <span class="status live">进行中</span>。
+</p>
+<p>
+  所有数字均来自仓库内可复现脚本，命令附在每条末尾。凡是估计值、含建模假设或未经核验的，都在原地标注。
+</p>
+
+<!-- ============================ PHASE 0 ============================ -->
+<h2>Phase 0 · 可复现基础</h2>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E1</span><span class="status pass">通过</span></div>
+  <div class="body">
+    <p class="entry-title">建立复现锚点</p>
+    <p class="why">先证明官方指标代码与其公布数字自洽，否则后续一切改动都无从判断对错。</p>
+    <p>
+      <code>gemini-2.0-flash</code> C20 multimodal 全部 17 项指标与论文<strong>逐位一致</strong>：
+    </p>
+    <pre><code>3708.7 &amp; 226.4 &amp; 72.8 &amp; 69.7 &amp; 71.2 &amp; 37.8 &amp; 63.4 &amp; 47.4 &amp; 60.0 &amp; 0.130 &amp; 0.292
+judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
+    <p class="verdict">
+      <b>这个锚点此后每次改动 <code>eval_all.py</code> 都重跑，全程保持逐位命中。</b>
+      <code>qwen2.5-7b</code> 纯文本 C20 也精确复现。
+    </p>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E2</span><span class="status pass">已修复</span></div>
+  <div class="body">
+    <p class="entry-title">评测脚本的静默截断缺陷</p>
+    <p class="why">复现能对上，不代表代码在别的输入下也对。</p>
+    <p>
+      原实现用 <code>zip(gold_data, eval_data)</code> 做位置对齐。<code>zip</code> 遇到较短列表会
+      <strong>静默截断</strong>——一个断点续跑产生的半截 response 文件，会在更少样本上求均值，
+      然后照常输出一个漂亮的分数。judge 那一侧更糟：<code>count = len(llm_data)</code> 独立遍历，
+      与自动指标的样本集合<strong>毫无关联</strong>。
+    </p>
+    <p>
+      改为按 <code>q_id</code> 建字典 join，显式报告覆盖率，新增 <code>--require-full</code>。
+    </p>
+    <p class="verdict">
+      <b>顺带发现一个可写进报告的事实：</b>187 个模型×设置组合中 <strong>62 个</strong> judge 文件不完整，
+      最低 <code>qwen2.5-7b_pure-text_quotes20</code> 只有 <strong>1165/2000（58.25%）</strong>。
+      所有 response 文件都是完整的，只有 judge 缺。
+      <strong>论文的 LLM-Judge 列不是在同一批问题上算出来的</strong>，跨模型比较不严格可比。
+    </p>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E3</span><span class="status pass">已修复</span></div>
+  <div class="body">
+    <p class="entry-title">工程可复现性整改</p>
+    <ul>
+      <li>依赖版本冻结到 <code>requirements.txt</code></li>
+      <li>NLTK 语料预解析，支持 <code>MMDOCRAG_NLTK_DATA</code> 离线路径（原来每次运行都联网下载）</li>
+      <li>API key 从源码硬编码改为环境变量，缺失时明确报错而非静默空串</li>
+      <li>推理与 judge 支持断点续跑，默认开启</li>
+      <li>每次实验落一份 manifest：git commit + dirty 文件、数据 sha256、包版本、CUDA 设备、配置、结果</li>
+      <li>删除 <code>train_swift_qwen.py:2</code> 硬编码的 <code>CUDA_VISIBLE_DEVICES='3,4'</code>，改为 <code>--devices</code></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================ PHASE 0.5 ============================ -->
+<h2>Phase 0.5 · Canonical 数据层</h2>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E4</span><span class="status correct">关键发现</span></div>
+  <div class="body">
+    <p class="entry-title">局部 quote 标签不是身份，q_id 也不是主键</p>
+    <div class="callout correction">
+      <div class="callout-label">表述已收窄 · 见 E28</div>
+      <p>
+        可以成立的表述是：<b>发布的 judge 产物中 62/187 不完整，因此无法从发布文件构造同底比较</b>。
+        <b>不能</b>断言论文作者内部计算使用了不同分母——本项目没有观测到作者的内部流程。
+      </p>
+    </div>
+
+    <p class="why">这两条决定了整个数据层的设计，任何一条搞错，后续所有 join 都是错的。</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>审计项</th><th>结果</th><th>后果</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>text5</code> / <code>image7</code> 是否全局 ID</td>
+            <td>同题 gold 在 15/20 两档：标签字符串仅 <b class="bad">4.6%</b> 相同，
+                canonical 身份 <b class="good">100%</b> 相同</td>
+            <td>任何按局部标签的 join 有 95% 是错的</td>
+          </tr>
+          <tr>
+            <td><code>q_id</code> 是否跨 split 唯一</td>
+            <td>dev 与 evaluation 各自从 0 编号，<b class="bad">2000 个 id 完全重合</b>，
+                其中问题文本相同的为 <b>0</b></td>
+            <td>主键必须是 <code>(split, q_id)</code></td>
+          </tr>
+          <tr>
+            <td><code>answer_interleaved</code> 是否与设置无关</td>
+            <td><b class="bad">3,890 / 4,055</b> 题在两档下不同（内嵌局部编号，
+                <code>46%[2]</code> vs <code>46%[6]</code>）</td>
+            <td>BLEU/ROUGE-L 的参考文本本身是 setting 相关的，须单表存放</td>
+          </tr>
+          <tr>
+            <td><code>page_id</code> 基准</td>
+            <td>0-indexed，抽样 12 篇无越界</td>
+            <td>是最可靠的 PDF 对齐锚点</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>canonical 身份定为</b> <code>sha1(doc_name|page_id|layout_id)[:16]</code>。
+      这是后续换 retriever、换 chunk、换 top-k 之后仍能复用原始 gold 标注的唯一基础。
+    </p>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E5</span><span class="status pass">Gate 1 通过</span></div>
+  <div class="body">
+    <p class="entry-title">gold 全量映射审计</p>
+    <p>
+      5 张表：<code>questions</code> 4,055 · <code>question_settings</code> 8,110 ·
+      <code>canonical_evidence</code> 25,716 · <code>question_candidates</code> 141,480 ·
+      <code>question_gold_evidence</code> 21,978。
+    </p>
+    <p class="verdict">
+      <b>21,978 / 21,978 = 100%</b> 的 gold quote 可解析到 <code>(doc, page, layout)</code>。
+      1,200 题往返验证 0 失配，4,054/4,054 题跨设置 canonical 身份一致。
+      冲突 0；14 处同图双文件名已按字典序去重并记入 alias；
+      2 处重复标签、2 处歧义标签（<code>dev:486/text11</code> 指向两个不同版面块）已显式报告而非静默处理。
+    </p>
+    <pre><code>python -m canonical.build</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E6</span><span class="status pass">Gate 2 通过</span></div>
+  <div class="body">
+    <p class="entry-title">自建 chunk 能否靠文本匹配对齐官方 gold</p>
+    <p class="why">
+      <code>layout_id</code> 是作者 MinerU 那次运行的产物，无法从 PDF 重建。
+      如果自建 chunk 对不回 gold，Phase 4 的粒度实验就只能退回用官方 quote 作检索单元。
+    </p>
+    <p>四次迭代，全量 3,146 条 gold text evidence（非抽样）：</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>方法</th><th class="n">通过率</th><th>为什么改</th></tr></thead>
+        <tbody>
+          <tr><td>精确子串包含</td><td class="n">82%</td>
+              <td>MinerU 会往 gold 里塞幻觉字形——实测一条把 <code>62%</code> 写成
+                  <code>$\mathbf{\mathcal{G}}_{62}\%$</code>，凭空多个 <code>G</code>。
+                  280 字符错一个，整条就失败</td></tr>
+          <tr><td>字符 8-gram 重叠</td><td class="n">94.28%</td>
+              <td>一个坏字符只毁掉跨过它的 N 个 shingle，退化是平缓的。
+                  但仍有 148 条卡在无文本层的页面上</td></tr>
+          <tr><td>+ 页级 OCR（128 页）</td><td class="n">98.47%</td>
+              <td>148 条受阻证据救回 132 条（89%）</td></tr>
+          <tr><td>+ 全语料 OCR，且与文本层<b>拼接</b>而非替换</td><td class="n"><b class="good">98.63%</b></td>
+              <td>一页可能有 55 字符页眉 + 一张图，替换会丢掉页眉里的 gold</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      阈值敏感性（每条的重叠门槛）：<code>0.60:99.6% 0.80:98.6% 0.90:96.3% 0.95:94.5%</code>。
+      0.80 处于平台区，不是凑出来的。
+    </p>
+    <p class="verdict">
+      <b>残留 43 条（1.4%）</b>三类：页面只有极少量文本层而真内容是图；
+      财报表格列布局被 PyMuPDF 打散（<code>ADOBE_2015_10K</code> cov=0.795，仅差一点）；
+      MinerU 侧 OCR 损坏（<code>C0VID</code> 把 O 写成 0）。第三类无解，占比可接受并已声明。
+    </p>
+    <pre><code>python -m canonical.gate2</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E7</span><span class="status pass">完成</span></div>
+  <div class="body">
+    <p class="entry-title">全语料 OCR</p>
+    <p>
+      RapidOCR（ONNX，CPU，纯 pip，无外部二进制）。阈值 <code>--min-chars 100</code>：
+      Phase 1B 要把这些页放进索引，只有页眉几十字符的页等同于空文档，会污染检索。
+      <strong>1,983 页 / 93 分钟</strong>，65 页无文字（3.3%），中位 249 字符/页。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>指标</th><th class="n">OCR 前</th><th class="n">OCR 后</th></tr></thead>
+        <tbody>
+          <tr><td>无可用文本的页面</td><td class="n">1,748（11.8%）</td><td class="n"><b class="good">357（2.4%）</b></td></tr>
+          <tr><td>100% 对文本检索不可见的文档</td><td class="n">27</td><td class="n"><b class="good">0</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <pre><code>python -m canonical.ocr --targets all --min-chars 100 --dpi 200</code></pre>
+  </div>
+</div>
+
+<!-- ============================ PHASE 1A.5 ============================ -->
+<h2>Phase 1A.5 · 生成输入层的模态路由</h2>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E8</span><span class="status correct">立项依据被推翻</span></div>
+  <div class="body">
+    <p class="entry-title">oracle 增益：看起来是机会，其实是测量结构的产物</p>
+    <p class="why">
+      仓库里有 19 个模型的 pure-text / multimodal 成对 response，覆盖同一批 2000 题，
+      所以「每题哪种输入更好」是已知的，零成本。
+    </p>
+    <p>
+      逐题取优者的 oracle 增益 <strong>+5.8 ~ +12.3 F1，19/19 模型全为正，均值 +8.7</strong>。
+      我据此把 Phase 1A.5 立为「零依赖保底里程碑」。
+    </p>
+    <div class="callout">
+      <p class="callout-label">这个推断是错的</p>
+      <p>
+        <strong>per-question oracle 增益大，不等于存在可路由的空间。</strong>
+        选取两个含噪声测量中的较大者，本身就会产生正增益。
+        对照实验：把同样的 oracle 用在<strong>两个不同模型的同一种模态</strong>上（匹配同一 |ΔF1| 区间），
+        增益是 <strong>+9.0</strong>——与跨模态的 +8.7 无异。这个增益<strong>不是模态特有的</strong>。
+      </p>
+    </div>
+    <p class="verdict">
+      <b>纪律：</b>此后凡报告 oracle 上界，必同时报告同类系统之间的参照水平。
+      已写入 proposal 的 RQ1a 与 plan，适用于 RQ1b 及 RQ2–RQ5。
+    </p>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E9</span><span class="status neg">负结果</span><br><span class="status correct" style="margin-top:6px">已更正</span></div>
+  <div class="body">
+    <p class="entry-title">模态路由器：0/19 统计显著胜出</p>
+    <div class="callout correction">
+      <div class="callout-label">已补 CLI 并重跑 · 见 E28</div>
+      <p>
+        原因确认：<code>load_features</code> 曾恒为 <code>hstack([emb(384), shallow(13)])</code>=397 维，
+        没有任何 CLI 可选特征子集，故记录簿所称的 13 维结果无法复现。
+        <b>已补 <code>--features</code>（emb / shape / qtype / shape+qtype / all）与 <code>--manifest</code></b>，
+        默认 <code>all</code> 复现 2026-08-25 之前的全部数字。重跑结果：
+      </p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>特征组</th><th class="n">维度</th><th class="n">胜过最优固定</th><th class="n">平均增益</th><th class="n">占 oracle 空间</th></tr></thead>
+          <tbody>
+            <tr><td><b>shape</b>（候选集统计，<b>可部署</b>）</td><td class="n">5</td><td class="n">8/19</td><td class="n">+0.2 F1</td><td class="n">2%</td></tr>
+            <tr><td>shape+qtype（原「13 维」）</td><td class="n">13</td><td class="n">9/19</td><td class="n">+0.2 F1</td><td class="n">2%</td></tr>
+            <tr><td>emb（仅句向量）</td><td class="n">384</td><td class="n">6/19</td><td class="n bad">−0.3 F1</td><td class="n bad">−5%</td></tr>
+            <tr><td>all（默认，历史口径）</td><td class="n">397</td><td class="n">5/19</td><td class="n bad">−0.4 F1</td><td class="n bad">−6%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <b>平均增益 +0.2 F1 与 2% 空间复现了</b>；但原文所称「<b>2/19 显著</b>提升、4/19 显著下降」
+        是<b>显著性</b>计数，本脚本只输出原始胜负计数，尚未做逐模型 bootstrap，
+        因此那两个数字<b>仍然撤下</b>，待补显著性检验后再报。
+      </p>
+      <p>
+        一个新结论：<b>只用 5 维可部署特征就能拿到与 13 维相同的 +0.2 F1 / 2%</b>——
+        人工标注的 <code>question_type</code>（privileged feature）<b>没有带来任何额外收益</b>，
+        因此原结果并不依赖部署时未必可得的信号。而 384 维句向量依旧把结论推向负值，
+        第五次印证 L10。
+      </p>
+    </div>
+
+    <p>
+      Router 只看问题（BGE-small 句向量 + 候选集浅层统计），严禁使用 gold_quotes。
+      按 |ΔF1| 加权训练——ties 不带信息，gpt-4.1 有 729/2000 题完全打平，不加权会有三分之一训练集在乱拉。
+      document-disjoint 切分（220 篇文档 60.6/19.7/19.8，每个大 domain 都在目标值一个百分点内）。
+    </p>
+    <p>
+      配对 bootstrap 检验（B=4000）：<strong>统计显著胜过最优固定策略的模型 0/19，显著更差的 4 个</strong>
+      （claude-3.5-sonnet、gemini-2.0-flash-tk、gpt-4o、internvl3-8b）。
+    </p>
+    <div class="callout">
+      <p class="callout-label">E23 之后的更正：0/19 应为 2/19</p>
+      <p>
+        上面用的是 397 维特征（384 维句向量 + 13 维候选集统计）。E23 发现该维度在 1,211 个训练样本上
+        会埋掉信号，故复检了 13 维统计特征单独的结果：
+        <strong>统计显著胜出 2/19</strong>（gemini-2.0-flash +0.13、<b>internvl3-38b +3.02</b>），
+        仍有 4/19 显著更差，<strong>平均 +0.21 F1 = oracle 空间（+8.7）的 2.4%</strong>。
+        结论不变——空间捕获不到——但「0/19」这个具体数字不准确，proposal 已同步更正为完整表述。
+        探针 3（kappa=0.038）与探针 5（对照 +9.0）不依赖特征，不受影响。
+      </p>
+    </div>
+    <p>
+    </p>
+    <h3>六个探针，每个堵一种「你是不是没做好」</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>反驳</th><th>探针</th><th>结果</th></tr></thead>
+        <tbody>
+          <tr><td>你管道有 bug</td><td>0 · 正对照</td>
+              <td>同一套特征/切分/分类器预测 <code>question_type</code>：AUC <b class="good">0.874 / 0.788</b></td></tr>
+          <tr><td>模型容量不够</td><td>1 · 过拟合</td><td>train 上比 best-fixed 高 5~8 分，test 持平</td></tr>
+          <tr><td>阈值选错了</td><td>2 · AUC</td><td>test 加权 AUC <b class="bad">0.513</b>（全阈值，与 0.5 无关）</td></tr>
+          <tr><td>换个特征就行</td><td>3 · 跨模型一致性</td>
+              <td>171 个模型对 Cohen's kappa 均值 <b class="bad">0.038</b>，<b>0/171</b> 超过 0.2</td></tr>
+          <tr><td>信号只是难提</td><td>4 · 泄漏探针</td>
+              <td>按 gold「纯视觉证据」路由（<b>需要答案</b>）只在 <b class="bad">2/19</b> 上胜出</td></tr>
+          <tr><td>+8.7 的空间总是真的</td><td>5 · 参照水平</td><td>见 E8</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      跨模型迁移矩阵也证实：对角线不比非对角线好，整个矩阵没有结构。
+    </p>
+    <p class="verdict">
+      <b>结论：「这道题该用哪种模态」不是问题的属性，属于模型-问题这一对。</b>
+      106 道「19 个模型全都有明确偏好」的题里，
+      <strong>没有一道达成全票一致</strong>；分布与 19 次独立抛硬币几乎重合。
+    </p>
+    <pre><code>python -m router.build_outcomes &amp;&amp; python -m router.splits --write
+python -m router.features --setting 20
+python -m router.train_modality --all --transfer
+python -m router.diagnose</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E10</span><span class="status pass">正面产出</span></div>
+  <div class="body">
+    <p class="entry-title">模态选择是模型级决策，不是问题级决策</p>
+    <p class="why">负结果之外，同一批数据能回答 proposal §13 的预算控制问题。</p>
+    <ul>
+      <li><strong>7/19 个模型两种模式的 ΔF1 95% CI 跨 0</strong>（2000 题配对 bootstrap，B=2000）</li>
+      <li><strong>4 个模型多模态明显更差</strong>：gpt-4.1-nano −11.9、internvl3-8b −11.1、llama4-scout −9.3</li>
+      <li><strong>6/13 被纯文本严格支配</strong>（token 可信的 13 个模型中），多模态又差又贵</li>
+      <li>盈亏平衡点（不依赖价格）：gpt-4o <b>548</b> token/F1 点、claude <b>777</b>、gpt-4.1 1,707；
+          而 gpt-4.1-mini <b class="bad">43,906</b>、llama4-mave <b class="bad">31,388</b> —— 意思就是「永远不值」</li>
+      <li>Pareto 前沿：16 个「模型×模式」选项，7 个非受支配；
+          剔除「增益不可与 0 区分」的台阶后剩 <b>6 个，其中只有 1 个是多模态</b></li>
+    </ul>
+    <p>
+      前沿的每一级台阶都跑了配对 bootstrap 检验——原始 Pareto 是纯几何操作，
+      <strong>完全不管测量误差</strong>。<code>gpt-4.1-mini multimodal</code> 靠 +0.2 F1
+      （CI <code>[−1.0, +1.3]</code>）占了个位子，照着买就是每 1000 题多付 $2.69 买噪声。
+      剔除后下一级要对<strong>最后一个保留下来的</strong>点重新检验。
+    </p>
+    <div class="callout">
+      <p class="callout-label">两处数据陷阱</p>
+      <p>
+        <strong>Gemini 系 5 个模型的 <code>in_tok</code> 不含图片 token</strong>——多模态仅比纯文本高
+        1.02~1.04 倍，8 张图不可能只贵 4%。F1 可用，成本数字不可用，脚本已自动标记剔除。
+        其余模型的比值是 1.88~4.75，<strong>供应商之间不可比</strong>。
+      </p>
+      <p>
+        <code>router/prices.json</code> 每条价格都标 <code>verified: false</code>，
+        脚本每次打印醒目横幅列出用到的未核验条目。<strong>引用任何美元数字前必须先核对。</strong>
+        token 与 ΔF1 是实测的，不受影响。
+      </p>
+    </div>
+    <pre><code>python -m router.oracle --setting 20 --pareto
+python -m router.cost_quality</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E11</span><span class="status correct">自查发现的 bug</span></div>
+  <div class="body">
+    <p class="entry-title">泄漏探针一度在测错误的东西</p>
+    <p>
+      <code>evidence_modality_type</code> <strong>从不包含字符串 <code>"image"</code></strong>，
+      它用的是 <code>table</code> / <code>figure</code> / <code>chart</code> / <code>layout</code> / <code>text</code>。
+      我最初写的 <code>"image" in s or "table" in s</code> 实际只匹配到 <code>table</code>，
+      测的是「gold 里有没有表格」（52.1%），不是「有没有视觉证据」（≈100%）。
+    </p>
+    <p class="verdict">
+      改正后用的是有区分度的版本——<b>gold 是否「纯视觉」</b>（37.9%）。结论不变：只在 2/19 上胜出。
+    </p>
+  </div>
+</div>
+
+<!-- ============================ PHASE 1B ============================ -->
+<h2>Phase 1B · 检索层</h2>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E12</span><span class="status correct">自己推翻自己</span></div>
+  <div class="body">
+    <p class="entry-title">「视觉证据结构上不可达」——这个论据被本项目自己的 OCR 消解了</p>
+    <p class="why">
+      RQ1b 最初的立论是结构性的：有些文档是纯扫描件，文本索引根本看不见。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>指标（2000 题，5,813 条 gold）</th><th class="n">仅文本层</th><th class="n">补 OCR 后</th></tr></thead>
+        <tbody>
+          <tr><td>gold 落在无可用文本的页上</td><td class="n">701（12.1%）</td><td class="n"><b>41（0.7%）</b></td></tr>
+          <tr><td>文本索引够不着 ≥ 一半 gold 的题</td><td class="n">320（16.0%）</td><td class="n"><b>20（1.0%）</b></td></tr>
+          <tr><td>gold 完全够不着的文档</td><td class="n">30</td><td class="n"><b>0</b></td></tr>
+          <tr><td>分布形态</td><td>83.8% / 15.4% 双峰</td><td>98.8% 挤在 0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <strong>该不该跑这个 OCR？该跑。</strong>真实系统一定会 OCR，不跑等于打稻草人。但结论必须随之修正。
+    </p>
+    <p class="verdict">
+      <b>仍然成立：</b>OCR 让页面「在索引里有东西」，不等于「能被检索到」。
+      OCR 页中位数仅 <b>249 字符</b>（正常文本页常在 2,000+），是索引里的瘦文档；
+      图表的 OCR 只给坐标轴标签与数字，给不出语义。
+      <b>立论方式从结构性改为实证性</b>，已写入 proposal RQ1b 的「待验证的前提」。
+    </p>
+    <pre><code>python -m router.retrieval_signal        # 加 --no-ocr 看仅文本层的对照</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E13</span><span class="status neg">负结果</span></div>
+  <div class="body">
+    <p class="entry-title">页粒度：文本检索对视觉证据没有劣势</p>
+    <p>
+      页级语料 14,763 页（文本层 + OCR，均 428 token/页），自实现 BM25（k1=1.5, b=0.75，
+      不引依赖是因为 OCR 文本噪声大、分词必须与建索引时完全一致），文档内检索（约 65 页/篇）。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>gold 类型</th><th class="n">条数</th><th class="n">R@1</th><th class="n">R@10</th><th class="n">R@20</th></tr></thead>
+        <tbody>
+          <tr><td>text</td><td class="n">2,582</td><td class="n">0.324</td><td class="n">0.845</td><td class="n">0.926</td></tr>
+          <tr><td>figure/table</td><td class="n">3,231</td><td class="n">0.363</td><td class="n">0.829</td><td class="n">0.920</td></tr>
+          <tr><td>差距</td><td class="n"></td><td class="n">−0.039</td><td class="n"><b>+0.015</b></td><td class="n">+0.006</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <strong>混淆已排除。</strong>承载视觉 gold 的页中位数 366 token（仅 10.3% 少于 50 token），
+      确实是靠图旁边的文字找到的；但即使只看 <strong>758 道「gold 全是视觉」的题</strong>，
+      recall@10 仍有 <strong>0.780</strong>。
+    </p>
+    <p class="verdict">
+      <b>边界：</b>只证明了文本检索在页粒度上<b>没有劣势</b>。
+      视觉检索在页粒度上能否<b>额外</b>带来收益，尚未测——需要 ColPali/ColQwen。
+      M3DocRAG 正是做页级视觉检索的，不能想当然。
+    </p>
+    <pre><code>python -m retrieval.corpus &amp;&amp; python -m retrieval.eval_page_recall</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E14</span><span class="status pass">机制确认</span></div>
+  <div class="body">
+    <p class="entry-title">模态信号是粒度依赖的</p>
+    <p>
+      同样的 gold，换个检索单元，图景完全不同：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>粒度</th><th>池</th><th class="n">text gold @10</th><th class="n">image gold @10</th></tr></thead>
+        <tbody>
+          <tr><td>页</td><td>~65/篇</td><td class="n">0.845</td><td class="n">0.829</td></tr>
+          <tr><td>quote</td><td>~115/篇</td><td class="n"><b>0.501</b></td><td class="n"><b>0.680</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      论文 Table 6 在 quote 粒度上给出了双向交叉（Recall@20）：
+      E5 文本检索 Txt <b>49.5</b> / Img 73.7；ColQwen 视觉检索 Txt 36.0 / Img <b>84.3</b>。
+      作者原话：<em>visual retrievers outperform text retrievers in image retrieval,
+      while lagging behind text retrievers in text retrieval.</em>
+    </p>
+    <p class="verdict">
+      <b>页粒度上图表与周边文字捆绑在一起，文本检索顺带就找到了；
+      quote 粒度上图被从上下文剥离，交叉才显现。</b>
+      这是 RQ1b × RQ3 的交互效应，本身就是一个发现，也把两个原本分开的 RQ 连了起来。
+    </p>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E15</span><span class="status correct">假设被证伪</span></div>
+  <div class="body">
+    <p class="entry-title">「图片 quote 更好检索」是池组成的产物，不是模态信号</p>
+    <p class="why">
+      我先提出的解释是「VLM 描述与问题词汇对齐」。这个假设站不住。
+    </p>
+    <p><strong>证据一 · 长度混淆是全部原因。</strong>image 描述中位 116 token，文字 quote 62 token：</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>长度分桶</th><th class="n">cov(text)</th><th class="n">cov(image)</th><th class="n">差距</th></tr></thead>
+        <tbody>
+          <tr><td>&lt;40</td><td class="n">0.224</td><td class="n">0.157</td><td class="n">−0.067</td></tr>
+          <tr><td>40–79</td><td class="n">0.282</td><td class="n">0.263</td><td class="n">−0.019</td></tr>
+          <tr><td>120–199</td><td class="n">0.361</td><td class="n">0.426</td><td class="n">+0.065</td></tr>
+          <tr><td><b>未控制</b></td><td class="n">0.288</td><td class="n">0.368</td><td class="n"><b class="bad">+0.080</b></td></tr>
+          <tr><td><b>长度匹配后</b></td><td class="n">0.288</td><td class="n">0.275</td><td class="n"><b class="good">−0.014</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <strong>证据二 · 百分位排名相当。</strong>在各自模态内排名再除以池大小：text 均值 0.147、image 0.153。
+      BM25 的长度归一化（b=0.75）本来就在抵消长度差，所以那 +0.080 没有转化成排名优势。
+    </p>
+    <p>
+      <strong>证据三 · 反事实分解。</strong>把 image 的百分位投影到 text 的池大小上：
+      k≥10 处 <strong>池大小贡献 +0.236</strong>、表示质量贡献 <strong>−0.013</strong>。
+      池里 19,151 条文字 quote vs 6,565 条图片，同模态竞争者少 3 倍。
+      只有 k=1 处有真实表示效应（+0.214，image gold 中位排名 1 vs text 6）。
+    </p>
+    <p class="verdict">
+      <b>这条线索要划掉。</b>真正的 RQ1b 问题——视觉检索器 vs 文本检索器的交叉——仍未测。
+    </p>
+    <pre><code>python -m retrieval.diagnose_modality</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E16</span><span class="status pass">交叉确认</span></div>
+  <div class="body">
+    <p class="entry-title">检索器交叉：符号翻转，四个 k 全部一致</p>
+    <p>BM25 vs BGE-small dense vs RRF 融合，quote 粒度，同池同查询同 gold。</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>差值</th><th class="n">@1</th><th class="n">@5</th><th class="n">@10</th><th class="n">@20</th></tr></thead>
+        <tbody>
+          <tr><td>dense − bm25，<b>text gold</b></td>
+              <td class="n good">+0.036</td><td class="n good">+0.085</td>
+              <td class="n good">+0.091</td><td class="n good">+0.086</td></tr>
+          <tr><td>dense − bm25，<b>image gold</b></td>
+              <td class="n bad">−0.065</td><td class="n bad">−0.093</td>
+              <td class="n bad">−0.082</td><td class="n bad">−0.077</td></tr>
+          <tr><td>rrf − 最优单检索器，text</td>
+              <td class="n">−0.007</td><td class="n">+0.012</td><td class="n">−0.003</td><td class="n">+0.012</td></tr>
+          <tr><td>rrf − 最优单检索器，image</td>
+              <td class="n">−0.005</td><td class="n">−0.008</td><td class="n">−0.007</td><td class="n">−0.009</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <strong>Dense 在文字证据上赢约 +0.09，BM25 在图片证据上赢约 +0.08。谁都不占优</strong>——
+      这正是 RQ2 需要的条件。推测机制（可测）：VLM 描述含有从图上抄下的字面词——数字、轴标签、实体名——
+      BM25 精确匹配，而 BGE-small 384 维语义向量会把它们糊掉；加上描述句式高度模板化，
+      语义空间里彼此靠得太近。
+    </p>
+    <div class="callout">
+      <p class="callout-label">此处我一度得出错误结论，已由 E17 更正</p>
+      <p>
+        上表末两行「rrf − 最优单检索器」是<strong>按模态分别</strong>算的，
+        也就是允许固定检索器在每种模态上各取其最优——那等于给了它 gold 模态的先验，
+        实际不可得。我据此说过「RRF 融合不管用」，<strong>这是错的</strong>。
+        对照诚实的基线（整个查询只用一个检索器），E17 显示
+        <strong>RRF 明显更好</strong>：0.726 vs 0.695。
+      </p>
+    </div>
+    <pre><code>python -m retrieval.dense --image-repr vlm
+python -m retrieval.eval_retrievers</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E17</span><span class="status neg">负结果</span></div>
+  <div class="body">
+    <p class="entry-title">二元检索器路由跑不过融合——原因是结构性的</p>
+    <div class="callout correction">
+      <div class="callout-label">结论已收窄并部分反转 · 见 E28</div>
+      <p>
+        本条目训练的是 <code>mostly_visual</code>（<b>gold 模态</b>标签），
+        再用写死的「视觉→BM25、文字→dense」路由。它否证的是<b>一条人工指定的策略</b>，
+        不是「逐题选择检索器」本身。「61.9% 是 Both」也不足以推出结构上无可选，
+        因为 BM25 与 dense 都同时检索文本与图片描述。
+      </p>
+      <p>
+        <b>已用 <code>retrieval/route_outcome.py</code> 直接以逐题
+        <code>recall(dense) − recall(bm25)</code> 为目标重做</b>：路由此时
+        <b>不再输给最优固定检索器</b>（0.7273 vs 0.7113，+0.0160，但 CI 跨 0），
+        原结论「路由 0.706 输给固定 0.711」<b>在符号上已被推翻</b>。
+        然而路由仍<b>显著输给静态 RRF</b>（0.7551，−0.0279，CI 不跨 0）。
+        正确的结论是：<b>逐题检索器路由达不到融合的质量，它买到的只是把两次检索省成一次。</b>
+      </p>
+    </div>
+
+    <p class="why">把 E8 的纪律搬到检索层：先跑对照，再验可学性，最后端到端。</p>
+
+    <h3>① headroom，带对照</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>组合</th><th class="n">最优固定</th><th class="n">oracle</th><th class="n">增益</th></tr></thead>
+        <tbody>
+          <tr><td>bm25 + dense（真实）</td><td class="n">0.695</td><td class="n">0.772</td><td class="n">+0.077</td></tr>
+          <tr><td>bm25 + bm25(b=0)（对照）</td><td class="n">0.695</td><td class="n">0.728</td><td class="n">+0.033</td></tr>
+          <tr><td><b>超出对照的部分</b></td><td class="n"></td><td class="n"></td><td class="n"><b class="good">+0.044</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <strong>对照抓到了东西</strong>：表面 +0.077 的 headroom 里，有 <strong>+0.033（43%）</strong>
+      是「取两个系统的较大者」这个动作本身产生的——两个几乎相同的 BM25 变体也能拿到。
+      真正属于检索器互补性的只有 <strong>+0.044</strong>。不跑对照就会把 0.077 当成机会报出去。
+    </p>
+
+    <h3>② 标签可学性：机制在查询层被稀释</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>gold 构成</th><th class="n">n</th><th class="n">bm25</th><th class="n">dense</th><th class="n">dense−bm25</th></tr></thead>
+        <tbody>
+          <tr><td>以视觉为主</td><td class="n">1,559</td><td class="n">0.733</td><td class="n">0.709</td><td class="n">−0.024</td></tr>
+          <tr><td>以文字为主</td><td class="n">441</td><td class="n">0.561</td><td class="n">0.586</td><td class="n">+0.025</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      方向与 E16 一致，但<strong>幅度从证据条目层的 ±0.09 缩到查询层的 ±0.025</strong>。
+      从问题预测「gold 以视觉为主」的 document-disjoint test AUC 仅 <strong>0.612</strong>
+      （基率 0.78，分类器大部分时候在报多数类）。
+    </p>
+
+    <h3>③ 端到端</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>策略</th><th class="n">recall@10</th><th>成本</th></tr></thead>
+        <tbody>
+          <tr><td>always bm25</td><td class="n">0.711</td><td>1 个检索器</td></tr>
+          <tr><td>always dense</td><td class="n">0.710</td><td>1 个检索器</td></tr>
+          <tr><td>最优固定（bm25，按 train 选）</td><td class="n">0.711</td><td>1 个检索器</td></tr>
+          <tr><td><b>RRF 融合</b></td><td class="n"><b class="good">0.755</b></td><td>2 个检索器</td></tr>
+          <tr><td>按预测模态路由</td><td class="n"><b class="bad">0.706</b></td><td>1 个检索器</td></tr>
+          <tr><td>ORACLE 选检索器</td><td class="n">0.801</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <p class="callout-label">更正 E16 的一个结论</p>
+      <p>
+        我先前说「RRF 融合不管用」，因为在 E16 里我拿它跟<strong>按模态分别取最优</strong>的固定检索器比——
+        那等于给了固定检索器 gold 模态的先验。对照诚实的基线，<strong>RRF 明显更好</strong>
+        （0.755 vs 0.711 在 test 上；0.726 vs 0.695 在全集上），
+        捕获了约 <strong>70%</strong> 的真实互补性。
+      </p>
+    </div>
+    <p class="verdict">
+      <b>路由失败的原因是结构性的，不是模型不够好：</b>
+      <b class="bad">61.9% 的问题 gold 同时包含文字与视觉证据</b>（1,237/2,000；纯视觉 758，纯文字仅 5）。
+      这样的问题<b>需要两种模态的证据</b>，二选一在结构上就服务不了它——
+      这也解释了为什么查询层效应只有条目层的四分之一，以及为什么融合才是对的答案。
+    </p>
+    <div class="callout lesson">
+      <p class="callout-label">因此 RQ1b / RQ2 应当重新表述</p>
+      <p>
+        问题不是<strong>「选哪个检索器」</strong>，而是<strong>「预算怎么分」</strong>——
+        20 个槽位里给文本检索几个、给视觉检索几个。
+        论文用的是<strong>固定配额</strong>（10→7/3，15→10/5，20→12/8），全程不随问题变化；
+        而一道纯视觉的题和一道文字为主的题显然该拿到不同的配比。
+        这既是 proposal §13 的原题，也是论文没有回答的（全文 <code>budget</code> 出现 0 次），
+        而且用现有数据就能测。
+      </p>
+    </div>
+    <pre><code>python -m retrieval.route_headroom</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E18</span><span class="status pass">机制量化</span></div>
+  <div class="body">
+    <p class="entry-title">「看懂图」比「读出图上的字」值 +0.42 recall</p>
+    <div class="callout correction">
+      <div class="callout-label">推断已收窄 · 见 E28</div>
+      <p>
+        可以成立的表述是：<b>在当前问题条件化池、BM25 与 RapidOCR 表示下，
+        VLM 描述显著优于裁剪 OCR</b>。<b>不能</b>据此推出差距源于「视觉理解而非提取失败」——
+        6,565 条裁剪 OCR 中 <b>1,270 条（19.3%）为空</b>，非空也不代表提取完整准确。
+      </p>
+      <p>
+        另，本条目把 recall 差值（+0.42）与 router 的 <b>F1</b> 差值相除得出的
+        <span class="superseded">「大 60 倍」</span>是<b>跨指标比较，无效</b>，已作废。
+      </p>
+    </div>
+
+    <p class="why">
+      发布数据只有 VLM 描述，没有 OCR-text（那一臂只存在于作者的 response 文件里）。
+      自己生成，就能在同池、同检索器、同 gold 下只换 image quote 的文本代理。
+    </p>
+    <p>
+      6,565 张图/表裁剪，RapidOCR，<b>235.6 分钟（2.15s/张）</b>。
+      <b class="bad">1,269 张（19.3%）OCR 出来完全没有文字</b>，中位 203 字符。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>image quote 的文本代理</th><th class="n">image gold @10</th><th class="n">@20</th><th class="n">中位排名</th><th class="n">池中不可检索项</th></tr></thead>
+        <tbody>
+          <tr><td><b>VLM 描述</b></td><td class="n good">0.680</td><td class="n good">0.791</td><td class="n">3</td><td class="n">0</td></tr>
+          <tr><td>自建 crop OCR</td><td class="n bad">0.264</td><td class="n bad">0.369</td><td class="n">34</td><td class="n">1,279</td></tr>
+          <tr><td>两者拼接</td><td class="n">0.674</td><td class="n">0.779</td><td class="n">3</td><td class="n">0</td></tr>
+          <tr><td>空表示（下界）</td><td class="n">0.002</td><td class="n">0.019</td><td class="n">85</td><td class="n">6,565</td></tr>
+          <tr><td><b>VLM − OCR</b></td><td class="n good">+0.416</td><td class="n good">+0.422</td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>混淆排除：差距不是「OCR 提取失败」造成的</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>子集</th><th class="n">gold 条数</th><th class="n">VLM@20</th><th class="n">OCR@20</th><th class="n">差距</th></tr></thead>
+        <tbody>
+          <tr><td><b>OCR 确实提取到文字</b></td><td class="n">3,031</td><td class="n">0.809</td><td class="n">0.392</td><td class="n good">+0.416</td></tr>
+          <tr><td>OCR 为空</td><td class="n">200</td><td class="n">0.530</td><td class="n">0.015</td><td class="n">+0.515</td></tr>
+          <tr><td>全部</td><td class="n">3,231</td><td class="n">0.791</td><td class="n">0.369</td><td class="n">+0.422</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      在 OCR <b>成功提取到文字</b>的 3,031 条上，差距仍是 <b>+0.416</b>——与全体一致。
+      空 OCR 那批只贡献 200 条 gold。<b>差距来自「理解」而非「提取失败」。</b>
+      拼接两者也不帮忙（0.779 vs 0.791），加进去的 OCR 碎片只是稀释。
+    </p>
+
+    <h3>附带发现：池内竞争是真实的</h3>
+    <p>
+      image quote 表示得越差，<b>text gold 的召回反而越高</b>：
+      VLM 0.501 → OCR 0.581 → 空 0.606（recall@10）。
+      描述丰富的图片 quote 会和文字 quote 抢 top-k 名额。
+      这解释了 E19 里为什么最优配额是 10/10 而非论文的 12/8，
+      也说明<b>预算分配的收益部分来自减少这种互相挤占</b>。
+    </p>
+    <p class="verdict">
+      <b>这是本项目对「视觉信息在检索侧值多少」的第一个直接量化。</b>
+      纯文本管线要拿到图表证据，代价是先用 VLM 给每张图写描述；
+      不写描述、只做 OCR，image gold 的 recall@20 从 0.791 掉到 0.369。
+      <b>ColQwen 这类视觉检索器的价值主张正是绕过描述生成步骤直接获得这份理解</b>——
+      E24 检验它能否兑现。
+    </p>
+    <pre><code>python -m retrieval.ocr_quotes
+python -m retrieval.eval_quote_recall --compare</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E19</span><span class="status neg">负结果</span></div>
+  <div class="body">
+    <p class="entry-title">自适应预算分配：结构真实存在，但观测不到</p>
+    <div class="callout correction">
+      <div class="callout-label">数字已修正 · 见 E28</div>
+      <p>
+        <code>C.argmax(axis=1)</code> 在并列时返回<b>最小</b>索引。实测 <b>97%</b> 的题有多个
+        并列最优配额（中位 16 个，共 21 个），argmax 把其中一半以上判为 a=0（全图片），
+        排列对照因此被推向极端，<b>「查询特异成分」被系统性高估</b>。
+      </p>
+      <p>
+        <b>原报数字（保留备查）：</b><span class="superseded">查询特异 +0.173 / +0.179</span>。
+        <b>应改用真实 regret：oracle − 最优固定 = +0.0694（自建池）/ +0.0744（canonical）</b>，
+        这才是自适应分配的上界。同时必须一并报告：<b>固定配额本身对 79.5% / 78.2% 的题已经是最优的</b>。
+      </p>
+    </div>
+
+    <p class="why">
+      E17 证伪了二元路由，剩下的是预算分配——k 个槽位在文字与图片 quote 之间怎么分。
+      论文用固定配额（20→12/8），不随问题变化。
+    </p>
+
+    <h3>① 分配曲线与排列对照</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>文本槽位 a</th><th class="n">0</th><th class="n">4</th><th class="n">8</th><th class="n">10</th><th class="n">12</th><th class="n">16</th><th class="n">20</th></tr></thead>
+        <tbody><tr><td>mean recall</td><td class="n">0.636</td><td class="n">0.771</td><td class="n">0.806</td>
+          <td class="n"><b>0.811</b></td><td class="n">0.804</td><td class="n">0.757</td><td class="n">0.274</td></tr></tbody>
+      </table>
+    </div>
+    <p>最优固定切分 <b>10/10 → 0.811</b>；MMDocRAG 的 12/8 → 0.804。</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>策略</th><th class="n">recall</th></tr></thead>
+        <tbody>
+          <tr><td>最优固定切分（a=10）</td><td class="n">0.811</td></tr>
+          <tr><td><b>排列 oracle（对照）</b></td><td class="n"><b class="bad">0.706</b></td></tr>
+          <tr><td>ORACLE 逐题切分</td><td class="n">0.885</td></tr>
+          <tr><td>表面 headroom</td><td class="n">+0.074</td></tr>
+          <tr><td>一般性成分（排列 − 固定）</td><td class="n">−0.104</td></tr>
+          <tr><td><b>查询特异性成分</b></td><td class="n"><b class="good">+0.179</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <strong>与 E8 完全相反</strong>：把别的问题的最优切分套过来，比固定切分还差 0.104。
+      最优切分<strong>强烈依赖具体问题</strong>，不是「取最大值」的一般效应。<b>结构是真的。</b>
+    </p>
+
+    <h3>② 但三种策略都抓不住</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>策略</th><th>目标 / 特征</th><th class="n">AUC</th><th class="n">vs 最优固定</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3">两阶段<br>（预测模态→分桶查表）</td><td>多数视觉 / 句向量 384d</td><td class="n">0.612</td><td class="n">−0.002</td></tr>
+          <tr><td>多数视觉 / <b>检索分数 11d</b></td><td class="n">0.616</td><td class="n"><b>+0.003</b></td></tr>
+          <tr><td>纯视觉 / <b>检索分数</b></td><td class="n"><b>0.699</b></td><td class="n">−0.008</td></tr>
+          <tr><td>直接回归 recall 曲线 → argmax</td><td>ridge, α=100</td><td class="n">—</td><td class="n">−0.011</td></tr>
+          <tr><td>收缩（λ 在 val 上选 = 0.5）</td><td>同上</td><td class="n">—</td><td class="n"><b>+0.003</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <strong>AUC 与分配收益反相关</strong>——AUC 最高的配置（0.699）分配最差。
+      这诊断出两阶段管道有损：中间目标优化得更好，不转化成更好的分配。
+      改成直接回归 recall 曲线绕开中间目标，仍是 −0.011。
+    </p>
+    <p>
+      收缩实验定位了原因：目标函数在最优点附近很平（a=8→0.806、a=10→0.811、a=12→0.804），
+      <strong>对含噪预测取 argmax 的方差损失大于它的收益</strong>。
+      λ 从 0 到 1 的曲线呈倒 U（+0.003/+0.006/+0.003/+0.001/−0.011），是典型的偏差-方差特征。
+    </p>
+
+    <h3>③ 信号有多少是查询特异的</h3>
+    <p>
+      预测曲线与真实曲线的原始相关是 <b>+0.538</b>，但每条曲线都是先升后降——
+      预测平均形状就能拿高分。<strong>减掉训练集平均曲线后只剩 +0.187</strong>，那才是路由器能用的部分。
+    </p>
+    <p class="verdict">
+      <b>诚实结论：λ 在 val 上选定后，test 增益 +0.003 = oracle headroom（+0.071）的 4%。</b>
+      而且 val 在 λ=0 / 0.25 / 0.5 之间根本分辨不出来（0.829 / 0.828 / 0.829）。
+      <b>这是与 E9 不同类型的负结果：E9 是结构不存在（kappa 0.038、对照复现全部增益）；
+      这里结构存在（+0.179）但从路由器能看到的东西里观测不到。</b>
+    </p>
+    <div class="callout">
+      <p class="callout-label">这条实验对池偏差最敏感</p>
+      <p>
+        最优切分直接取决于池的文字:图片比例。本项目的池是 <b>115:36 ≈ 3.2:1</b>，
+        而论文的真实池是 <b>536:63 ≈ 8.5:1</b>——图片被高估了 2.6 倍。
+        这解释了为什么本实验的最优切分是 10/10 而论文用 12/8。
+        <strong>「结构存在但不可观测」这个定性结论比 a=10 这个数值稳健得多</strong>，
+        换成真实池必须重测。
+      </p>
+    </div>
+    <pre><code>python -m retrieval.budget_alloc --features both --target pure</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E20</span><span class="status pass">稳健性确认</span></div>
+  <div class="body">
+    <p class="entry-title">真实规模自建语料：E19 的结论原样复现</p>
+    <p class="why">
+      E19 最大的软肋是池偏差——本项目的池只有论文的 16% 文字覆盖，且文字:图片比 3.2:1 对 8.5:1。
+      最优切分直接取决于这个比例，所以必须换池重测。
+    </p>
+
+    <h3>自建 quote 语料</h3>
+    <p>
+      PyMuPDF 的原始版面块过度切分（16 块/页、中位 66 字符），按阅读顺序贪心合并到目标长度，
+      遇到大于 1.8 倍中位行距的垂直间隔提前断开——那是真实的版面边界。无文本层的页用缓存 OCR 文本切分。
+      <code>--target-chars</code> 刻意做成参数而非常数：<b>扫这个参数就是 RQ3 的粒度轴</b>，同一个构建器直接服务 Phase 4。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>指标</th><th class="n">自建池</th><th class="n">旧 canonical 池</th><th class="n">论文真实池</th></tr></thead>
+        <tbody>
+          <tr><td>文字单元 / 篇</td><td class="n"><b>422</b></td><td class="n">86</td><td class="n">536</td></tr>
+          <tr><td>文字覆盖率</td><td class="n"><b class="good">79%</b></td><td class="n bad">16%</td><td class="n">100%</td></tr>
+          <tr><td>图片单元 / 篇</td><td class="n">29</td><td class="n">29</td><td class="n">63</td></tr>
+          <tr><td>文字:图片</td><td class="n">14.3:1</td><td class="n">3.2:1</td><td class="n"><b>8.5:1</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      共 <b>92,752 chunk / 220 篇</b>（89,752 来自文本层均 444 字符，3,000 来自 OCR 均 245 字符）。
+      两个池<strong>从两侧夹住</strong>真实比例，因此在两者上都成立的结论就不是池组成的产物。
+      只重建文字侧：自建图片区域没有任何文本表示，会以另一种方式扭曲池——这个不对称已在代码中声明。
+    </p>
+    <p>
+      <b>gold 迁移</b>用 Gate 2 验证过的 8-gram 匹配：<b>3,052/3,151 = 96.86%</b>，
+      其中 2,524 条（80%）完整覆盖，仅 5.1% 的 gold 跨越多个 chunk。
+    </p>
+
+    <h3>结论复现</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>指标</th><th class="n">canonical (3.2:1)</th><th class="n">自建 (14.3:1)</th></tr></thead>
+        <tbody>
+          <tr><td>最优固定切分</td><td class="n">a=10 → 0.811</td><td class="n">a=10 → 0.798</td></tr>
+          <tr><td>MMDocRAG 配额 12/8</td><td class="n">0.804</td><td class="n">0.791</td></tr>
+          <tr><td>排列 oracle（对照）</td><td class="n">0.706</td><td class="n">0.694</td></tr>
+          <tr><td>ORACLE 逐题</td><td class="n">0.885</td><td class="n">0.867</td></tr>
+          <tr><td><b>查询特异性成分</b></td><td class="n"><b>+0.179</b></td><td class="n"><b>+0.173</b></td></tr>
+          <tr><td>减掉平均曲线后的相关</td><td class="n">+0.187</td><td class="n">+0.182</td></tr>
+          <tr><td><b>λ 在 val 上选 → test 增益</b></td><td class="n"><b>+0.003（4%）</b></td><td class="n"><b>+0.003（4%）</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>池比例改变 4.5 倍，每一个关键数字都在噪声内复现。</b>
+      「结构真实存在但从可观测特征中读不出来」不是池组成的产物，是这个问题本身的性质。
+      顺带两点：论文的 12/8 配额在两个池上都比最优固定切分低约 0.008；
+      自建池上 <b>51% 的问题（1,013/1,999）</b>最优是把全部 20 个槽位给图片。
+    </p>
+    <pre><code>python -m retrieval.quote_corpus
+python -m retrieval.budget_alloc --pool selfbuilt --features both --target pure</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E21</span><span class="status pass">瓶颈定位</span></div>
+  <div class="body">
+    <p class="entry-title">比例分配规则：规则是对的，输入拿不到</p>
+    <p class="why">
+      一份外部生成的调研报告把「按预测的模态构成比例分配配额」
+      <code>k_vis = round(K × p̂_vis(q))</code> 作为核心建议。它比 E19 试过的策略更受限
+      （E19 学的是分桶最优切分与直接回归曲线），所以本不预期更好——但它是那份报告的头条主张，值得直接测。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>策略</th><th class="n">canonical 池</th><th class="n">自建池</th></tr></thead>
+        <tbody>
+          <tr><td>最优固定切分</td><td class="n">0.820</td><td class="n">0.807</td></tr>
+          <tr><td>MMDocRAG 固定配额 12/8</td><td class="n">−0.011</td><td class="n">−0.009</td></tr>
+          <tr><td>比例分配，预测 share（<b>含 384d 句向量</b>）</td><td class="n bad">−0.029</td><td class="n bad">−0.022</td></tr>
+          <tr><td><b>比例分配，预测 share（仅 11d 检索分数）</b><br><span style="font-size:12.5px;color:var(--ink-3)">E23 更正：句向量在拖后腿</span></td><td class="n">−0.004</td><td class="n">+0.002</td></tr>
+          <tr><td><b>比例分配，用<u>真实</u> share</b></td><td class="n good">+0.029</td><td class="n good">+0.035</td></tr>
+          <tr><td>ORACLE 逐题切分</td><td class="n">+0.071</td><td class="n">+0.072</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      用预测值时它是测过的所有策略里<strong>最差的一个</strong>，比论文的固定配额还低。
+      但喂给它真实的模态构成，它拿到 <b>+0.029 / +0.035 = oracle headroom 的 41% / 49%</b>。
+    </p>
+    <p class="verdict">
+      <b>瓶颈精确定位：规则本身是有效的，问题在输入。</b>
+      <code>visual_share</code> 的回归 test R² = <b class="bad">−0.070 / −0.059</b>——
+      <b>比直接猜训练集均值还差</b>。预测值的配额均值（13.7 图片槽位）与真值（13.6）几乎相同，
+      即模型学到了总体分布却没有任何逐题分辨力。
+    </p>
+    <div class="callout lesson">
+      <p class="callout-label">这给出了一个量化的目标</p>
+      <p>
+        后续任何新特征源（模型内部隐状态、测试期反思、迭代检索反馈）都不必再猜值不值得：
+        <strong>只要能把 <code>visual_share</code> 预测到有意义的 R²，回报上限就是 oracle headroom 的约 45%。</strong>
+        当前 R² 是负的，所以任何正的 R² 都是进展。
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E22</span><span class="status correct">论文核实</span></div>
+  <div class="body">
+    <p class="entry-title">外部报告引用的四篇论文：三篇真实，但用途都不是我们的问题</p>
+    <p class="why">
+      那份报告的表格里已发现确凿的数字捏造与张冠李戴（见对账），所以它引用的论文必须逐一核实后才能进 related work。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>论文</th><th>arXiv</th><th>真实性</th><th>它实际路由的是什么</th></tr></thead>
+        <tbody>
+          <tr><td><b>BaRP</b></td><td>2510.07429</td><td class="n good">真</td>
+              <td>在<b>多个 LLM 之间</b>按 bandit 反馈选模型，可调性能-成本偏好。纯文本，与模态无关</td></tr>
+          <tr><td><b>ParetoBandit</b></td><td>2604.00136</td><td class="n good">真</td>
+              <td>生产环境 LLM serving 的<b>模型选择</b>，美元预算约束 + 在线适应价格漂移。与检索、模态均无关</td></tr>
+          <tr><td><b>MMA-RAG</b></td><td>2603.00511</td><td class="n good">真</td>
+              <td>用内部表示判断<b>要不要触发反向图像检索</b>。数据集是 OK-VQA / Encyclopedic-VQA / InfoSeek（自然图像知识 VQA），不是长文档 RAG</td></tr>
+          <tr><td><b>MARA</b></td><td>—</td><td class="n bad">未提供</td><td>无法核实</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>关键的目标错配：MMA-RAG 的输入是「问题 + 图像」的联合表示——模型已经看到图了。</b>
+      本项目的路由决策发生在<b>检索之前</b>，那时没有任何图像可喂。
+      而它的决策是「要不要检索」，我们的决策是「文本/视觉配额怎么分」。
+      三篇都是真论文，但报告把它们当作我们这个问题的解法，跨度被高估了。
+      唯一可迁移的成分是「用更强的编码器表示问题」——这在 E23 里被验证为<b>反方向</b>有效。
+    </p>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E23</span><span class="status neg">负结果 + 方法学更正</span></div>
+  <div class="body">
+    <p class="entry-title">测试期反思：预测变好了，分配没变好；而句向量一直在拖后腿</p>
+    <p class="why">
+      检索层相对生成层的结构性优势本该是「可以先看一眼再决定」。
+      这一步真的去用它：先花 6 个槽位做均衡首轮检索，读返回内容，再分配剩下 14 个。
+      观测量只用词法统计（返回项对问题 idf 质量的覆盖率、模态间覆盖差、分数衰减），不调用 LLM。
+    </p>
+
+    <h3>① 意外发现：384 维句向量一直在毁掉预测</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>特征</th><th class="n">维度</th><th class="n">canonical R²</th><th class="n">自建 R²</th></tr></thead>
+        <tbody>
+          <tr><td>问题句向量</td><td class="n">384</td><td class="n bad">−0.155</td><td class="n bad">−0.106</td></tr>
+          <tr><td><b>首轮检索分数</b></td><td class="n">11</td><td class="n good">+0.110</td><td class="n good">+0.093</td></tr>
+          <tr><td>句向量 + 分数（<b>E19/E21 一直用的</b>）</td><td class="n">395</td><td class="n bad">−0.070</td><td class="n bad">−0.059</td></tr>
+          <tr><td>首轮观测</td><td class="n">11</td><td class="n">+0.102</td><td class="n">+0.044</td></tr>
+          <tr><td><b>分数 + 首轮观测</b></td><td class="n">22</td><td class="n good">+0.136</td><td class="n">+0.081</td></tr>
+          <tr><td>全部</td><td class="n">406</td><td class="n bad">−0.053</td><td class="n bad">−0.065</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      1,211 个训练样本撑不住 384 维。<b>E19 与 E21 始终把句向量拼在特征里，
+      所以从未见过正的 R²——信号一直在，被句向量埋掉了。</b>
+      去掉之后 <code>visual_share</code> 的 R² 首次转正，E21 的比例分配也从 −0.029 修正到 −0.004 / +0.002。
+    </p>
+
+    <h3>② 但分配收益仍然是零</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>策略（首轮 6 槽 + 剩余 14 槽）</th><th class="n">canonical</th><th class="n">自建</th><th class="n">占 headroom</th></tr></thead>
+        <tbody>
+          <tr><td>固定切分</td><td class="n">0.820</td><td class="n">0.807</td><td class="n">0%</td></tr>
+          <tr><td>比例分配，句向量+分数</td><td class="n">+0.000</td><td class="n">−0.002</td><td class="n">1% / −3%</td></tr>
+          <tr><td><b>比例分配，首轮观测</b></td><td class="n">+0.001</td><td class="n">+0.001</td><td class="n">2% / 1%</td></tr>
+          <tr><td>收缩（λ 在 val 上选）</td><td class="n">+0.000</td><td class="n">+0.001</td><td class="n">0% / 1%</td></tr>
+          <tr><td><b>比例分配，<u>真值</u> mix（oracle 观测）</b></td><td class="n good">+0.023</td><td class="n good">+0.028</td><td class="n good">37% / 45%</td></tr>
+          <tr><td>ORACLE 剩余切分</td><td class="n">+0.062</td><td class="n">+0.062</td><td class="n">100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>反思改善了预测（R² 从负到 +0.14），但没有改善分配（0~2%）。</b>
+      两阶段的 oracle 观测上界（37% / 45%）还略低于一阶段（41% / 49%），
+      因为强制的均衡首轮限制了可达的切分范围——反思的代价没有换来对应的信息增益。
+      廉价词法观测不足以填上这个缺口；要么需要真正读懂返回内容的观测（LLM 判定），要么这条路到此为止。
+    </p>
+    <div class="callout lesson">
+      <p class="callout-label">L10 · 高维特征会埋掉低维真信号</p>
+      <p>
+        1,211 个训练样本 + 384 维句向量，把一个 R²=+0.11 的真实信号压成 −0.07。
+        <strong>报告负结果之前，必须单独测一遍最小特征集</strong>——否则「学不出来」可能只是「维度太高」。
+        本项目连续三个实验（E19/E21/E23 前半）都受此影响。
+      </p>
+    </div>
+    <pre><code>python -m retrieval.reflect_alloc --pool canonical
+python -m retrieval.reflect_alloc --pool selfbuilt</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E24</span><span class="status neg">负结果</span></div>
+  <div class="body">
+    <p class="entry-title">ColQwen2 视觉检索：在这个设定下不值它的 GPU 成本</p>
+    <div class="callout correction">
+      <div class="callout-label">原结论维持；池口径已更正 · 见 E28 / E31</div>
+      <p>
+        <b>池口径更正（2026-08-28，E31）。</b>本条目此前写的
+        <s>「图片候选每篇文档中位 29」</s>是 <b>superseded</b>：那是
+        <b>按问题加权</b>的中位数，一篇 169 题的文档会把它的池大小贡献 169 次。
+        <b>按文档计，正确值是中位 20、均值 29.76</b>（最小 1、最大 262）；
+        按问题加权才是中位 29、均值 34.92。两者是同一个池的两个不同统计量。
+        同批更正的还有覆盖率：<s>46.8%</s> 是拿 6,548 条 evidence row 除以
+        13,999 张唯一图片，单位不一致；正确值是 <b>6,487 / 13,999 = 46.34%</b>。
+        两项均由 <code>python experiments.py verify E24</code> 断言，共 22 项全过。
+      </p>
+      <p>
+        <b>更正的更正。</b>本横幅初版曾称本条目结论「方向是错的」，
+        依据是 ColQwen 在 k=15/20 上显著优于图片描述检索（+0.0269 / +0.0220）。
+        <b>那只在 396 题的探索性半区成立。</b>在全部 2,000 题上重算，同一比较为
+        <b>+0.0075 / +0.0089 / +0.0039（k=10/15/20），置信区间全部跨 0</b>；
+        且放开配额做配置搜索时，最好的 ColQwen 配置（0.8114）被 RRF-打描述（0.8197）压住，
+        排不进前七。<b>本条目的原结论成立，撤回「方向错误」的说法。</b>
+      </p>
+      <p>
+        仍需更正的部分：图片候选按<b>文档</b>计中位数只有 <b>20</b> 个（本条目原写 29，那是按题计的），
+        @20 对一半文档等于取走整个池，饱和是结构性的，应当写得更强。
+        模型为 ColQwen2-<b>v1.0</b>、文本侧 bge-<b>small</b>；<s>与论文 v0.1 / bge-large 不同</s>——论文并未给出版本，故无法判定是否一致。结论范围仍限于「本项目可获得的池规模与裁剪粒度下」。<br><small><b>2026-08-30 更正</b>：论文<b>未给出任何检索器的版本或 HF id</b>，Table 6 只列族名（DPR / ColBERT / BGE / E5 / ColPali / ColQwen）。「论文用 v0.1 / bge-large」是本项目的推断冒充论文原文，见 <code>docs/paper-baseline-audit.md</code>。</small>
+      </p>
+    </div>
+
+    <p class="why">
+      论文 Table 6 的交叉是<b>视觉检索器 vs 文本检索器</b>（ColQwen 84.3 vs BGE 74.2，image gold @20），
+      而本项目此前所有检索数字都来自文本检索器。这一步用那一行的原模型补齐另一半。
+    </p>
+
+    <h3>① 三个检索器在同一图片池上打平</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>检索器（池：每篇约 29 个 image quote）</th><th class="n">@1</th><th class="n">@5</th><th class="n">@10</th><th class="n">@20</th></tr></thead>
+        <tbody>
+          <tr><td>BGE dense 打在 VLM 描述上</td><td class="n">0.359</td><td class="n">0.683</td><td class="n">0.827</td><td class="n">0.935</td></tr>
+          <tr><td>BM25 打在 VLM 描述上</td><td class="n">0.370</td><td class="n"><b>0.713</b></td><td class="n"><b>0.834</b></td><td class="n">0.929</td></tr>
+          <tr><td><b>ColQwen2（视觉）</b></td><td class="n">0.370</td><td class="n">0.688</td><td class="n">0.820</td><td class="n">0.929</td></tr>
+          <tr><td>RRF（BM25 + ColQwen）</td><td class="n">0.375</td><td class="n">0.728</td><td class="n">0.845</td><td class="n">0.944</td></tr>
+          <tr><td><b>ColQwen − BM25</b></td><td class="n">+0.001</td><td class="n bad">−0.025</td><td class="n bad">−0.015</td><td class="n">+0.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>一个被证伪的假设：</b>我先猜论文的「视觉优势」来自文本基线选错了检索器
+      （E16 测得 BM25 在图片证据上比 dense 高 +0.076）。但在<b>纯图片池</b>里 dense 与 BM25 打平
+      （@20 甚至 0.935 vs 0.929）。E16 那个 +0.076 来自<b>混合池</b>——BM25 的优势在于
+      把图片 quote 与文字 quote <b>区分开</b>，而非在图片内部排得更好。假设不成立。
+    </p>
+
+    <h3>② 互补性存在，但不是视觉特有的</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>配对（A 基线 + B 补充，top-5）</th><th class="n">A@5</th><th class="n">并集</th><th class="n">增益</th><th class="n">B 独占</th></tr></thead>
+        <tbody>
+          <tr><td><b>BM25 + ColQwen2（跨模态）</b></td><td class="n">0.713</td><td class="n">0.808</td><td class="n">+0.095</td><td class="n">9.5%</td></tr>
+          <tr><td>BM25 + BGE dense（对照：两个文本检索器）</td><td class="n">0.713</td><td class="n">0.794</td><td class="n">+0.081</td><td class="n">8.1%</td></tr>
+          <tr><td>BM25 + BM25(b=0)（对照：同族）</td><td class="n">0.713</td><td class="n">0.728</td><td class="n">+0.015</td><td class="n">1.5%</td></tr>
+          <tr><td colspan="3"><b>跨模态超出「两个文本检索器」对照</b></td><td class="n bad">+0.014</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>ColQwen 与 BM25 的互补性是 +0.095，但换一个文本检索器就已经拿到 +0.081。
+      视觉检索器独有的贡献只有 +0.014。</b>
+      没有 L1 对照，这里会得出「视觉检索带来 +0.095 互补性」的误导性结论——
+      这已是本项目第三次靠对照拦下这类结论。
+    </p>
+
+    <h3>③ 必须声明的三个限制</h3>
+    <ul>
+      <li><b>裁剪 vs 整页</b>：ColPali 系模型在<b>整页图像</b>上训练，这里喂的是裁剪出的图表区域
+          （为对齐论文的 quote 粒度）。这对 ColQwen 是分布外，可能低估它。</li>
+      <li><b>池太小、任务饱和</b>：先说清单位——同一个池有两个不同的统计量。
+          <b>按文档</b>：中位 <b>20</b>、均值 <b>29.76</b>（最小 1、最大 262）；
+          <b>按问题加权</b>：中位 <b>29</b>、均值 <b>34.92</b>。两者差在
+          169 题的 <code>news_combined</code> 会把自己的池大小贡献 169 次，
+          所以加权口径被大文档拉高。
+          <br>
+          <s>「每篇文档中位 29 个图片候选，@20 等于取走 69% 的池」</s>
+          <b>superseded（2026-08-29，E33）</b>：29 是<b>按问题加权</b>的中位数，
+          20/29 ≈ 69% 也只在这个口径下成立，<b>不能写成「每篇文档」</b>。
+          按文档口径的正确说法是：<b>对候选池处于文档中位水平的文档，
+          k=20 已经取走整个图片池</b>——220 篇里 <b>111 篇（50.5%）</b>池 ≤ 20。
+          <s>「只有 38.4% 的文档候选数 ≥ 40」</s>同样是加权口径：
+          按问题 <b>38.3%</b>，<b>按文档只有 29.1%</b>。
+          <br>
+          两个口径下饱和的结论方向一致：三个检索器在 @20 全部收敛到 0.93。
+          论文的池是 63 个/篇。全部由
+          <code>python experiments.py verify E24</code> 断言。</li>
+      <li><b>问题条件化的池</b>：绝对值偏乐观，可比的是同池内的相对关系。</li>
+    </ul>
+    <p>
+      因此结论应表述为：<b>在本项目可获得的池规模与裁剪粒度下，ColQwen2 不值它的 GPU 成本</b>；
+      而非「视觉检索无用」。要严格复现论文那一行，需要文档全量图片池（63/篇）与整页索引。
+    </p>
+
+    <h3>环境踩坑（Windows + 8GB 卡，可复用）</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>症状</th><th>原因</th><th>解法</th></tr></thead>
+        <tbody>
+          <tr><td>colpali-engine 要把 transformers 4.57.3 升到 5.15.1</td>
+              <td>会弄坏 sentence-transformers 5.4.1，前面每个实验都依赖它</td>
+              <td><code>venv --system-site-packages</code>：继承系统 torch（省 2.5 GB），只影子化 transformers。已验证主环境未变</td></tr>
+          <tr><td>基座 4.9 GB 下完，74 MB 的 adapter 卡死，GPU 0%</td>
+              <td>huggingface_hub 1.28 默认的 <b>xet</b> 传输后端挂起且不超时</td>
+              <td><code>HF_HUB_DISABLE_XET=1</code>，同一文件 31 秒下完</td></tr>
+          <tr><td><code>WinError 1314 客户端没有所需的特权</code></td>
+              <td><code>snapshots/</code>→<code>blobs/</code> 需符号链接，Windows 非开发者模式失败；blob 在、snapshot 空，transformers 判定「缓存没有」转而联网</td>
+              <td>平铺文件复制到普通目录 <code>models/</code>，并把 <code>adapter_config.base_model_name_or_path</code> 改为本地绝对路径</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>资源实测：</b>ColQwen2-v1.0（Qwen2-VL-2B）bf16 <b>VRAM 4.49 GB</b>，前向峰值 <b>4.64 GB</b>，
+      8.6 GB 卡余量充足且全程无增长（逐文档 <code>empty_cache()</code>）。
+      <b>0.56 s/图，6,565 张约 62 分钟</b>，无 OOM。
+    </p>
+    <pre><code>.venv-colpali/Scripts/python.exe -m retrieval.colqwen_index
+python -m retrieval.eval_colqwen</code></pre>
+  </div>
+</div>
+
+<!-- ============================ 横切 ============================ -->
+<div class="entry">
+  <div class="gutter"><span class="eid">E25</span><span class="status correct">机制确认</span></div>
+  <div class="body">
+    <p class="entry-title">粒度 × 预算：固定 top-k 与固定 token 预算给出<b>完全相反</b>的粒度排序</p>
+    <div class="callout correction">
+      <div class="callout-label">单位与覆盖范围已修正 · 见 E28</div>
+      <p>
+        本条目所称「固定 token 预算」中的 <code>n_tok</code> 来自正则词元
+        <code>[a-z0-9]+(?:[.\-][a-z0-9]+)*</code>，<b>不是生成模型的 BPE token</b>。
+        全部相关表述应改为 <b>word-like retrieval budget</b>，或用最终生成模型的
+        tokenizer 重算——后者更可取，因为 proposal §13 的成本论证依赖真实计费 token。
+      </p>
+      <p>
+        本实验只覆盖 <b>text gold + BM25 + 字符切分</b>，未覆盖视觉 region/page、
+        parent section、稠密检索与下游生成。<b>因此不能宣称「RQ3 已完成」</b>，
+        应表述为「RQ3 的文本-BM25 切片已完成」。趋势结论（两个轴给出相反排序）不受影响。
+      </p>
+    </div>
+
+    <p class="why">
+      RQ3 是唯一没被负结果碰过的维度，且 E14（页粒度模态差距消失、quote 粒度才出现）与
+      E18（证据表示 +0.42）都指向粒度是效应所在。用 <code>quote_corpus.py --target-chars</code>
+      扫五档语料，同一套 PDF、同一个 BM25、同一批 gold。
+    </p>
+
+    <h3>① 两个必须先拆掉的陷阱</h3>
+    <p>
+      直觉设计是「各粒度各自映射 gold，比 recall@k」。这个设计被<b>双重做局</b>，两处都得先拆：
+    </p>
+    <ul>
+      <li><b>gold 的定义会随粒度移动。</b><code>quote_corpus.map_gold</code> 把每条 gold 指派给
+          覆盖它最多、且覆盖率 ≥50% 的<b>单个</b> chunk。2,400 字符的 chunk 能整口吞下 334 字符的
+          gold（覆盖率 1.0），100 字符的 chunk 最多覆盖三分之一，直接记为<b>未映射</b>。
+          实测映射率：<b>t100 94.13% / t300 96.86% / t600 97.84%</b>——粗粒度在开跑前就赢了。
+          <b>所以本实验完全不用 gold_map</b>，改测「检索集合的 8-gram 并集对<b>官方原始 gold</b> 的覆盖率」，
+          目标在各臂之间完全相同；粗粒度只是更容易一口吃下，细粒度则要多花几个槽位去拼——那正是它该付的成本。</li>
+      <li><b>recall@k 不是公平的轴。</b>10 个 2,400 字符 chunk 是 24,000 字符上下文，
+          10 个 100 字符 chunk 只有 1,000。粗粒度的 recall 是拿细粒度没拿到的上下文买来的。</li>
+    </ul>
+
+    <h3>② 语料（220 篇 PDF，同一构建器）</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>target-chars</th><th class="n">chunk 数</th><th class="n">每篇</th><th class="n">均值字符</th><th class="n">中位</th><th class="n">均值 token</th></tr></thead>
+        <tbody>
+          <tr><td>100</td><td class="n">144,634</td><td class="n">657</td><td class="n">280</td><td class="n">163</td><td class="n">43</td></tr>
+          <tr><td>300（≈官方 quote 粒度）</td><td class="n">92,752</td><td class="n">422</td><td class="n">437</td><td class="n">349</td><td class="n">68</td></tr>
+          <tr><td>600</td><td class="n">68,307</td><td class="n">310</td><td class="n">595</td><td class="n">604</td><td class="n">92</td></tr>
+          <tr><td>1200</td><td class="n">51,405</td><td class="n">234</td><td class="n">791</td><td class="n">672</td><td class="n">122</td></tr>
+          <tr><td>2400</td><td class="n">41,732</td><td class="n">190</td><td class="n">975</td><td class="n">563</td><td class="n">151</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">
+      官方 text quote 中位 334 字符、均值 431，所以 t300 是官方粒度的对照臂。
+      构建器只<b>合并</b> PyMuPDF 区块、不切分，故 t100 的实际中位（163）高于 target。
+    </p>
+
+    <h3>③ 反转：同一批数据，两个轴，两个相反的冠军</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>粒度</th><th class="n">top-20 覆盖≥0.5</th><th class="n">top-20 花掉 token</th><th class="n">1000 token 预算</th><th class="n">2000 token 预算</th></tr></thead>
+        <tbody>
+          <tr><td>100</td><td class="n bad">0.697</td><td class="n">1,236</td><td class="n"><b>0.653</b></td><td class="n">0.808</td></tr>
+          <tr><td>300</td><td class="n">0.766</td><td class="n">1,608</td><td class="n">0.645</td><td class="n"><b>0.814</b></td></tr>
+          <tr><td>600</td><td class="n">0.818</td><td class="n">2,171</td><td class="n">0.631</td><td class="n">0.793</td></tr>
+          <tr><td>1200</td><td class="n">0.865</td><td class="n">3,097</td><td class="n">0.600</td><td class="n">0.781</td></tr>
+          <tr><td>2400</td><td class="n"><b>0.903</b></td><td class="n">4,273</td><td class="n bad">0.581</td><td class="n bad">0.758</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>固定 top-k：越粗越好，单调，全部显著。</b>t2400 比 t300 高 <b>+0.137</b>（@20，CI [+0.121,+0.153]）。<br>
+      <b>固定 token 预算：排序完全倒转，同样全部显著。</b>t2400 在 500 token 上比 t300 低 <b>−0.097</b>
+      （CI [−0.116,−0.078]），1000 token 上 −0.064，2000 token 上 −0.056。
+    </p>
+    <p class="verdict">
+      <b>粗粒度在 recall@k 上的全部优势，都是用多出来的上下文买的。</b>
+      把预算换成 token，冠军从最粗变成最细。这不是量级微调——@20 差 +0.137，500 token 差 −0.097，
+      两个方向都远超噪声。
+    </p>
+
+    <h3>④ 只有预算紧时粒度才重要</h3>
+    <p>
+      4,000 与 8,000 token 处，五档语料<b>全部收敛</b>（除 t2400 略差，多数 CI 跨 0）。
+      粒度只在预算紧张时才是一个变量。而 MMDocRAG 的预算恰恰是紧的：
+      20 档配额给 12 条 text quote，均值 431 字符 ÷ 3.88 字符/token ≈ <b>1,332 token</b>；
+      10/10 配额则约 <b>1,110 token</b>——正落在粒度效应最强的区间。
+    </p>
+    <p class="note">
+      <b>对本项目的意义：</b>没有任何粒度在论文自己的预算点上<b>显著优于</b>官方粒度
+      （t100 比 t300 高 +0.007/+0.008，CI 跨 0）。所以 RQ3 同样没有给出正向提升，
+      但给出了一个干净且量级很大的<b>方法学结论</b>：<b>用 recall@k 比较不同 chunk 粒度的检索实验，
+      系统性地偏袒粗粒度</b>，因为它没有控制上下文成本。
+    </p>
+    <h3>⑤ 补充：往更细扫，确认存在一个下限</h3>
+    <p>
+      E25 的表里最细档（t100）在紧预算上最好，所以补扫了 <b>t1（不合并，直接用 PyMuPDF 原始区块，
+      中位 66 字符）、t50、t200</b>，全部在 greedy 取用规则下与官方粒度 t300 对比：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>vs t300（覆盖≥0.5）</th><th class="n">t1</th><th class="n">t50</th><th class="n">t100</th><th class="n">t200</th></tr></thead>
+        <tbody>
+          <tr><td>500 token</td><td class="n bad">−0.037 *</td><td class="n">−0.004</td><td class="n">+0.000</td><td class="n">−0.002</td></tr>
+          <tr><td>1000 token</td><td class="n bad">−0.036 *</td><td class="n">+0.005</td><td class="n">+0.005</td><td class="n">−0.005</td></tr>
+          <tr><td>2000 token</td><td class="n bad">−0.070 *</td><td class="n bad">−0.019 *</td><td class="n">−0.008</td><td class="n">−0.005</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>粒度的最优区是一个宽平台（约 50~300 字符 target），平台内没有显著赢家；
+      但存在明确下限——不做合并、直接用原始版面区块会显著变差（−0.036 ~ −0.070，全部显著）。</b>
+      七档语料合起来给出同一个结论：<b>RQ3 的正面形式在这个基准上不成立</b>，
+      官方选的 quote 粒度已经落在最优平台内，没有可捡的收益。
+    </p>
+    <pre><code>python -m retrieval.quote_corpus --target-chars 600 --out retrieval/quotes_t600.sqlite --no-gold-map
+python -m retrieval.eval_granularity
+python -m retrieval.eval_granularity --pack greedy</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E26</span><span class="status neg">负结果 + 对照拦截</span></div>
+  <div class="body">
+    <p class="entry-title">small-to-big 被证伪；细粒度优势的一半是「预算量化损失」而非排序能力</p>
+    <p class="why">
+      E25 的粒度旋钮是<b>重载</b>的：chunk 大小同时决定「检索器能多精确地打分」和
+      「一旦选中能带回多少 gold」。二者方向相反，单旋钮扫描会互相抵消。
+      拆开它们的标准做法是 small-to-big：<b>用细 chunk 排序，返回它的粗 parent</b>——
+      检索单元与消费单元解耦，这正是 proposal 意义上的路由。
+    </p>
+
+    <h3>① 假设被证伪</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>token 预算</th><th class="n">coarse-direct(600)</th><th class="n">fine-direct(100)</th><th class="n">small-to-big</th><th class="n">s2b − coarse</th></tr></thead>
+        <tbody>
+          <tr><td>500</td><td class="n">0.457</td><td class="n"><b>0.486</b></td><td class="n">0.440</td><td class="n bad">−0.017 *</td></tr>
+          <tr><td>1000</td><td class="n">0.631</td><td class="n"><b>0.653</b></td><td class="n">0.615</td><td class="n bad">−0.016 *</td></tr>
+          <tr><td>2000</td><td class="n">0.793</td><td class="n"><b>0.808</b></td><td class="n">0.784</td><td class="n">−0.009</td></tr>
+          <tr><td>4000</td><td class="n"><b>0.908</b></td><td class="n">0.903</td><td class="n">0.900</td><td class="n bad">−0.009 *</td></tr>
+          <tr><td>8000</td><td class="n"><b>0.961</b></td><td class="n">0.958</td><td class="n">0.955</td><td class="n bad">−0.006 *</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      parent 映射率 <b>99.94%</b>（按同页 8-gram 重叠反推，不靠构建时的父子关系），
+      所以这不是映射失败。<b>细排序 + 粗单元在每个预算上都比两个纯臂差</b>：
+      粗 chunk 的 BM25 分数本身就聚合了整块区域的证据，细排序挑出的那一条的 parent
+      并不比粗排序直接选中的更好，而细排序在短文本上更不稳。
+    </p>
+
+    <h3>② 对照拦下了一个本来会被写成正面结果的数字</h3>
+    <p>
+      细粒度在紧预算上的优势看起来显著（+0.028 / +0.022 / +0.015，CI 全部不跨 0）。
+      但取用规则是「走到第一个塞不下的 chunk 就停」，而粗 chunk 更容易塞不下——
+      500 预算下 t600 实际只花了 438 token，t100 花了 495。
+      <b>粗粒度可能只是输在「装不满预算」，而不是输在排序。</b>
+      改成 greedy（跳过塞不下的，继续装）后：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>token 预算</th><th class="n">prefix 规则（fine − coarse）</th><th class="n">greedy 规则（fine − coarse）</th></tr></thead>
+        <tbody>
+          <tr><td>500</td><td class="n">+0.028 [+0.011,+0.046] *</td><td class="n">+0.015 [−0.001,+0.032]</td></tr>
+          <tr><td>1000</td><td class="n">+0.022 [+0.006,+0.038] *</td><td class="n">+0.015 [−0.000,+0.031]</td></tr>
+          <tr><td>2000</td><td class="n">+0.015 [+0.003,+0.028] *</td><td class="n">+0.011 [−0.001,+0.024]</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>细粒度优势约一半来自预算量化损失，剩下的排序部分单独达不到显著。</b>
+      greedy 是更贴近真实系统的规则（真实系统会跳过超长块继续装，不会就此停手），
+      因此<b>不把 prefix 规则下的 +0.028 当作结论</b>。
+      这是本项目第四次靠对照拦下一个会被写成正面结果的数字（前三次：E8 参照水平、E15 长度匹配、E24 同族互补性）。
+    </p>
+    <pre><code>python -m retrieval.eval_small2big --fine retrieval/quotes_t100.sqlite --coarse retrieval/quotes_t600.sqlite
+python -m retrieval.eval_small2big --fine retrieval/quotes_t100.sqlite --coarse retrieval/quotes_t600.sqlite --pack greedy</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E27</span><span class="status pass">正向结果</span></div>
+  <div class="body">
+    <p class="entry-title">比论文发布的检索配置高 <b>+0.023 ~ +0.049</b> recall：两个池 × 三个预算，六格全显著</p>
+    <div class="callout correction">
+      <div class="callout-label">已修正 · 见 E28</div>
+      <p>
+        本条目原标题与数字建立在两个错误之上：<b>(a)</b> 基线被称作「论文发布配置」，
+        但它其实是本地 BGE-small 同时跑文本与<b>图片文字描述</b>的替代基线，
+        <s>既非论文的 bge-large，也不含论文的 ColQwen 视觉检索器</s>——准确的说法是：它<b>不含视觉检索器</b>，两个模态跑的是同一个文本检索器；至于文本检索器的规模是否与论文一致，<b>不可判定</b>（论文未给版本）；
+        <b>(b)</b> bootstrap 按题重采样，而 396 道题只来自 55 篇文档。
+        另外未映射的 62 条 gold 被静默剔除，使绝对值偏高约 0.017。
+      </p>
+      <p>
+        <b>原报数字（口径已作废，保留备查）：</b>
+        <span class="superseded">+0.023 ~ +0.049，两个池 × 三个预算六格全显著</span>。
+        修正后的结论见下方「② 修正后的结果」，完整核查见
+        <a href="https://claude.ai/code/artifact/29d4751e-010a-48a5-a3f8-782c29a61842">E27 结论边界审计</a>。
+      </p>
+    </div>
+
+    <p class="why">
+      E9/E17/E19/E23/E25 把所有<b>自适应</b>路线都判了负。剩下的问题变成：
+      <b>在这个基准上，静态配置本身还有没有没被拿走的收益？</b>
+      论文 20 档的发布配置是<b>单检索器（BGE dense）+ 固定配额 12 文 / 8 图</b>。
+      本实验把两个各自独立验证过的改动叠上去，其他一切保持不变。
+    </p>
+
+    <h3>① 结果：六格全部显著</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>预算 k</th><th>池</th><th class="n">论文配置</th><th class="n">本项目配置</th><th class="n">Δ（95% CI）</th></tr></thead>
+        <tbody>
+          <tr><td>10</td><td>自建</td><td class="n">0.6866</td><td class="n"><b>0.7348</b></td><td class="n"><b>+0.0482</b> [+0.0222, +0.0756] *</td></tr>
+          <tr><td>10</td><td>canonical</td><td class="n">0.7006</td><td class="n"><b>0.7458</b></td><td class="n"><b>+0.0452</b> [+0.0198, +0.0719] *</td></tr>
+          <tr><td>15</td><td>自建</td><td class="n">0.7614</td><td class="n"><b>0.8098</b></td><td class="n"><b>+0.0485</b> [+0.0236, +0.0732] *</td></tr>
+          <tr><td>15</td><td>canonical</td><td class="n">0.7804</td><td class="n"><b>0.8160</b></td><td class="n"><b>+0.0357</b> [+0.0128, +0.0601] *</td></tr>
+          <tr><td>20</td><td>自建</td><td class="n">0.8212</td><td class="n"><b>0.8486</b></td><td class="n"><b>+0.0274</b> [+0.0087, +0.0471] *</td></tr>
+          <tr><td>20</td><td>canonical</td><td class="n">0.8417</td><td class="n"><b>0.8646</b></td><td class="n"><b>+0.0229</b> [+0.0053, +0.0415] *</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">
+      本项目配置 = <b>RRF(BM25, BGE dense) 在每个模态内融合 + 固定配额 k/2 : k/2</b>。
+      全部数字报在<b>冻结的 document-disjoint 测试半区</b>（n=396），配额只在训练半区（n≈1,210）上选。
+      配对 bootstrap B=4000，按题重采样。两个池的文字:图片比分别是 3.2:1 与 14.3:1，
+      夹住真实的 8.5:1（E20 的做法）——两边都成立才算数。
+    </p>
+
+    <h3>② 分解：融合是主力，配额是次要且与融合重叠</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>单独贡献（自建池，held-out）</th><th class="n">k=10</th><th class="n">k=15</th><th class="n">k=20</th></tr></thead>
+        <tbody>
+          <tr><td>只改配额（论文 → k/2:k/2）</td><td class="n">+0.0220 *</td><td class="n">+0.0297 *</td><td class="n">+0.0092</td></tr>
+          <tr><td>只改融合（dense → RRF）</td><td class="n">+0.0264 *</td><td class="n">+0.0217 *</td><td class="n">+0.0231 *</td></tr>
+          <tr><td><b>两个一起</b></td><td class="n"><b>+0.0482 *</b></td><td class="n"><b>+0.0485 *</b></td><td class="n"><b>+0.0274 *</b></td></tr>
+          <tr><td>融合在配额之上再加</td><td class="n">+0.0262 *</td><td class="n">+0.0188</td><td class="n">+0.0182 *</td></tr>
+          <tr><td>配额在融合之上再加</td><td class="n">+0.0218 *</td><td class="n">+0.0267 *</td><td class="n">+0.0043</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>预算越紧收益越大</b>（k=10/15 约 +0.048，k=20 降到 +0.027）——20 个槽位已经接近饱和。
+      k=20 处配额的边际贡献掉到 +0.0043 且不显著：RRF 已经把图片证据排上来了，
+      再动配额就没什么可捡的。<b>两个改动不是可加的，它们抢同一份收益。</b>
+    </p>
+
+    <h3>③ 成本：这个提升几乎是免费的</h3>
+    <p>
+      基线本来就要跑 dense 检索，融合只是<b>额外加一遍文档内 BM25</b>——
+      每篇约 422 个 chunk，纯 CPU、无 GPU、无 API、无训练。配额改动是零成本。
+      这与 proposal §13 的预算控制口径一致：<b>不是用更多预算换质量，是同预算下换更好的配置。</b>
+    </p>
+
+    <h3>④ 一个被砍掉的组件：PRF</h3>
+    <p>
+      同时试了 RM3 伪相关反馈（top-10 反馈集、20 个扩展词、原查询权重 2），
+      这是本项目唯一还没试过的零成本召回手段。<b>它是负的</b>：
+      单独用在 BM25 上 k=10 处 <b>−0.0389</b>（CI 不跨 0），
+      叠在完整配置之上 k=20 处 −0.0124。
+      文档内检索池只有几百个单元、且问题词汇与财报/技术文本差距大，
+      反馈集里混进错误文档的代价远大于扩展词的收益。<b>已从推荐配置中移除，不做粉饰。</b>
+    </p>
+
+    <p class="verdict">
+      <b>这是本项目第一个、也是唯一一个「比已发表配置更好」的正向结果，并且是端到端可复现的：
+      两个池、三个预算、held-out 选参、配对 bootstrap，六格全部显著。</b>
+      它同时说明了本项目全部负结果的意义所在——<b>收益不在自适应路由里，在静态配置里，
+      而且早就摆在那儿没人拿</b>。
+    </p>
+    <pre><code>python -m retrieval.dense_chunks
+python -m retrieval.eval_stack --k 10
+python -m retrieval.eval_stack --k 15
+python -m retrieval.eval_stack --k 20
+python -m retrieval.eval_stack --pool canonical --k 20</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E28</span><span class="status correct">审计与修正</span></div>
+  <div class="body">
+    <p class="entry-title">复现性与结论边界审计：三处系统性错误，四条结论被改写</p>
+    <p class="why">
+      对 E27 及相关记录做的一次逐项复核，起因是外部审计指出基线身份、统计单位与 recall 分母都可能有问题。
+      全部十组问题用代码、逐题原始结果与统计检验独立验证，<b>结论是问题基本全部成立</b>。
+      完整报告见 <a href="https://claude.ai/code/artifact/29d4751e-010a-48a5-a3f8-782c29a61842">E27 结论边界审计</a>。
+      旧数字一律保留，相关条目已就地加注修正横幅。
+    </p>
+
+    <h3>① 三处系统性错误</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>错误</th><th>实际情况</th><th>后果</th></tr></thead>
+        <tbody>
+          <tr><td><b>基线身份</b></td>
+              <td><code>eval_stack.py</code> 把基线标为「paper: BGE dense」，
+                  但它是 <b>bge-small</b> 同时跑文本与<b>图片文字描述</b>，
+                  而论文把文本检索器与<b>真视觉检索器</b>配对使用（<s>bge-large 加 ColQwen</s>：论文只写族名，未给版本）</td>
+              <td class="bad">「优于论文配置」不成立；补上视觉检索器后，
+                  提升只在 k=10 稳健</td></tr>
+          <tr><td><b>统计单位</b></td>
+              <td>396 道测试题只来自 <b>55 篇文档</b>，同文档题目不独立，
+                  但 bootstrap 按题重采样</td>
+              <td class="bad">区间过窄；「融合单独贡献」在 k=10/15 上失去显著性</td></tr>
+          <tr><td><b>recall 分母</b></td>
+              <td>未映射的 62 条 gold 在 <code>gset</code> 形成<b>之前</b>被
+                  <code>continue</code> 掉，从不计为 miss；零 gold 的题整题丢弃</td>
+              <td>实为 conditional-on-mapped recall，绝对值偏高约 <b>0.017</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      三者叠加把一个「六格全显著、+0.023~+0.049、优于论文配置」的结论，
+      变成「相对本地替代基线 +0.023~+0.046，相对论文式对照只在 k=10 稳健、约 +0.036~+0.037」。
+      修正后的完整数字见 E27 条目内的「② 修正后的结果」。
+    </p>
+
+    <h3>② 一次被我自己的功效不足骗到的「反转」（已撤回）</h3>
+    <p>
+      本条目初版声称 E24 的结论方向是错的：在视觉槽位上单独替换后，
+      ColQwen 相对图片描述检索在 k=15（+0.0269）与 k=20（+0.0220）上显著更好。
+      <b>那个结果只在 396 题的探索性半区成立。</b>随后用 nested CV 把评测扩到全部 2,000 题时，
+      同一比较变成 <b>+0.0075 / +0.0089 / +0.0039</b>，三个预算的置信区间<b>全部跨 0</b>。
+    </p>
+    <p>
+      进一步地，在放开配额的配置搜索里（5 种检索器配置 × 全部配额），
+      最好的 <code>RRF/ColQwen</code> 组合为 0.8114，被 <code>RRF/RRF</code> 的 0.8197 压住，
+      <b>排不进前七</b>；nested CV 的内层五折也从未选中任何 ColQwen 配置。
+    </p>
+    <p class="verdict">
+      <b>E24 的原结论成立，「方向反转」由本人撤回。</b>
+      讽刺之处在于：这正是本次审计要防的那类错误——在一个低功效切分上把噪声读成效应——
+      而我在审计报告里犯了一次。如实记录。
+      E24 唯一需要加强的是饱和描述：图片候选按文档计中位只有 20 个（原记录的 29 是按题计的）。
+    </p>
+
+    <h3>③ E17 重做：路由不再输给固定检索器，但仍输给融合</h3>
+    <p>
+      原 E17 训练的是 <code>mostly_visual</code>（gold 模态标签），再用写死的
+      「视觉→BM25、文字→dense」路由——它测的是一条人工策略，不是「逐题选检索器」本身。
+      <code>retrieval/route_outcome.py</code> 改为直接以逐题
+      <code>recall@10(dense) − recall@10(bm25)</code> 为目标，
+      按 |regret| 加权（打平的题不携带路由决策，不应牵动拟合），特征分组报告：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>策略 / 特征组</th><th class="n">recall@10</th><th class="n">检索器数</th><th class="n">占 oracle 空间</th></tr></thead>
+        <tbody>
+          <tr><td>always bm25</td><td class="n">0.7113</td><td class="n">1</td><td class="n">—</td></tr>
+          <tr><td>always dense</td><td class="n">0.7103</td><td class="n">1</td><td class="n">—</td></tr>
+          <tr><td>最优固定（bm25，训练集上选）</td><td class="n">0.7113</td><td class="n">1</td><td class="n">—</td></tr>
+          <tr><td><b>路由（首轮检索分数特征）</b></td><td class="n"><b>0.7273</b></td><td class="n">1</td><td class="n">18%</td></tr>
+          <tr><td>路由（分数 + 句向量）</td><td class="n">0.7168</td><td class="n">1</td><td class="n">6%</td></tr>
+          <tr><td>路由（仅句向量）</td><td class="n">0.7162</td><td class="n">1</td><td class="n">5%</td></tr>
+          <tr><td><b>静态 RRF</b></td><td class="n"><b>0.7551</b></td><td class="n">2</td><td class="n">49%</td></tr>
+          <tr><td>ORACLE 检索器选择</td><td class="n">0.8011</td><td class="n">—</td><td class="n">100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>原 E17 的具体说法「路由 0.706 输给最优固定 0.711」在符号上已被推翻</b>：
+      用正确标签训练后路由是 <b>+0.0160</b>（CI [−0.0052,+0.0371]，跨 0）。
+      但路由<b>显著输给静态 RRF</b>（−0.0279，CI [−0.0503,−0.0050]）。
+      regret 加权 AUC 仅 0.574，且<b>加入 384 维句向量会把它压到 0.517</b>——
+      与 L10 完全一致，这已是第四次观察到同一现象。
+    </p>
+    <p class="verdict">
+      <b>正确的 E17 结论是：逐题检索器路由达不到融合的质量，它买到的只是把两次检索省成一次，
+      代价是 0.028 的 recall。</b>而不是原来那句「路由连固定检索器都不如」。
+    </p>
+
+    <h3>④ E19 的 oracle 空间被并列最优高估</h3>
+    <p>
+      <code>C.argmax(axis=1)</code> 并列时取最小索引。实测 <b>97%</b> 的题有多个并列最优配额
+      （中位 16 个 / 共 21 个），argmax 把 1,013/1,999 题判为 a=0（全图片），
+      排列对照因此被推向极端。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>口径（k=20）</th><th class="n">自建池</th><th class="n">canonical</th></tr></thead>
+        <tbody>
+          <tr><td><span class="superseded">E19 原报「查询特异」</span></td>
+              <td class="n bad">+0.1728</td><td class="n bad">+0.1787</td></tr>
+          <tr><td>并列感知排列对照</td><td class="n">+0.1166</td><td class="n">+0.1219</td></tr>
+          <tr><td><b>真实 regret（oracle − 最优固定）</b></td>
+              <td class="n good"><b>+0.0694</b></td><td class="n good"><b>+0.0744</b></td></tr>
+          <tr><td><b>固定配额本身已是最优的题</b></td>
+              <td class="n">79.5%</td><td class="n">78.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>今后一律用 regret 作为自适应分配的上界</b>，并同时报告「近八成的题固定策略已经最优」。
+      后者比任何 oracle 数字都更说明问题：自适应分配能动的只有两成题。
+    </p>
+
+    <h3>⑤ 两个池不是两次独立复现</h3>
+    <p>
+      数据集共 <b>14,826</b> 张图片，属于这 220 篇评测文档的有 <b>13,999</b> 张，
+      而两个池在 evaluation 范围内只含 <b>6,487</b> 张不同图片——<b>7,512 张（53.66%）从未进入任何池</b>（6,504 是全库 223 篇文档的口径，不可与 13,999 相除），
+      且两个池<b>共用同一个不完整的图片侧</b>，差异只在文本侧。
+      因此应称为<b>两种池构造的敏感性分析</b>。
+    </p>
+    <p class="note">
+      能否补全：<b>对 ColQwen（读像素）可以</b>，需为 13,999 张图片建索引；
+      <b>对 BM25/BGE（读描述）不行</b>——缺失的 7,512 张没有任何 VLM 描述，
+      补齐需要 API 支出，且换一个描述模型会引入新的混淆。
+      <b>完整图片池上的比较只能在视觉检索器之间做</b>，这个限制必须写进报告。
+    </p>
+
+    <h3>⑥ 本次审计自身的一个失误</h3>
+    <p>
+      <code>audit_e19_ties.py</code> 里我构造的「closest-to-fixed oracle」是<b>退化指标</b>：
+      它在每题的并列最优集合内取最靠近固定策略者，而该集合内任一元素都达到最大值，
+      故它恒等于 oracle、差值恒为 0，不携带任何信息。已从结论中剔除，
+      改用「固定策略本身已是最优的题目占比」。如实记录，以免它被当成一个真实发现。
+    </p>
+
+    <h3>⑦ 全部结果标记为 exploratory</h3>
+    <p>
+      该 document-disjoint 切分自 E9 起被反复观察，并用于挑选配额、检索器、融合方式与粒度，
+      <b>已不是干净的确认集</b>。在完成 document-grouped nested CV
+      或在冻结流水线后于外部测试集确认之前，本项目所有检索结论一律标注 exploratory，
+      不得写成 confirmed generalisation。
+    </p>
+<h3>⑧ document-grouped nested CV：去掉选择泄漏后主结果反而更强</h3>
+    <p>
+      审计第七项要求的确认协议已实现。外层按<b>文档</b>分 5 折，内层只看其余文档、
+      在 <b>5 种检索器配置 × 全部 k+1 种配额</b>上选配置，held-out 折用一个它从未影响过的配置评分。
+      每题最终都被 out-of-fold 评分，因此可用<b>全部 2,000 题</b>而非 396 题。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>out-of-fold 比较（2,000 题 / 220 篇文档）</th><th class="n">k=10</th><th class="n">k=20</th></tr></thead>
+        <tbody>
+          <tr><td>nested-CV 流水线 − 论文式对照 E（自建池）</td>
+              <td class="n good">+0.0608 *</td><td class="n good">+0.0304 *</td></tr>
+          <tr><td>同上（canonical 池）</td>
+              <td class="n good">+0.0541 *</td><td class="n good">+0.0269 *</td></tr>
+          <tr><td>论文式对照 E − 本地替代基线 A</td>
+              <td class="n">+0.0075</td><td class="n">+0.0039</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>在无选择泄漏的协议下，相对论文式对照的提升在 k=10 与 k=20 上都显著。</b>
+      单切分分析中「只有 k=10 稳健」的限制主要来自 396 题的功效不足，而非效应本身消失。
+      内层在 k=10 上五折一致选出 <code>RRF/RRF, 4/6</code>；
+      在 k=20 上配额在 8/12~11/9 间摆动——<b>配额落在平台上，具体取值不重要</b>，
+      与 E19 的并列最优发现互相印证。
+    </p>
+        <pre><code>python -m retrieval.eval_stack_v2 --k 10 --pool selfbuilt --dump
+python -m retrieval.eval_stack_v2 --k 20 --pool canonical --dump
+python -m retrieval.audit_e19_ties --pool selfbuilt --k 20
+python -m retrieval.route_outcome --features scores --k 10
+python -m retrieval.nested_cv --pool selfbuilt --k 20</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E30</span><span class="status pass">归因</span></div>
+  <div class="body">
+    <p class="entry-title">归因消融：+0.054 里，RRF 融合是三者中最小的一项</p>
+    <p class="why">
+      E28 自己写下了一条要求——主结果同时更换了文本检索器、图片证据的检索方式和模态配额，
+      因此总 Δ 是「流水线改进」，<b>必须用消融才能分别归因</b>。这条要求一直没有兑现，
+      主结果至今是一个未拆解的三合一效应。本条目补上它，
+      而结果<b>改变了项目的叙事顺序</b>。
+    </p>
+
+    <h3>① 设计</h3>
+    <p>
+      2×2×2 因子设计，8 格，全部 2,000 题，按文档 cluster bootstrap（B=4000）求主效应：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>因子</th><th>低水平（论文式）</th><th>高水平（本项目）</th></tr></thead>
+        <tbody>
+          <tr><td>文本检索器</td><td>dense（BGE-small）</td><td>RRF(BM25, BGE-small)</td></tr>
+          <tr><td>图片检索</td><td>ColQwen2 像素</td><td>RRF 跑 VLM 图片描述</td></tr>
+          <tr><td>模态配额</td><td>官方 7/3、12/8</td><td>均衡 5/5、10/10</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      配额一维<b>刻意使用事先命名的 <code>BALANCED_QUOTA</code></b>，而不是 nested CV 各折选出的配额。
+      后者是看着这批数据选出来的，用作因子水平会把选择偷渡进分解。
+    </p>
+
+    <h3>② 结果：三个都有效，但排序随预算翻转</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>主效应</th><th>canonical k=10</th><th>selfbuilt k=10</th><th>canonical k=20</th><th>selfbuilt k=20</th></tr></thead>
+        <tbody>
+          <tr><td><b>配额</b> 官方→均衡</td>
+              <td class="good">+0.0263</td><td class="good">+0.0283</td>
+              <td>+0.0050</td><td>+0.0062</td></tr>
+          <tr><td><b>图片描述检索</b> ColQwen→RRF 描述</td>
+              <td>+0.0160</td><td>+0.0160</td>
+              <td class="good">+0.0141</td><td class="good">+0.0141</td></tr>
+          <tr><td><b>RRF 文本融合</b> dense→RRF</td>
+              <td>+0.0100</td><td>+0.0121</td>
+              <td>+0.0095</td><td>+0.0128</td></tr>
+          <tr><td>合计（E→三者全改）</td>
+              <td>+0.0523</td><td>+0.0564</td><td>+0.0286</td><td>+0.0331</td></tr>
+          <tr><td>交互残差</td>
+              <td>+0.0000</td><td>+0.0000</td><td>−0.0000</td><td>+0.0000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>12 个主效应全部显著</b>（doc-cluster 95% CI 不跨 0），且四格<b>近乎完美可加</b>，
+      交互残差 |r|&lt;0.00005。三个组件互不重叠，各自独立起作用。
+    </p>
+    <p class="verdict">
+      <b>但项目一直把 BM25–BGE RRF 融合当作主要贡献来叙述，实测它在任何一格都是三者中最小的一项。</b>
+      紧预算 k=10 下真正的主力是配额：把官方 7/3 改成 5/5，仅此一项就买到总提升的约一半
+      （+0.026 / +0.052），而 RRF 只占约 19%。k=20 时配额贡献塌到 +0.005~+0.006，
+      排序翻转为 图片描述检索 &gt; RRF 文本融合 &gt; 配额。
+      <b>组件排序是预算依赖的，报告时不指明 k 就没有意义。</b>
+    </p>
+
+    <h3>③ 与 E24 的表面矛盾（不是矛盾）</h3>
+    <p>
+      E24 与 nested CV 都报告「ColQwen 替换图片描述检索，CI 跨 0」，本条却测出
+      ColQwen→RRF 描述 <b>+0.0141~+0.0160，四格全显著</b>。两者比较的对象不同：
+    </p>
+    <ul>
+      <li>ColQwen 对 <b>dense-only</b> 描述检索 = +0.0075，[−0.0048,+0.0202]，<b>跨 0</b>（即 nested CV 的 E−A）</li>
+      <li>ColQwen 对 <b>RRF</b> 描述检索 = −0.0141~−0.0160，<b>显著</b></li>
+    </ul>
+    <p>正确的排序是 <b>dense 描述 ≈ ColQwen &lt; RRF 描述</b>。E24 的原结论成立，只是缺了这个限定词。</p>
+
+    <h3>④ ColQwen 臂的公平性核查（此前缺失）</h3>
+    <p>
+      「你是不是把 ColQwen 跑残了」是任何审稿人的第一个问题，而此前没有测过。现在测了：
+      ColQwen 索引<b>排完了每篇文档图片池的 100%</b>（2,000 题的 coverage 全为 1.000，长度不一致 0 处），<b>没有任何视觉 gold 缺席于完整 ranking</b>。所以「无优势」不是索引不全造成的假象。<br><b>但要说准确：「在完整 ranking 中」不等于「进入 top-k」。</b>E24 测的是后者，ColQwen Recall@10 = 0.820、Recall@20 = 0.929。
+      <code>eval_stack_v2.py</code> 里那句「only for the question-conditioned candidate set」
+      的注释是错的，已订正。
+    </p>
+    <p class="verdict">
+      <b>剩下的限制只有两条，且对所有臂一视同仁：</b>池本身只覆盖 13,999 张可抽取图片中的
+      6,487 张唯一图片（<b>46.34%</b>，非此前写的 46.8%——那是拿 6,548 条 evidence row 除以唯一图片数，单位不一致），按文档中位仅 <b>20</b> 个候选（此前写的「中位 29」是按题加权的数字，是另一个量），k=20 时已接近饱和。因此这是
+      <b>image-description retrieval 在当前不完整池上</b>的结果，
+      不能写成视觉检索器的能力结论。
+    </p>
+
+    <h3>⑤ 顺带发现：k=20 的配置选择并不稳定</h3>
+    <p>
+      重跑 nested CV 时注意到，五折选出的配置只在 <b>k=10 完全一致</b>（全部 RRF/RRF 4/6）；
+      k=20 各折分别选了 11/9、10/10、8/12、9/11。这与本条测得的
+      「k=20 配额贡献仅 +0.005~+0.006」互相印证——该预算下配额目标面本就平坦，
+      所以选择不稳定是预期之中，而不是 bug。原记录未提这一点。
+    </p>
+
+    <h3>⑥ 边界</h3>
+    <p>
+      <b>这是归因，不是确认。</b>每格用固定配置在全部 2,000 题上评价，
+      区间描述的是效应在本 benchmark 上的稳定性；
+      泛化性仍然只由 <code>nested_cv.py</code> 的 document-grouped OOF 协议支持，
+      而那个协议本身也只是 internal OOF，不是外部确认。
+    </p>
+        <pre><code>python -m retrieval.ablation --pool canonical --k 10
+python -m retrieval.ablation --pool canonical --k 20
+python -m retrieval.ablation --pool selfbuilt --k 10
+python -m retrieval.ablation --pool selfbuilt --k 20</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E31</span><span class="status correct">基础设施</span></div>
+  <div class="body">
+    <p class="entry-title">可复现运行系统：把「终端里见过的数字」变成落盘产物</p>
+    <p class="why">
+      到 E30 为止，这个项目的绝大多数数字只存在于终端回滚缓冲里。一张打印给人看的表格
+      不是结果——它不能被重新读取，不能和下一次运行做 diff，终端一滚就没了。
+      本条目建立 <code>expkit/</code> 与四个套件，使
+      <b>一条命令可以重新评价全部当前有效实验，并把每个数字连同它的产生方式一起落盘</b>。
+    </p>
+
+    <h3>① 落盘结构</h3>
+    <p>每次运行获得独立目录，旧目录永不覆盖（<code>latest.json</code> 指向最新，
+       不用 Windows symlink）：</p>
+    <pre><code>artifacts/runs/&lt;run_id&gt;/
+  run.json  summary.{json,csv,md,html}  metrics.jsonl
+  experiments/E30/cmd0/
+    command.json  stdout.log  stderr.log
+    metrics.json  per_question.csv  manifest.json</code></pre>
+    <p class="verdict">
+      <b>summary 里的每个数字都从本次的 metrics.json 聚合，绝不复制 experiments.py
+      里的历史文字。</b>否则报告会长得像结果、其实是记忆，而且在代码停止复现之后
+      仍然看起来正确。尚未接入结构化输出的实验（E1/E2/E3）如实标为
+      「已运行（仅日志）」并给出日志路径，而不是借历史数字把空位填上。
+    </p>
+
+    <h3>② 套件与闸门</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>套件</th><th>作用</th><th>闸门</th></tr></thead>
+        <tbody>
+          <tr><td><code>replay</code></td><td>只重算指标，复用现有 DB／向量／排名／response</td>
+              <td>推荐的一键复现；不联网、不调 API</td></tr>
+          <tr><td><code>retrieval</code></td><td>当前有效的检索实验与审计</td>
+              <td>superseded 口径不会作为当前结果重新发布</td></tr>
+          <tr><td><code>full-local</code></td><td>可重建 OCR／chunk／向量／ColQwen 索引</td>
+              <td>需 <code>--include-expensive</code>；运行前打印复用/重建决策</td></tr>
+          <tr><td><code>api</code></td><td>真正花钱的实验（E29）</td>
+              <td>需 <code>--allow-api</code>；其他套件<b>无法</b>触达</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      跳过是一等状态：<code>skipped</code> / <code>manual</code> / <code>blocked</code>
+      都带原因写进 <code>status.json</code>，<b>绝不会被汇总成「执行成功」</b>。
+    </p>
+
+    <h3>③ 顺带修掉的三个静默失败</h3>
+    <p>
+      <b>分母静默缩小。</b><code>eval_colqwen.py</code> 里的
+      <code>if eid not in set(eids): continue</code> 今天一次都不触发（已由
+      <code>verify E24</code> 断言），所以已发布数字不受影响。但它是个定时炸弹：
+      一旦某次重建的池缺了 gold，recall 会因为难题悄悄离开分母而上升，且没有任何提示。
+      现在分母由<b>全部</b>视觉 gold 构成，池外 gold 计为 miss，覆盖率不足时默认拒绝出数。
+    </p>
+    <p class="verdict">
+      <b>这个修复是可验证的，不是理论上的：</b>把 40 道题的 ranking 抽掉后，
+      旧口径仍会报 ColQwen Recall@20 = 0.9294（那 39 题直接消失了），
+      新口径报 <b>0.9149</b>——因为它们被计为 miss 而不是被删掉。
+    </p>
+    <p>
+      <b>读不出的图片被吞掉。</b><code>colqwen_index.py</code> 的
+      <code>except: pass</code> 会让某篇文档静悄悄地少索引几张图，而评测端仍按完整池计算。
+      现在每个失败写入 <code>colqwen_failed_images.jsonl</code>（含路径、是否存在、异常类型），
+      结束时汇报数量并提示先跑 verify。
+    </p>
+    <p>
+      <b>shell=True 与 Unix 命令。</b>旧 runner 把格式化后的字符串交给
+      <code>shell=True</code>，在 Windows 上走 cmd.exe，引号会被改写，记录下来的命令
+      未必能原样重放。现在一律 argv 数组 + <code>shell=False</code>。
+      E29 注册表里的 <code>cp</code> 是 Unix 命令，本机根本跑不了，改用
+      <code>make_eval_jsonl --out</code> 直接写目标路径。
+    </p>
+
+    <h3>④ 花钱的路径：先用 mock 验证，再谈真实调用</h3>
+    <p>
+      API 调用是本项目唯一不能免费重来的操作，所以它的日志是一等产物而非调试辅助。
+      每次尝试（<b>包括失败</b>）都逐条 flush 落盘，含 token usage、provider request id、
+      HTTP 状态、rate-limit 详情与延迟。
+    </p>
+    <p class="verdict">
+      <b>resume 键的是 request_hash，不是 q_id。</b>哈希包含实际展示的 quotes，
+      因此同一道题在不同检索配置下是<b>不同的请求</b>——实测 E29 的 paper 臂与 ours 臂
+      在 50 道题上哈希碰撞为 <b>0</b>。只按 q_id 续跑会把 paper 臂的答案当成 ours 臂的，
+      而那正好会让端到端比较失去意义。
+    </p>
+    <p>
+      本次<b>没有发生任何真实 API 调用</b>：全部用 <code>--mock</code> 的确定性假 provider
+      验证。测试覆盖成功、500 失败、429 限流、硬杀后的残行、以及 <code>--force</code>。
+      密钥过滤有一个值得记的坑：最初的正则用了裸 <code>token</code>，把
+      <code>input_tokens</code> 一起打成 <code>&lt;redacted&gt;</code>——而 token 数正是
+      唯一实测的成本量。正则已收紧并加了断言。价格一律标 <code>price_verified: false</code>。
+    </p>
+
+    <h3>⑤ 池口径统一（E24 数字更正）</h3>
+    <p>
+      <code>python experiments.py verify E24</code> 断言 22 项，全部通过。它同时钉死了
+      两个此前混用的口径：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>说法</th><th>问题</th><th>正确值</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">池覆盖 46.8%</td>
+              <td>用 6,548 条 image <b>evidence row</b> 除以 13,999 张<b>唯一图片</b>，单位不一致</td>
+              <td class="good">6,487 / 13,999 = <b>46.34%</b></td></tr>
+          <tr><td class="bad">每篇文档中位 29 张候选</td>
+              <td>那是<b>按问题加权</b>的中位数；169 题的文档会把它的池大小贡献 169 次</td>
+              <td class="good">按文档中位 <b>20</b>、均值 29.76；按问题中位 29、均值 34.92</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      另有一句需要说准确：ColQwen 排完了池内全部图片证据，没有任何视觉 gold
+      缺席于完整 ranking——<b>但「在完整 ranking 中」不等于「进入 top-k」</b>。
+      E24 测的是后者：ColQwen Recall@10 = 0.820、Recall@20 = 0.929。
+    </p>
+    <pre><code>python experiments.py run-suite replay --offline
+python experiments.py verify E24
+python -m tests.test_runner</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E32</span><span class="status correct">基础设施</span></div>
+  <div class="body">
+    <p class="entry-title">replay 完整性与可追溯性：让四格结果真的来自同一次运行</p>
+    <p class="why">
+      E31 让数字落了盘，但没有回答两个问题：报告里的四格<b>是不是这一次跑出来的</b>，
+      以及<b>跑它的源码还找不找得回来</b>。两处都不成立——E27 只跑两格，
+      另两格由 <code>result</code> 文字补齐；而 run 只记 commit 加一份脏文件名单，
+      在一棵常年脏着的树上等于什么都没记。
+    </p>
+
+    <h3>① E27 主结果矩阵：从两格补到四格</h3>
+    <p>
+      E27 此前只执行自建 k=10 与 canonical k=20。读者看到的是一个关于四格的论断，
+      背后是两格的证据——而缺的那两格恰好会被读者默认「和看到的这两格差不多」。
+      现在四条 nested CV 全在 E27 之下，E28 去掉与之重复的 selfbuilt k=10，只保留审计实验。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>池</th><th>k</th><th>baseline E</th><th>ours (OOF)</th>
+          <th>Δ</th><th>doc-cluster 95% CI</th></tr></thead>
+        <tbody>
+          <tr><td>自建</td><td>10</td><td>0.6537</td><td>0.7145</td>
+              <td class="good">+0.0608</td><td>[+0.0468, +0.0753]</td></tr>
+          <tr><td>自建</td><td>20</td><td>0.7862</td><td>0.8166</td>
+              <td class="good">+0.0304</td><td>[+0.0197, +0.0412]</td></tr>
+          <tr><td>canonical</td><td>10</td><td>0.6786</td><td>0.7328</td>
+              <td class="good">+0.0541</td><td>[+0.0395, +0.0689]</td></tr>
+          <tr><td>canonical</td><td>20</td><td>0.8196</td><td>0.8465</td>
+              <td class="good">+0.0269</td><td>[+0.0172, +0.0364]</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b><code>verify E27</code> 的 61 项断言只读指定 run 的 metrics.json，一个字的
+      experiments.py 说明文字都不读。</b>缺任意一格 exit 1——已用上一版 run 实测：
+      pass 0 / FAIL 29 / exit 1。断言覆盖 document-grouped、5 折、OOF、n_questions=2000、
+      未映射 gold 计为 miss，以及每格的 baseline / ours / delta / CI 是否齐全。
+    </p>
+
+    <h3>② source fingerprint：把 run 绑到源码</h3>
+    <p>
+      每个 run 新增 <code>source_manifest.json</code>：25 个实际被调用的源文件的
+      SHA-256、完整注册表快照、关键数据文件哈希、以及脱敏后的
+      <code>source.patch</code>。<code>git checkout &lt;commit&gt; &amp;&amp; git apply &lt;patch&gt;</code>
+      可还原本次执行的源码。summary 顶部显示 16 位 fingerprint。
+    </p>
+    <p class="verdict">
+      两个 run 的 fingerprint 相同，就是同一份代码配同一份注册表；不同，就在清单里能查到差在哪。
+      这正是 <code>dirty: true</code> 给不出的东西。补丁经与 API 日志同一套 redaction 过滤，
+      实测无 sk- / AIza / xai- / Bearer 命中。
+    </p>
+
+    <h3>③ E24：一个被误标的臂</h3>
+    <p>
+      本条目里的 <code>rrf</code> 一直是 <b>RRF(BM25-描述, ColQwen)</b>——它<b>包含</b> ColQwen。
+      把它减去 ColQwen 叫「RRF(description) − ColQwen」是错的：那测的是互补性。
+      现在单列出描述端融合臂 <code>rrf_desc</code> = RRF(BM25, BGE)，
+      两者都跑 VLM 描述，不含任何像素模型。
+    </p>
+    <p>
+      <b>补正（2026-08-29，E33）。</b>当时把 <code>rrf_desc</code> − ColQwen 写成
+      <s>「不是两种表示谁更好」的对立面、即「隔离出两种表示」</s>，
+      这一步同样不成立：<b>它同时改变了表示与检索架构</b>。见下方 E33。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>配对比较</th><th>k=10</th><th>k=20</th></tr></thead>
+        <tbody>
+          <tr><td>ColQwen − BM25</td>
+              <td>−0.0145 [−0.0314,+0.0033]</td><td>+0.0003 [−0.0122,+0.0124]</td></tr>
+          <tr><td>ColQwen − BGE</td>
+              <td>−0.0074 [−0.0216,+0.0066]</td><td>−0.0056 [−0.0158,+0.0048]</td></tr>
+          <tr><td>视觉分支：描述端 RRF − ColQwen<br>
+                  <small>同时换表示与架构，非表示效应</small></td>
+              <td class="good">+0.0269 [+0.0127,+0.0412]</td>
+              <td>+0.0111 [−0.0010,+0.0230]</td></tr>
+          <tr><td>RRF(描述+ColQwen) − ColQwen<br><small>含 ColQwen，测互补性</small></td>
+              <td class="good">+0.0254 [+0.0137,+0.0368]</td>
+              <td class="good">+0.0142 [+0.0050,+0.0236]</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      三个覆盖率数字也分开说清了：ColQwen ranking 覆盖 <b>2000/2000</b> 题；
+      本条目实际评分 <b>1995</b> 题（另 5 题没有视觉 gold，无法评分）；
+      而<b>完整 ranking 覆盖候选池，不等于进入 top-k</b>——本条目测的是后者。
+      （E33 把这三个数字从脚本里的字面量改成由数据算出，并接入
+      <code>verify E24</code> 断言分子/分母/比值三者自洽。）
+    </p>
+
+    <h3>④ E30：Holm 校正与一个被简化掉的因子名</h3>
+    <p>
+      这个设计报告 12 个检验（4 格 × 3 主效应）。按 95% 逐个读星号，
+      familywise 错误率约 46% 而不是 5%。Holm 需要 12 个 p 值同时在手，
+      四个独立进程拼不出来，所以 E30 改成单命令 <code>--all-cells</code>。
+    </p>
+    <p class="verdict">
+      <b>raw CI 12/12 不跨 0，Holm 校正后 12/12 仍然存活</b>（最大 p_holm = 0.0165）。
+      raw 区间一并保留，校正不隐藏任何东西。
+      bootstrap 分辨率把 p 下限钉在 1/4000 = 0.00025——那是「小于本设计能分辨的量」，不是零。
+    </p>
+    <p>
+      视觉因子改名为
+      <b>visual branch: ColQwen over images → BM25+BGE RRF over VLM descriptions</b>。
+      它同时换了两样东西：表示（像素 → VLM 文字）与检索器数量（单模型 → 双模型融合）。
+      简称成「表示效应」会把融合带来的收益记到表示头上。
+      同时明确：<b>E30 是内部组件归因，不是外部泛化验证</b>——固定配置、单一 benchmark，
+      而这个 benchmark 已经被本项目用于挑选方法。
+    </p>
+
+    <h3>⑤ 产物元数据、测试隔离、Git 策略</h3>
+    <p>
+      registry 现在记录 model name / revision / dtype / shape / normalization /
+      corpus hash / id order hash / 生成命令 / 软件版本。实测
+      <code>bge-small-vlm</code> 是 float32、(25716, 384)、已归一化（row norm 中位 1.0000）、
+      含 3 行零向量。<b>不可确认的字段写 <code>unknown</code> 并置
+      <code>metadata_incomplete: true</code>，不猜。</b>legacy 向量的 model_revision
+      和「生成当时的 corpus hash」就属于此类——填一个看似合理的值，比承认空缺更糟。
+    </p>
+    <p class="verdict">
+      测试隔离：mock 运行此前把假响应写进了正式的 <code>dataset/</code> 与
+      <code>response/</code>。那两个目录是项目的证据，
+      <b>一个假模型的输出躺在里面，是给日后 glob <code>response/*.jsonl</code> 统计的人埋的坑。</b>
+      现在有 <code>--dataset-dir</code> / <code>--response-dir</code>，
+      测试断言两个正式目录零新增文件，遗留的三个文件已移入
+      <code>artifacts/test-runs/legacy-mocktest/</code>。
+    </p>
+    <p>
+      Git 策略见 <code>docs/artifacts-git-policy.md</code>：本地全留，Git 只收轻量可引用的部分
+      （run.json、source_manifest、summary、metrics）；日志、逐题 CSV、向量、模型缓存不入库。
+      <b>API 原始流量按敏感内容处理</b>——即使密钥已脱敏，里面仍有完整 prompt（含文档正文，
+      数据集许可可能限制再分发）与模型逐字输出。发布某次 run 需
+      <code>git add -f artifacts/runs/&lt;run_id&gt;/</code> 显式点名。
+    </p>
+        <pre><code>python experiments.py run-suite replay --offline
+python experiments.py verify E24
+python experiments.py verify E27
+python -m tests.test_runner --scratch-root artifacts/test-runs</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E33</span><span class="status correct">基础设施</span></div>
+  <div class="body">
+    <p class="entry-title">可追溯性与科学表述收尾：能验证 ≠ 能重建；换了两样东西就不能只归因给一样</p>
+    <p class="why">
+      E32 给每个 run 加了 <code>source_manifest.json</code>，并在里面写了一行还原命令：
+      <code>git checkout &lt;commit&gt; &amp;&amp; git apply source.patch</code>。
+      这一行是错的。它从来没有被执行过一次，所以也从来没有人发现它不成立。
+    </p>
+
+    <h3>① source.patch 还原不了这个仓库</h3>
+    <p>
+      <code>git diff HEAD</code> 只看得见 <b>Git 已跟踪</b>的文件。
+      而本项目 25 个被指纹覆盖的源文件里，有 <b>18 个从未提交</b>——
+      <code>experiments.py</code>、整个 <code>expkit/</code>、
+      <code>retrieval/nested_cv.py</code>、<code>retrieval/ablation.py</code>……
+      也就是说，指纹能<b>判定</b>源码是否相同，却<b>产生不出</b>跑过的源码。
+      这正好是一份源码记录一半的用处。
+    </p>
+    <p class="verdict">
+      对基准 run <code>20260828T080756Z_replay</code> 实测：
+      <b>commit + patch 只还原 7/25 个文件，其余 18 个缺失。</b>
+      这不是理论隐患，是量出来的。
+    </p>
+    <p>
+      现在每个 run 生成 <code>source_bundle.zip</code>：按原相对路径存放 manifest 中
+      全部源文件的字节，tracked 与 untracked 一视同仁。manifest 记录 bundle 的路径、
+      SHA-256、文件数，以及<b>每个成员</b>的路径、大小与哈希。
+      bundle 只含源码——数据集、模型、向量、索引、API 日志、response
+      与任何凭据形状的路径都被构造性排除，写入时再按路径二次校验。
+      <b>patch 保留</b>，因为它仍然是已跟踪文件改动的可审阅形式；
+      但它不再被宣称能单独还原一次运行。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>还原步骤</th><th>作用</th><th>覆盖</th></tr></thead>
+        <tbody>
+          <tr><td><code>git archive --format=zip &lt;commit&gt;</code></td>
+              <td>取出提交时的树。<b>只读</b>——在这棵常年脏着的工作区上
+                  <code>git checkout</code> 会销毁数月未提交的工作</td>
+              <td>419 个已跟踪文件</td></tr>
+          <tr><td><code>git apply source.patch</code></td>
+              <td>已跟踪文件的工作区改动</td>
+              <td class="bad">7 / 25</td></tr>
+          <tr><td><code>unzip source_bundle.zip</code></td>
+              <td><b>权威</b>：覆盖为真正跑过的字节</td>
+              <td class="good">25 / 25</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      每次 <code>run-suite</code> 结束时会<b>当场执行这套还原</b>：在
+      <code>artifacts/test-runs/</code> 下重建一棵树、重算全部源文件哈希，
+      结果写进 <code>run.json</code> 的 <code>reconstruction_test</code> 与 summary。
+      记录与它的证据一起出厂，而不是把证据留在一个可能没人跑过的测试里。
+    </p>
+    <p>
+      独立测试 <code>tests/test_source_bundle.py</code> 还会<b>故意把 bundle 弄坏两次</b>：
+      删掉一个 untracked 成员（别处无法补上）、改坏一个 tracked 成员
+      （证明验证器信的是 bundle 而不是 patch）——两次都必须 exit 1。
+      一个不会失败的检查不是证据。
+    </p>
+    <p class="verdict">
+      <b>过程中真抓到一个静默失败。</b><code>git apply</code> 会从当前目录向上寻找仓库；
+      当还原目录位于本仓库内部（默认就是，因为树建在 <code>artifacts/test-runs/</code> 下），
+      它会找到<b>本仓库</b>，认为改动已经存在，打印
+      <code>Skipped patch 'eval_all.py'.</code> 然后<b>退出码 0</b>。
+      一个报告成功的空操作比失败更糟。已用 <code>GIT_CEILING_DIRECTORIES</code>
+      切断向上查找，并改为检查它实际做了多少活，而不是只看退出码。
+    </p>
+
+    <h3>② E24：「隔离了两种表示」不成立</h3>
+    <p>
+      E32 补出的描述端融合臂 <code>rrf_desc</code> = RRF(BM25, BGE)，
+      当时把 <code>rrf_desc</code> − ColQwen 说成「isolates the two representations」。
+      不成立——这一步<b>同时</b>改了两样东西：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>维度</th><th>ColQwen 分支</th><th>描述端 RRF 分支</th></tr></thead>
+        <tbody>
+          <tr><td>表示</td><td>原始图片像素</td><td>VLM 写出的文字描述</td></tr>
+          <tr><td>检索架构</td><td>1 个后交互检索器</td><td>2 个检索器 RRF 融合</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      一个同时移动两个变量的对比，无法把效应归给其中任何一个。
+      它现在叫 <b>visual branch comparison</b>：
+      <b>ColQwen over raw images</b> vs <b>BM25+BGE RRF over VLM descriptions</b>，
+      并写明这是<b>完整的视觉分支比较，不是被隔离出来的表示效应</b>。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>配对比较（document-cluster bootstrap, B=4000）</th>
+                   <th>k=10</th><th>k=20</th></tr></thead>
+        <tbody>
+          <tr><td>ColQwen − BM25<br><small>架构固定为单检索器</small></td>
+              <td>−0.0145 [−0.0314,+0.0033]</td><td>+0.0003 [−0.0122,+0.0124]</td></tr>
+          <tr><td>ColQwen − BGE<br><small>架构固定为单检索器</small></td>
+              <td>−0.0074 [−0.0216,+0.0066]</td><td>−0.0056 [−0.0158,+0.0048]</td></tr>
+          <tr><td><b>视觉分支：描述端 RRF − ColQwen</b><br>
+                  <small>表示与架构同时改变</small></td>
+              <td class="good">+0.0269 [+0.0127,+0.0412]</td>
+              <td>+0.0111 [−0.0010,+0.0230]</td></tr>
+          <tr><td>互补性：RRF(描述, ColQwen) − ColQwen<br>
+                  <small>融合臂内含 ColQwen</small></td>
+              <td class="good">+0.0254 [+0.0137,+0.0368]</td>
+              <td class="good">+0.0142 [+0.0050,+0.0236]</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <b>可以说的</b>：在当前<b>不完整</b>的图片池中、<b>紧预算 k=10</b> 下，
+      完整的 description-RRF 分支检索更好（CI 不跨 0）；k=20 处 CI 跨 0。
+      <br>
+      <b>不能说的</b>：VLM 文字表示优于像素表示。这个实验没有测过那件事。
+    </p>
+
+    <h3>③ 覆盖率不再是字面量</h3>
+    <p>
+      脚本里原来硬写着 <code>2000</code>。硬写的数字发现不了它脚下的数据变了，
+      而那正是这一层要防的。现在全部由数据算出，并分成两个总体：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>指标</th><th>值</th><th>含义</th></tr></thead>
+        <tbody>
+          <tr><td><code>n_evaluation_questions</code> / <code>_ranked</code></td>
+              <td class="good">2000 / 2000</td><td>全部问题，ColQwen 全部排了序</td></tr>
+          <tr><td><code>n_visual_gold_questions</code> / <code>_ranked</code></td>
+              <td class="good">1995 / 1995</td><td>有视觉 gold 的子集</td></tr>
+          <tr><td><code>questions_scored_here</code></td>
+              <td class="good">1995</td><td>真正进入分子分母的题</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      另外 <b>5 题没有任何视觉 gold</b>，视觉 Recall 对它们<b>没有分母</b>。
+      这是<b>总体的边界</b>，不是被悄悄缩小的分母——两者必须分开说。
+      并且保留那句要紧的区分：<b>完整 ranking 覆盖候选池 ≠ gold 进入 top-k</b>。
+      ColQwen 排完了每篇文档的整个图片池、没有一条视觉 gold 缺席于完整 ranking，
+      而它的 Recall@10 仍然只有 0.820——因为指标测的是 top-k。
+    </p>
+    <p>
+      <code>verify E24</code> 从 22 项扩到 <b>68 项</b>：A–E 仍从数据库重算，
+      新增的 F/G 只读<b>指定 run 的 metrics.json</b>，断言覆盖率的分子/分母/比值
+      三者自洽、四类比较在 k=10/20 都在且都带 document-cluster CI、
+      指标名未漂移，以及被禁表述没有复活。
+    </p>
+
+    <h3>④ 候选池口径：最后一处存活的旧数字</h3>
+    <p>
+      E31 已经更正过 E24 条目里的池口径，但 ColQwen 那一节的限制清单里还留着一句
+      <s>「每篇文档中位 29 个图片候选，@20 等于取走 69% 的池」</s>。
+      29 是<b>按问题加权</b>的中位数，20/29 ≈ 69% 也只在那个口径下成立。
+    </p>
+    <p class="verdict">
+      按文档：<b>中位 20、均值 29.76</b>（最小 1、最大 262）。
+      正确说法是——<b>对候选池处于文档中位水平的文档，k=20 已经取走整个图片池</b>；
+      220 篇里有 <b>111 篇（50.5%）</b>池 ≤ 20。
+      「候选数 ≥ 40」同样是加权口径：按问题 38.3%，<b>按文档只有 29.1%</b>。
+      两个口径下饱和的结论方向一致，但写成「每篇文档」就是错的。
+    </p>
+
+    <h3>⑤ 仍然如实标注的限制</h3>
+    <ul>
+      <li><b>E1 / E2 / E3 / E28 仍是 stdout-only</b>。它们跑了，但没有接入结构化输出，
+          报告里标为「已运行（仅日志）」，数字只能从对应的 <code>stdout.log</code> 读。
+          <b>不要把它们描述成已完成结构化验证。</b></li>
+      <li>source fingerprint 与 bundle 覆盖被调用的模块与注册表，
+          <b>不覆盖第三方依赖的字节内容</b>（只记版本号），也不含数据集与模型；
+          完整复现仍需要本地的 canonical DB、向量与 ColQwen 排名。</li>
+      <li><code>--force-rebuild</code> 的重建路径在 <code>plan()</code> 里决策正确，
+          但<b>从未真正执行过</b>——按要求本轮不重建任何产物。</li>
+      <li><s>E29 仍被 Gemini 免费层配额阻断（5 RPM / 20 RPD）。</s><br><b>已失效（2026-08-29）</b>：改用付费层后 E29 已完成，见下条目。</li>
+    </ul>
+    <p>
+      <b>本轮没有调用任何真实 API、没有下载模型、没有重跑 OCR、
+      没有重建向量 / 语料 / ColQwen 索引，旧 run 全部保留。</b>
+    </p>
+    <h3>⑥ 补记（2026-08-30）：这套机制在磁盘上留下了 36.6 GB</h3>
+    <p class="why">
+      上面 ①–⑤ 全部成立：指纹每次都对，重建测试 25/25，
+      <code>test_runner</code> 50/50，没有一次红过。
+      问题不在对错，在于<b>没有人量过它的体积</b>——
+      直到 D 盘只剩 <b>0.8 GB</b>，用户问「你跑实验存到 test-runs 里了吗」。
+      实测：<code>artifacts/test-runs</code> 下 <b>38 棵重建树、36.6 GB</b>。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>放大路径</th><th>机制</th><th>单位体积</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">还原第一步没有 pathspec</td>
+              <td><code>git archive &lt;commit&gt;</code> 把全部 <b>419 个</b>已跟踪文件
+                  （<b>1.0 GB</b>，五个 dataset jsonl 占绝大部分）解进每棵树，
+                  而被校验的只有 <b>25 个源文件、138 KB</b></td>
+              <td>每棵 <b>965 MB</b><br>其中 <b>99.99%</b> 是死重</td></tr>
+          <tr><td class="bad"><code>--scratch-root</code> 顺带决定了保留</td>
+              <td><code>test_runner.py</code> 只要给了 scratch root 就
+                  <code>keep = True</code>，而验收命令正是
+                  <code>--scratch-root artifacts/test-runs</code>；
+                  它委托的 bundle 测试每次再造 4 棵</td>
+              <td>每次验收 <b>3.8 GB</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      两处都修了，而且是按<b>已有的策略</b>修，不是新加一条特例：
+    </p>
+    <ul>
+      <li><code>_wanted_in_tree()</code> 对 archive 成员施加与 bundle
+          <b>同一套</b>排除规则。白名单是 manifest 的 <code>source_files</code>
+          ∪ patch 的 <code>diff --git</code> 目标，永远解出——因此过滤
+          <b>不可能</b>把 <code>git apply</code> 或 <code>verify_tree</code>
+          变成假失败。跳过量如实写进 <code>run.json</code> 的
+          <code>steps[0].skipped_bytes</code>（实测 <b>1,008,397,697</b>），
+          <b>不是悄悄砍掉</b>。</li>
+      <li><b><code>--scratch-root</code> 决定的是放哪，不是留不留。</b>
+          重建树是中间物：它是一份与磁盘上、bundle 里都逐字节相同的拷贝，
+          <b>证据是那张哈希表</b>，已经在 <code>run.json</code> 里。
+          所以通过即删（记 <code>tree_kept: false</code> 与重生成命令），
+          <b>失败才保留</b>——那是唯一需要看字节的场合。</li>
+    </ul>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>项</th><th>修复前</th><th>修复后</th></tr></thead>
+        <tbody>
+          <tr><td>单棵重建树</td><td>965 MB</td><td class="good">2.3 MB</td></tr>
+          <tr><td>单次验收（<code>test_runner</code>）</td><td>3.8 GB</td>
+              <td class="good">79 KB</td></tr>
+          <tr><td><code>artifacts/test-runs</code> 总计</td><td>36.6 GB</td>
+              <td class="good">2.7 MB</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      清理只删名为 <code>tree</code> 的目录，<b>325 个真正的测试产物</b>
+      （command.json、stdout、mock run、plan.json）一个未动。
+      删前先确认了两件事：test-runs 下<b>没有任何 junction / 符号链接</b>
+      （Windows 上 <code>rm -rf</code> 会跟进去删到目标），
+      以及付费产生的 <code>response/</code>（788 MB）与
+      <code>artifacts/api/</code> 与删除范围<b>零交集</b>。
+      树里那个 <code>response/</code> 只是 archive 解出的已跟踪副本。
+    </p>
+    <p class="verdict">
+      教训不是「记得清理」。这两个缺陷<b>不是逻辑错误</b>，
+      任何断言都抓不到它们——测试全绿、指纹全对、结论全部成立。
+      它们只在一个条件下存活：<b>没有任何一处记录报告过体积</b>。
+      因此纪律是——<b>凡是每次运行都产出目录的机制，都要把体积写进它自己的记录</b>，
+      让它和别的数字一样可被读到、可被比较。
+      <code>reconstruction_test.tree_bytes</code> 与
+      <code>steps[0].skipped_bytes</code> 就是为此加的。
+    </p>
+
+    <pre><code>python experiments.py run-suite replay --offline
+python experiments.py verify E24
+python experiments.py verify E27
+python -m tests.test_runner --scratch-root artifacts/test-runs
+python -m tests.test_source_bundle --scratch-root artifacts/test-runs
+python -m expkit.source reconstruct --run &lt;run_id&gt;</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E29</span><span class="status pass">正向结果</span></div>
+  <div class="body">
+    <p class="entry-title">端到端：k=10 上 +0.054 的检索优势，变成了 +2.90 的答案 F1</p>
+    <p class="why">
+      到 E30 为止，这个项目证明的都是<b>检索侧</b>的事：recall 更高、组件归因清楚、
+      out-of-fold 站得住。但没有任何证据说明这些提升会<b>到达答案</b>。
+      检索指标涨了而下游不动，是 RAG 里再常见不过的结局——多召回的证据可能
+      生成器本来就用不上，也可能挤掉了它原本会引用的东西。
+      这一条不补上，整个项目就只有「recall 高了」，没有「所以呢」。
+    </p>
+
+    <h3>① 设计：把除候选块以外的一切都钉死</h3>
+    <p>
+      600 题（从 2,000 题里按文档轮转抽样、种子冻结），两臂<b>同一批题、同一份 gold、
+      同一个模型、同一个 prompt</b>，唯一的差别是喂进去的候选块由哪套检索配置产生：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>臂</th><th>文本检索</th><th>视觉检索</th><th>配额</th><th>来源</th></tr></thead>
+        <tbody>
+          <tr><td>paper</td><td>dense (BGE-small)</td><td>ColQwen</td><td>7/3</td>
+              <td>最接近论文的本地对照</td></tr>
+          <tr><td>ours</td><td>RRF(BM25,BGE)</td><td>RRF</td><td><b>4/6</b></td>
+              <td><b>E27 里 nested CV 选出的那一组</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      配额 4/6 这一点值得强调：它不是通用的均衡配额 5/5，而是 nested CV 实际选出的值。
+      如果这里用了 5/5，E29 测的就<b>不是 E27 声称的那个系统</b>，整条因果链会在
+      最后一步断掉。开跑前核对过：两臂 q_id 完全相同、gold 均值都是 2.59、
+      候选集 <b>0/600 相同</b>（平均 Jaccard 0.125）。
+    </p>
+
+    <h3>② 结果：传导了</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>臂</th><th>final_f1</th><th>img_f1</th><th>txt_f1</th></tr></thead>
+        <tbody>
+          <tr><td>paper</td><td>55.21</td><td>63.9</td><td>36.3</td></tr>
+          <tr><td><b>ours</b></td><td class="good"><b>58.11</b></td><td>68.9</td><td>36.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>配对差 +2.90 F1，document-cluster 95% CI [+1.01, +4.77]，不跨 0，
+      bootstrap p = 0.0025</b>（220 篇文档 / 600 题重采样）。
+      逐题 <b>210 胜 / 156 负 / 234 平</b>。
+      增益几乎全部来自图片侧（img_f1 +5.0），文本侧基本持平（+0.2）——
+      与 ours 臂把视觉配额从 3 提到 6 的方向一致。
+    </p>
+
+    <h3>③ 三条口径，缺一不可</h3>
+    <ul>
+      <li><b>绝对值不可与论文比较。</b><code>gemini-3.6-flash</code> 不在论文的模型表里
+          （论文用过的 Gemini 模型现已全部调不到）。55.21 与 58.11 只对彼此有意义，
+          不能放进论文任何一行旁边。</li>
+      <li><b>估计量必须与 <code>eval_all</code> 一致。</b>
+          <code>eval_e29_paired.py</code> 原样复用 <code>strip_thinking</code> /
+          <code>extract_citations</code> / <code>get_scores</code>，并在算<b>任何</b>区间之前
+          先断言两臂均值复现 <code>eval_all</code> 打印的 55.2 / 58.1（实测 55.21 / 58.11），
+          不符就直接 <code>SystemExit</code>。
+          <b>围绕另一个量算出来的区间，比没有区间更糟。</b></li>
+      <li><b>重采样单位是文档，不是题。</b>题嵌套在文档里，一篇文档可以贡献很多题。</li>
+    </ul>
+    <p>
+      第三条附带一个<b>反直觉的观察，也更正了我先前写下的一句断言</b>。
+      我在代码注释里写「按题重采样的区间太窄」——数据不支持：
+      按题 <code>[+0.94, +4.99]</code> 反而<b>略宽</b>于按文档 <code>[+1.01, +4.77]</code>。
+      聚类<b>不必然</b>放宽区间，方向取决于文档内配对差的相关性。
+      用文档做单位的理由是<b>单位匹配</b>，不是「它更保守」。已按实测改正。
+    </p>
+
+    <h3>④ 成本：两次算错，都被外部账本抓到</h3>
+    <p>
+      这一节记的是方法学，不是流水账。E29 是本项目第一个真正花钱的实验，
+      而我把成本算错了<b>两次</b>，两次都是「拿手上现成的数当计费的全部」。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>错误</th><th>后果</th><th>怎么被发现的</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">用 <code>gemini-2.0-flash</code> 的价格算
+                  <code>gemini-3.6-flash</code></td>
+              <td>输入低估 7.5×、输出低估 9.4×<br>
+                  （真实 $0.75 / $3.75 每 Mtok）</td>
+              <td>用户指出「我们用的是 3.6-flash 啊」</td></tr>
+          <tr><td class="bad">只加 <code>in_tok + out_tok</code></td>
+              <td>再低估 3×：漏掉 <b>986,407 个 thinking token</b>，
+                  它们按<b>输出价</b>计费，占计费输出的 <b>81%</b></td>
+              <td>用户看 Google AI Studio：充 20 AUD 只剩 11.13</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      纪律两条。<b>价格表里没有该模型本身的、已核验条目时，就不报美元，只报 token</b>——
+      不能拿「最像的一条」顶替。<b>预算与对账一律按 <code>total_tok</code></b>，
+      不是 <code>in_tok + out_tok</code>；API 返回的可见输出字段<b>不等于</b>计费输出。
+      更根本的一条：<b>provider 的计费面板是地面真值，我的重构不是</b>——
+      任何持续花钱的实验都该在早期就拿面板对一次账，
+      差异超过一成就说明计费模型漏了东西。
+      <code>gemini-3.6-flash</code> 已于 2026-08-29 对照官方定价页核验并写入
+      <code>router/prices.json</code>（<code>verified: true</code>）。
+    </p>
+    <p>
+      一个不能碰的诱惑：<code>--no-enable-thinking</code> 能省约 80% 的输出费用，
+      但 paper 臂 600 次全部带 thinking 跑完之后就<b>不能再改</b>——
+      配对比较的两臂配置必须一致，中途改开关等于把已花的钱全部作废。
+      <b>thinking 开关属于开跑前的决定。</b>
+      实际花费 12.09 AUD / 1,225 次调用。同样的工作走 batch 层只要一半。
+    </p>
+
+    <h3>⑤ 运行工程：一个被杀的长任务教会的事</h3>
+    <p>
+      第一次全量启动在 paper 臂 273/600 处被外部终止（约 48 分钟，疑似后台进程时长上限）。
+      <b>已完成的工作一条没丢</b>——逐条追加的 API log 加上 <code>--resume</code> 正是为此存在。
+      但由此发现两个缺陷并修掉：
+    </p>
+    <ul>
+      <li><code>--plan-only</code> 的 <code>already_succeeded</code> 只查 API log、不查
+          <code>response/</code> 文件，把 585 次报成 600 次。
+          <b>计划是人用来批准花钱的文件，它必须预测运行的实际行为。</b>
+          现在两个来源分别显示，并在 resume 实测数与计划宣称数不一致时打警告。</li>
+      <li>新增 <code>--max-requests</code>：与其寄望下一次不被杀，不如让长任务
+          <b>按设计有界</b>。被杀在半路会丢掉在途请求的开销且不留记录；
+          主动到点收尾是完成当前调用、落盘、退出 0。
+          全程分 6 段跑完，每段收尾时打印剩余量。</li>
+    </ul>
+
+    <h3>⑥ 限制</h3>
+    <ul>
+      <li><b>600 题，不是 2,000。</b>子集按文档轮转抽样、种子冻结，但功效低于全量。</li>
+      <li><b>只有 pure-text 模式。</b>多模态臂（真图喂 VLM）未跑，成本约翻倍。</li>
+      <li><b>生成器不是复现锚点。</b>论文用过的 Gemini 模型全部不可调用，
+          因此本条目建立的是<b>配对内部效度</b>，不是与论文的可比性。</li>
+      <li><b>单一生成器。</b>+2.90 是 <code>gemini-3.6-flash</code> 上的结果；
+          换模型是否同向未测。E10 的跨 19 模型经验说明这类结论未必迁移。</li>
+    </ul>
+    <p class="verdict">
+      即便如此，这一条补上了项目最缺的一环：
+      <b>canonical 层 → 检索配置改进（E27）→ 组件归因（E30）→ 答案质量（E29）</b>
+      现在是一条完整的链，而不是一个悬空的 recall 数字。
+    </p>
+    <pre><code>python experiments.py run-suite api --allow-api
+python eval_e29_paired.py</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E34</span><span class="status pass">正向结果</span></div>
+  <div class="body">
+    <p class="entry-title">论文式基线：缺口不在模型身份，在池规模；换上更强的文本检索器后，头条提升反而变大</p>
+    <p class="why">
+      E27/E29 的提升都是「相对最接近论文的本地对照」。悬在上面的质疑一直是同一个：
+      <b>这个对照会不会太弱？</b>更强的基线常常把表观提升吃掉大半。
+      这一条把对照真正加强，然后看还剩多少。
+    </p>
+
+    <h3>① 先核对，再动手：两条我自己的说法被推翻</h3>
+    <p>
+      按「基线必须匹配已发表系统」的纪律逐项核对，结果推翻了本项目此前的两条表述：
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>此前的说法</th><th>核对结果</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">论文用 bge-large-en-v1.5 与 ColQwen2-v0.1</td>
+              <td><b>论文没有给出任何检索器的版本或 HF id</b>。Table 6 只列族名
+                  （DPR / ColBERT / BGE / E5 / ColPali / ColQwen）。
+                  那两个版本号是<b>我的推断冒充论文原文</b>。
+                  因此换用 bge-large 只能说成「更接近论文规模的文本检索器」，
+                  <b>不能</b>说成「与论文版本一致」。</td></tr>
+          <tr><td class="bad">需要下载 ColQwen 才能建真视觉臂</td>
+              <td><code>models/colqwen2-v1.0</code> 与 8.3 GB 的
+                  <code>colqwen2-base</code> <b>早已在本地</b>，
+                  <code>colqwen_index.py</code> 走 MaxSim 后交互直接读像素。
+                  视觉侧从来就不是替代品。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      真正的主缺口是<b>图片池规模</b>：论文每篇 63 个图片 quote，本项目此前只有
+      <b>29.8</b>——那是官方候选并集，每一条都因为是某题的 gold 或 hard negative
+      才在池中。<b>被问题条件化的池会让 recall 乐观偏置。</b>
+      磁盘上这 220 篇共 <b>13,999 张图 = 63.6/篇</b>，与论文吻合。
+      文本侧则早已修过：自建 chunk 421/篇，对论文的 536 是 79%。
+    </p>
+
+    <h3>② 实测：k=10 的头条提升不但没被吃掉，反而变大</h3>
+    <p>
+      两个池 × 两个 k，其余全部固定。<code>*</code> = document-cluster 95% CI 不含 0。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>对比</th><th>池</th><th>bge-small</th><th>bge-large</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="2"><b>G − E</b>　最佳混合 vs 论文式<br>
+                  <small>k=10</small></td>
+              <td>canonical</td><td>+0.0464*</td><td>+0.0453*</td></tr>
+          <tr><td>selfbuilt</td><td>+0.0473*</td><td class="good"><b>+0.0605*</b></td></tr>
+          <tr><td rowspan="2"><b>D − E</b>　全栈 vs 论文式<br><small>k=10</small></td>
+              <td>canonical</td><td>+0.0362*</td><td>+0.0359*</td></tr>
+          <tr><td>selfbuilt</td><td>+0.0371*</td><td class="good"><b>+0.0511*</b></td></tr>
+          <tr><td>D − A　全栈 vs dense-only<br><small>k=10</small></td>
+              <td>canonical</td><td>+0.0452*</td><td>+0.0256*</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      为什么没被吃掉？因为对照臂 <b>E 本身也用 dense 文本检索器</b>，两臂一起变强；
+      而 D/G 用的是 <b>RRF(BM25, dense)</b>，更强的 dense 让<b>融合</b>受益更多，
+      差距因此在自建池上反而拉开。
+      D − A 是唯一明显缩水的一项（基线是纯 dense，升级只让基线单边变强）——
+      那正是「更强基线吃掉提升」的教科书情形，只是它没吃到头条那一项。
+    </p>
+
+    <h3>③ 一条已发表的结论必须撤回</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>k=20 的对比</th><th>bge-small</th><th>bge-large</th></tr></thead>
+        <tbody>
+          <tr><td><b>E − A</b>　ColQwen 视觉 vs 图片描述检索</td>
+              <td class="bad"><b>+0.0220*</b></td>
+              <td>+0.0086　<small>[−0.0101,+0.0274]</small></td></tr>
+          <tr><td>D − A　全栈 vs dense-only（canonical）</td>
+              <td class="bad"><b>+0.0229*</b></td>
+              <td>+0.0060　<small>[−0.0101,+0.0222]</small></td></tr>
+          <tr><td>G − E（canonical）</td><td>+0.0027</td><td>−0.0057</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      <b>「ColQwen 读像素优于在 VLM 描述上做检索」在 k=20 上不再成立。</b>
+      它测的不是视觉表示的优势，是<b>文本检索器太弱</b>。
+      E − A 只涉及图片侧，两个池数值完全相同，可作一致性校验。
+      k=20 的 G − E 与 D − E 在四个组合下全部跨 0——与 E27 早就记录的
+      「只有 k=10 稳健」一致，更强的检索器没有改变这一点。
+    </p>
+
+    <h3>④ 唯一字节可证的模型</h3>
+    <p>
+      <code>retrieval/fetch_model.py</code> 把 bge-large 落成平铺目录并写下
+      <code>fetch.json</code>：revision <code>d4aa6901d3a41ba39fb536a557fa166f842b0e09</code>
+      与<b>逐文件 SHA-256</b>，<code>--check</code> 可随时重算。
+      本项目其余每一条模型记录都只能报出<b>名字</b>，无法证明加载了哪份权重。
+      顺带绕开两个本机已知问题：Windows 无开发者模式时
+      <code>huggingface_hub</code> 建不了符号链接缓存（WinError 1314），
+      以及 xet 传输后端会挂起。
+    </p>
+
+    <h3>⑤ 测试抓到的两个静默错误</h3>
+    <p>
+      新增的池不变量测试第一次运行就红了，两次都是<b>不报错、数值合理、结果错误</b>的那一类：
+    </p>
+    <ul>
+      <li><b>别名被冲掉。</b>60 个图片文件被多条 canonical evidence 共用，
+          我的 <code>basename → evidence_id</code> 是一对一映射，
+          <b>丢了 61 个 evidence_id</b>。丢一个 id 等于那条 gold 永远找不回来——
+          recall 会低一截而不报任何错。改为每个别名各发一条。</li>
+      <li><b>检查点只按偏移命名。</b>分片 <code>0</code> 在
+          <code>--img-batch 2</code> 下是图 0–1，在 4 下是图 0–3。
+          改批大小重跑时，新循环命中旧分片却只拿到一半图片，
+          <code>OTC_LVMUY_2021</code> 因此「成功」完成，
+          <b>192 张图只排了 106 张</b>。现在批大小进文件名，载入时再校验跨度，
+          并且凑不齐整池的文档<b>拒绝标记为完成</b>。</li>
+    </ul>
+
+    <h3>⑥ 未完成：ColQwen 全池索引</h3>
+    <p>
+      机制全部就绪并测试通过，但<b>索引本身只完成 5/220 篇</b>，
+      因此 <code>eval_fullpool.py</code> 尚无可报告的结果。
+      原因是资源不是正确性：ColQwen2 权重需 4.49 GB，
+      而本机 8.19 GB 显存中 Ollama 的 <code>llama-server.exe</code> 持有 3.26 GB，
+      余下的放不下大图激活；全量实测需 5–9 小时 GPU。
+    </p>
+    <p>
+      设计上要紧的一点：<code>--doc-order random</code> 让<b>任何停止点都是文档的
+      简单随机样本</b>，所以部分索引仍然可报告；
+      而 <code>eval_fullpool.py</code> 只在<b>已索引文档</b>上估计，
+      <b>不</b>把未索引文档的 gold 计为 miss——那不是保守，那是错的，
+      算出来的数会变成「索引跑了多远」而不是「排得多好」。
+    </p>
+    <p class="verdict">
+      待验证的预测已写进代码：候选池上本项目 Recall@10 = <b>0.820</b>，论文
+      <b>0.708</b>；把池补到论文规模后该数<b>应当下降并逼近 0.708</b>。
+      若不降，差距就从来不是池造成的。
+      论文的 ColQwen <b>文本</b> recall 不做对照——论文从未说明视觉检索器如何排文本
+      quote，其配额句只对 hybrid 检索给出。
+    </p>
+
+    <h3>⑦ 表述约束</h3>
+    <p>
+      即便全部完成，也<b>不能</b>写「优于论文配置」。可写的是
+      <b>「相对最接近论文的本地对照」</b>——配额、模态分工、检索器族名对齐，
+      而版本与解析流水线不可确定。若全池 recall 的 CI 覆盖论文值，
+      只能声明<b>本地实现通过量级核查</b>，那是实现验证，不是复现论文系统。
+      要让描述分支也上全池，需为 8,943 张图补 VLM 描述（付费，未批准）。
+    </p>
+    <pre><code>python -m retrieval.fetch_model BAAI/bge-large-en-v1.5 --check
+python -m retrieval.dense --model models/bge-large-en-v1.5 --image-repr vlm
+python -m retrieval.dense_chunks --model models/bge-large-en-v1.5 --batch 128
+python -m retrieval.eval_stack_v2 --pool selfbuilt --k 10 --dense-model models/bge-large-en-v1.5</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E35</span><span class="status pass">正向结果</span></div>
+  <div class="body">
+    <p class="entry-title">路由的天花板：先证明有空间可路由，再去训练路由器</p>
+    <p class="why">
+      proposal 的标题承诺逐题路由，而 E27 交付的是更好的<b>静态</b>配置。
+      Phase 3 要补上这一环。但 E8 与 E19 已经用两次代价教过同一条纪律：
+      <b>逐题 oracle 增益本身不是可路由结构的证据</b>，而且用
+      <code>argmax</code> 算出来的 oracle 根本不是它自称的那个 oracle。
+      所以第一件事不是写 router，是把表观空间里的假象拆干净。
+    </p>
+
+    <h3>① 动作空间与两种货币</h3>
+    <p>
+      一个动作是（文本检索器，图片侧检索器），共 12 个。
+      其中 bm25/dense/rrf 跑在 VLM 写的<b>图片描述</b>上，从不看像素；
+      只有 colqwen 是视觉检索。成本分两种货币，<b>永不相加</b>：
+      <code>cpu_passes</code>（对某分支候选池的单检索器遍历，rrf 记 2 因为它真的跑两个）
+      与 <code>gpu_passes</code>（ColQwen 的后交互打分）。
+      本项目从未测过两者之间的兑换率，所以<b>预算是一对上限，不是一个标量</b>，
+      「最便宜的最优动作」必须在两种字典序下各报一次。
+    </p>
+
+    <h3>② 表观空间里有多少是假象</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>量</th><th>selfbuilt k=10</th><th>读法</th></tr></thead>
+        <tbody>
+          <tr><td>有 &gt;1 个最优动作的题</td><td>97.5%（中位 9 / 12）</td>
+              <td>recall 是小整数之比，最优是一大片平台</td></tr>
+          <tr><td class="bad">12 个动作完全同分的题</td><td class="bad">47.9%</td>
+              <td>其中 33.4% 全对、1.9% 全错。<b>按构造不含任何可路由信号</b></td></tr>
+          <tr><td>最优固定动作已经是最优的题</td><td>77.0%</td>
+              <td>这些题上任何选择都赢不了固定策略</td></tr>
+          <tr><td>tie 假象的大小</td><td>+0.0087 ~ +0.0132</td>
+              <td>E19 式 argmax 破 tie 的置换对照比 tie-aware 的低这么多</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>③ 约束下界不总是同一个</h3>
+    <p>
+      保配比的置换对照（保留 oracle 的动作多重集、只打乱谁配到哪个）落在
+      <b>0.6844</b>，而最优固定动作是 <b>0.7101</b>——
+      置换对照<b>低于</b>固定动作，与 E19 的方向相反。
+      这说明 oracle 的优势<b>不是</b>动作配比带来的，而确实是逐题的。
+    </p>
+    <p class="verdict">
+      因此这里的约束下界是<b>最优固定动作</b>，不是置换对照。
+      正确的纪律是<b>两者取更强的那个</b>，而哪一个更强必须从数据读出来，不能假定。
+    </p>
+
+    <h3>④ 天花板：一半的 CPU 预算能不能打过静态 RRF</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>池 / k</th><th>oracle @ cpu&le;2 − 静态 RRF(cpu 4)</th>
+                   <th>最优固定 @ cpu&le;2 − 静态 RRF</th><th>路由器要补的缺口</th></tr></thead>
+        <tbody>
+          <tr><td>selfbuilt k=10</td><td class="good">+0.0502 [+0.0413,+0.0594]</td>
+              <td class="bad">−0.0220</td><td>oracle 空间的 30.5%</td></tr>
+          <tr><td>selfbuilt k=20</td><td class="good">+0.0405 [+0.0334,+0.0478]</td>
+              <td class="bad">−0.0196</td><td>32.6%</td></tr>
+          <tr><td>canonical k=10</td><td class="good">+0.0520 [+0.0429,+0.0614]</td>
+              <td class="bad">−0.0187</td><td>26.5%</td></tr>
+          <tr><td>canonical k=20</td><td class="good">+0.0399 [+0.0327,+0.0476]</td>
+              <td class="bad">−0.0164</td><td>29.1%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="verdict">
+      四格一致：<b>完美选择在一半的 CPU 预算下确实能打过静态 RRF</b>，
+      而同预算的最优固定动作打不过。所以预算主张不是先验不可能的——
+      路由器需要拿到该预算内 oracle 空间的约 <b>三成</b>。
+      这就是 E36 要去够的那个数。
+    </p>
+    <pre><code>python -m router.actions --pool selfbuilt
+python -m router.tie_audit --pool selfbuilt --k 10
+python -m router.tie_audit --pool canonical --k 20</code></pre>
+  </div>
+</div>
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E36</span><span class="status neg">负结果（含一处正向）</span></div>
+  <div class="body">
+    <p class="entry-title">逐题路由：图片侧的「要不要看像素」可学，文本侧的「要不要融合」不可学</p>
+    <p class="why">
+      问题的提法很关键。E17 已经否掉了「路由器能否在质量上打过融合」。
+      这里问的是<b>成本</b>形式：静态 RRF 对每个 query 都付两个检索器，
+      <b>路由器能否用更少的检索代价达到同样的质量？</b>
+      论文全文 <code>budget</code> 出现 0 次，这是本项目自己的提法。
+    </p>
+
+    <h3>① 两条级联，八格，一个 Holm 家族</h3>
+    <p>
+      主对照<b>必须</b>是同预算下的<b>随机分配</b>。
+      「比不升级好」是废话——升级本身就多做了检索。
+      唯一能证明路由器懂 query 的，是它在<b>同样预算</b>下胜过随机挑谁升级。
+      B=0.50 事先声明，八格（2 级联 × 2 池 × 2 预算）一次算完做 Holm。
+    </p>
+    <p class="small">
+      下表是<b>特征组事先固定为低维组</b>（池形状 + 首轮分数）的口径。
+      折内选特征组的另一口径见 ③，两者<b>不可混用</b>——每个区间只在自己的口径内成立。
+    </p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>级联（特征组事先固定）</th><th>路由器 − 随机（同预算 B=0.50）</th><th>存活 Holm</th><th>capture</th></tr></thead>
+        <tbody>
+          <tr><td>cpu：bm25 两分支 → RRF 两分支（2→4 pass）</td>
+              <td class="bad">+0.0005 ~ +0.0046</td><td class="bad">0/4</td><td>−0.9% ~ 8.6%</td></tr>
+          <tr><td>gpu：dense 文本 + bm25 图片描述 → RRF 文本 + ColQwen 视觉</td>
+              <td class="good">+0.0064 ~ +0.0111</td><td class="good">3/4（第 4 格 p<sub>holm</sub>=0.080）</td><td>10.2% ~ 11.8%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      次要家族（路由器 B=0.50 − 总是升级）：cpu 级联 4/4 显著为负（−0.0134 ~ −0.0169）；
+      gpu 级联 4/4 不显著、点估计全为正。即<b>在一半的 ColQwen 调用下打平</b>——
+      这是成本主张，不是质量主张。
+    </p>
+
+    <h3>② 成本要按增量记，沉没的那一遍不退款</h3>
+    <p>
+      gpu 级联首轮跑了 bm25 图片描述，升级时改用 ColQwen——
+      那一遍<b>白做了但已经付过</b>。所以升级的增量是 +1 cpu +1 gpu，
+      级联在 B=1 时是 <b>3 cpu + 1 gpu</b>，比直接跑静态系统（2 cpu + 1 gpu）<b>更贵</b>。
+      把「从零跑两个动作的成本之差」当增量会漏掉这一点。
+      成本参照系是<b>静态系统</b>，不是 B=1 的级联。
+    </p>
+    <p class="verdict">
+      路由器在 B=0.05~0.15 就追平「总是用 ColQwen」的质量：
+      <b>2.05~2.15 cpu + 0.05~0.15 gpu</b>，对比静态的 2.00 cpu + 1.00 gpu。
+      省掉 85%~95% 的 GPU 遍历，多付 2%~7% 的 CPU。
+      两种货币不相加，所以这句话只能这样写，不能写成「省了 X%」。
+      而且这个 B 是<b>看着曲线读出来的，属描述性数字，不是检验</b>。
+    </p>
+
+    <h3>③ 把特征组也放进折内选择之后，强度掉下来</h3>
+    <p>
+      上面的 3/4 是把特征组<b>事先固定</b>为低维组（池形状 + 首轮分数）得到的，
+      而那个组是我在一格上试出来的——这本身就是一次选择。
+      把特征组连同模型族一起放进每个训练折内选，主家族只剩 <b>1/8 存活 Holm</b>，
+      gpu 四格点估计仍全为正（+0.0015 ~ +0.0102）、两格 raw 显著；
+      cpu 四格则落到 −0.0016 ~ +0.0043（capture −2.1% ~ 7.1%），依旧是零。
+    </p>
+    <p>
+      原因是内层目标在 1,200~1,600 条训练样本上<b>选不稳特征组</b>：
+      40 个 fold 里换了 5 种组合，其中 6 次选中含 384 维句向量的组。
+      这是 E23 的教训上升一层——不只是「别把句向量拼进去」，
+      而是<b>「在这个样本量下，连该不该拼进去都选不准」</b>。
+    </p>
+    <p class="verdict">
+      因此可辩护的写法是：<b>方向一致，强度取决于特征组是否事先固定，两种口径都报</b>。
+    </p>
+
+    <h3>④ 检索前就选检索器：干净的负结果</h3>
+    <p>
+      Policy A 在跑任何检索器之前就挑（成本恒为 2 pass），只能用免费特征。
+      四种特征组下路由器<b>全部输给</b>折内选出的最优固定动作
+      （−0.0044 ~ −0.0088，两组 CI 不跨 0），与 E17 在 quote 粒度上的结论一致。
+    </p>
+
+    <div class="callout correction">
+      <p class="callout-label">2026-08-31 更正 · 两个区间曾经混了口径</p>
+      <p>
+        本条初版把 cpu 级联的 delta 写成 <s>−0.0004 ~ +0.0046</s>、capture 写成
+        <s>−1% ~ 9%</s>，oracle regret 写成 <s>+0.034 ~ +0.070</s>。
+        三个数字都真实存在，但<b>下界取自折内选特征组的口径、上界取自事先固定的口径</b>，
+        拼成一个区间就是混口径。已按口径拆开，见上表与本节。
+        <b>结论未变</b>：cpu 级联在两个口径下都是零，gpu 级联在两个口径下点估计都为正。
+        发现方式是把记录簿里的每个数字回查到 <code>router/cache/cells/*.json</code>——
+        这类核对应当在写完记录之后立刻做一次，而不是等下一个人来读。
+      </p>
+    </div>
+
+    <h3>⑤ 边界</h3>
+    <p>
+      oracle regret 仍然很大——特征组事先固定时 +0.0337 ~ +0.0615，
+      折内选时 +0.0339 ~ +0.0701——路由器只实现了可得空间的约十分之一。
+      <b>不能</b>写成「路由有效」，只能写成
+      「图片侧的升级决策上存在可学的逐题信号，且它买到的是成本而不是质量」。
+      端到端生成质量未测：本条全部指标是 evidence recall，
+      要接到 F1 需要一次配对 API 运行。
+      切分仍是 exploratory。
+    </p>
+    <pre><code>python -m router.phase3_cells --features search
+python -m router.phase3_cells --features shape+firstpass
+python -m router.budget_router --pool selfbuilt --k 10 --policy A --features free
+python -m tests.test_phase3</code></pre>
+  </div>
+</div>
+
+
+<h2>横切：反复出现的方法学教训</h2>
+
+<div class="callout lesson">
+  <p class="callout-label">L1 · oracle 增益不等于可路由空间</p>
+  <p>
+    出现在 E8。选两个含噪声测量的较大者本身产生正增益。
+    <strong>凡报告 oracle 上界，必同时报告同类系统之间的参照水平。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L2 · 粒度决定模态问题是否可见</p>
+  <p>
+    出现在 E13/E14。页粒度把图和它周围的文字捆在一起，模态问题被掩盖；
+    quote 粒度才让它显现。<strong>报告任何模态结论都必须绑定粒度。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L3 · 长度与池组成是最常见的两个混淆</p>
+  <p>
+    出现在 E15。长文档天然包含更多查询词；同模态竞争者少的一方天然排名靠前。
+    <strong>做模态比较前先控制这两项。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L4 · 供应商报告的数字未必是同一个东西</p>
+  <p>
+    出现在 E10。Gemini 的 <code>in_tok</code> 不含图片 token。
+    <strong>跨供应商用计费量做成本比较前，先做量纲合理性检查。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L6 · 基线必须和被比较者拿到同样的信息</p>
+  <p>
+    出现在 E16→E17。我拿 RRF 去跟「按模态分别取最优」的固定检索器比，
+    等于偷偷给了基线 gold 模态的先验，于是得出「融合不管用」的错误结论。
+    <strong>比较双方可获得的信息必须对齐，否则赢的那一方只是拿到了更多先验。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L7 · 效应会随聚合层级稀释</p>
+  <p>
+    出现在 E16→E17。检索器优势在<strong>证据条目</strong>层是 ±0.09，到<strong>查询</strong>层只剩 ±0.025，
+    因为 61.9% 的问题同时需要两种模态的证据。
+    <strong>决策发生在哪一层，效应就必须在哪一层测量。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L8 · 「结构存在」与「结构可观测」是两件事</p>
+  <p>
+    出现在 E9 与 E19 的对比。E9 里排列/同类对照复现了全部增益，说明<strong>结构本就不存在</strong>；
+    E19 里排列对照崩掉 0.104，说明<strong>结构真实存在</strong>，但三种策略都只拿到 4%。
+    <strong>报负结果时要说清是哪一种</strong>——前者是问题问错了，后者是特征不够。
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L9 · 目标函数平坦时，argmax 会输给固定值</p>
+  <p>
+    出现在 E19。最优点附近 ±2 个槽位只差 0.005，而含噪预测的 argmax 标准差达 5.6 个槽位。
+    <strong>先看目标函数的平坦程度再决定用不用 argmax 策略</strong>；收缩是标准解法，
+    而收缩曲线呈倒 U 本身就是诊断证据。
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L5 · 改进语料会改变结论，这是对的</p>
+  <p>
+    出现在 E12。补 OCR 提升了语料质量，同时消解了 RQ1b 原本的立论。
+    <strong>不能为了保住论点而拒绝改进；该做的是修正论点。</strong>
+  </p>
+</div>
+
+<!-- ============================ 交接 ============================ -->
+<div class="callout lesson">
+  <p class="callout-label">L11 · 基线必须真的复现被比较的那个系统</p>
+  <p>
+    出现在 E27 / E28。本项目把一个「bge-small 同时跑文本与图片文字描述」的本地系统
+    标为「论文发布配置」，据此宣称提升。补上论文真正用的视觉检索器后，
+    六格显著缩到只剩 k=10 一格稳健。
+    <strong>凡要主张「优于已发表工作」，必先逐项核对基线身份：模型名与版本、
+    每个模态各用什么检索器、候选表示是像素还是文字描述、配额、池规模。
+    任何一项对不上，就命名为 local surrogate baseline，并另建最接近论文的对照——
+    更强的基线通常会吃掉大部分表观提升。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L12 · 重采样单位必须是真实的抽样单位</p>
+  <p>
+    出现在 E27 / E28。396 道测试题只来自 55 篇文档，同文档题目共享证据、文风与难度。
+    按题 bootstrap 得到的区间过窄，改按文档聚类后「融合单独贡献」在两个预算上失去显著性。
+    <strong>嵌套数据一律用 cluster bootstrap，并同时报告点估计、区间与聚类数（文档数）。
+    多个 k × 多个系统的比较要说明多重比较；CI 下界贴 0 不算显著。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L13 · 分母不能被静默改变</p>
+  <p>
+    出现在 E27 / E28。映射失败的 gold 在评分集合形成之前就被 <code>continue</code> 掉，
+    于是永远不计为 miss，报出的其实是 conditional-on-mapped recall，绝对值偏高约 0.017。
+    <strong>不可检索的目标默认计为 miss；若要报条件口径必须单独命名。
+    每次评测强制打印 QA 数、文档数、gold 数、未映射数与丢弃数——
+    这几个计数一旦常驻输出，这类错误当场就会暴露。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L14 · argmax 会在并列时悄悄制造结构</p>
+  <p>
+    出现在 E19 / E28。recall 是小整数之比，最优配额常有长平台：97% 的题有多个并列最优，
+    中位 16 个。<code>argmax</code> 取最小索引，把一半以上的题判成同一个极端配置，
+    排列对照随之被推向极端，「查询特异结构」被高估一倍以上（+0.173 → 真实 regret +0.069）。
+    <strong>目标函数是离散比值时，先统计并列规模；报 regret 而非 oracle 减对照；
+    并报告「固定策略本身已最优的样本占比」——近八成时，可动空间只有两成。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L15 · 训练的标签必须就是你要的决策</p>
+  <p>
+    出现在 E17 / E28。原实验训练 gold 模态标签、再写死「视觉→BM25、文字→dense」，
+    否证的是一条人工策略而非「逐题选检索器」本身。
+    改成直接以 <code>recall(dense) − recall(bm25)</code> 为目标后，
+    路由在符号上就不再输给固定检索器了（结论被推翻），只是仍输给融合。
+    <strong>用代理标签加人工映射得到的负结果，只能否证那条映射。
+    要否证一类方法，必须直接训练该方法的决策目标。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L18 · 约束下界是「最优固定策略」与「保配比置换对照」中更强的那个</p>
+  <p>
+    出现在 E35。E19 里置换对照高于固定策略，E35 里反过来。
+    <strong>哪一个更强必须从数据读出来，不能假定；报 oracle 上界时两个都要给。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L19 · 预算实验的主对照是同预算的随机分配</p>
+  <p>
+    出现在 E36。「比不升级好」是废话，因为升级本身就多做了检索。
+    <strong>只有在同样的预算下胜过随机挑谁升级，才说明路由器懂 query。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L20 · 级联的升级成本按增量算，沉没的首轮不退款</p>
+  <p>
+    出现在 E36。首轮做了而升级用不上的那一遍已经付过钱。
+    <strong>用「从零跑两个动作的成本之差」当增量，会让级联看起来比它实际更便宜；
+    成本参照系是静态系统，不是 B=1 的级联。</strong>
+  </p>
+</div>
+
+<div class="callout lesson">
+  <p class="callout-label">L21 · 对照的期望能算就不要抽样</p>
+  <p>
+    出现在 E36。均匀随机升级 m/n 时，第 i 题的期望恰是
+    <code>base_i + (m/n)·gain_i</code>。用几百次抽样去估它，
+    等于给唯一承载主张的对照加一层蒙特卡洛噪声——
+    <strong>本实验里那点噪声足以让 Holm 校正后的 p 跨过 0.05。</strong>
+  </p>
+</div>
+
+
+<h2>交接：文件清单</h2>
+
+<div class="scroll">
+  <table>
+    <thead><tr><th>路径</th><th>作用</th></tr></thead>
+    <tbody>
+      <tr><td><code>canonical/build.py</code></td><td>Canonical 数据层，5 表 SQLite（E4/E5）</td></tr>
+      <tr><td><code>canonical/gate2.py</code></td><td>自建 chunk ↔ 官方 gold 的 8-gram 对齐审计（E6）</td></tr>
+      <tr><td><code>canonical/ocr.py</code></td><td>页级 OCR，可选 <code>--min-chars</code>（E7）</td></tr>
+      <tr><td><code>router/build_outcomes.py</code></td><td>342,000 行逐题模态结果（E9）</td></tr>
+      <tr><td><code>router/splits.py</code></td><td>document-disjoint 切分，已冻结到 <code>manifests/</code></td></tr>
+      <tr><td><code>router/{oracle,train_modality,diagnose}.py</code></td><td>headroom / 训练 / 六探针（E8/E9）</td></tr>
+      <tr><td><code>router/cost_quality.py</code></td><td>成本-质量表 + 显著性感知 Pareto（E10）</td></tr>
+      <tr><td><code>router/retrieval_signal.py</code></td><td>检索层信号，含 <code>--no-ocr</code> 对照（E12）</td></tr>
+      <tr><td><code>retrieval/corpus.py</code></td><td>页级语料（E13）</td></tr>
+      <tr><td><code>retrieval/{bm25,dense}.py</code></td><td>两个检索器（E13/E16）</td></tr>
+      <tr><td><code>retrieval/eval_{page,quote}_recall.py</code></td><td>两种粒度的 recall（E13/E14）</td></tr>
+      <tr><td><code>retrieval/diagnose_modality.py</code></td><td>池大小 vs 表示质量分解（E15）</td></tr>
+      <tr><td><code>retrieval/{eval_retrievers,route_headroom}.py</code></td><td>RQ2 主表与路由 headroom（E16/E17）</td></tr>
+      <tr><td><code>manifests/</code></td><td>冻结的切分与每次实验的 manifest</td></tr>
+      <tr><td><code>docs/lab-notebook.html</code></td><td>本文件</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>这台机器上的操作教训</h3>
+<div class="scroll">
+  <table>
+    <thead><tr><th>坑</th><th>正确做法</th></tr></thead>
+    <tbody>
+      <tr><td>后台任务的输出接了 <code>| grep</code> 或 <code>| tail</code></td>
+          <td>管道会缓冲，日志文件一直是 0 字节，看不到进度也看不到报错。
+              <b>后台任务一律原样重定向到文件</b>，读的时候再过滤。本项目犯了 4 次</td></tr>
+      <tr><td><code>Get-Process python | Where-Object {宽泛条件} | Stop-Process</code></td>
+          <td>误杀过自己的下载任务和一小时计时器。<b>记录并只杀特定 PID</b></td></tr>
+      <tr><td>Bash heredoc 里的 <code>
+</code> 被吞掉</td>
+          <td>Git Bash 会折叠反斜杠，导致 f-string 被拆断或 <code>str.replace</code> 匹配失败。
+              需要字面反斜杠时用 <code>chr(92)</code> 构造，或改用按行定位替换</td></tr>
+      <tr><td>从 HF 拉模型</td>
+          <td>一律加 <code>HF_HUB_DISABLE_XET=1</code>；含子目录的仓库不要依赖 HF 缓存，
+              直接落到普通目录（Windows 符号链接权限）</td></tr>
+      <tr><td>装需要新版 transformers 的库</td>
+          <td>走 <code>venv --system-site-packages</code>，不要动主环境</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>不要重写的</h3>
+<p>
+  <code>eval_all.py</code> 的 <code>strip_thinking</code> / <code>extract_citations</code> /
+  <code>get_scores</code> 是论文口径的唯一实现，全项目复用同一份；
+  <code>prompt_bank/*.txt</code> 三个官方 prompt 自 Phase 2 起必须固定不变；
+  <code>data_utils.py</code> 全项目沿用。
+</p>
+
+<h2>当前状态</h2>
+<div class="callout correction">
+  <div class="callout-label">2026-08-25 审计后重述</div>
+  <p>
+    项目有一个<b>正向的静态检索结果</b>，但它<b>不是</b>自适应路由，也<b>不是</b>「击败论文配置」。
+    准确表述：模态内 BM25–BGE-small RRF 融合配合固定均衡配额，
+    相对<b>本地 BGE-small-only 替代基线</b>把 Recall@k 提高约 <b>0.023–0.046</b>；
+    相对<b>最接近论文的本地 hybrid 对照</b>（含 ColQwen 视觉检索器），
+    稳健显著的提升集中在紧预算 <b>k=10，约 0.036–0.037</b>，k=15 与 k=20 不可与 0 区分。
+    经 Bonferroni 校正后仅「RRF 文本 + ColQwen 视觉 + 均衡配额，k=10」在两个池上同时存活。
+  </p>
+  <p>
+    <b>已完成 document-grouped nested CV</b>（E28⑧），因此上述结论不再受选择泄漏影响：
+    外层按文档 5 折、内层重新搜索检索器配置与配额，全部 2,000 题 out-of-fold 评分，
+    相对论文式对照在 <b>k=10 为 +0.061 / +0.054</b>、<b>k=20 为 +0.030 / +0.027</b>（两个池），
+    均显著。单切分分析中「只有 k=10 稳健」的限制来自 396 题的功效不足。
+    仍未做的是<b>外部数据集确认</b>，因此结论限于 MMDocRAG 之内。
+  </p>
+  <p>
+    <b>端到端已确认（2026-08-29，E29）。</b>检索侧的提升不再是悬空的 recall 数字：
+    600 题配对生成实验中，ours 配置相对论文式对照把 quote-selection F1 从
+    <b>55.21 提到 58.11（+2.90，document-cluster 95% CI [+1.01,+4.77]，p=0.0025）</b>。
+    增益几乎全部来自图片侧。口径限制照旧：生成器 <code>gemini-3.6-flash</code>
+    不在论文模型表里，两个绝对值只对彼此有意义；且只跑了 pure-text 模式与单一生成器。
+  </p>
+</div>
+<ul>
+  <li><strong>RQ1a</strong>（生成输入层）— 负结果，主证据（跨 19 模型 kappa=0.038）不依赖被撤下的
+      13 维特征表述，<b>结论不变</b>；但 E9 中「13 维下 2/19 显著提升」已撤下待重跑</li>
+  <li><strong>RQ1b</strong>（检索层预算分配）— headroom 数字已修正：
+      自适应分配的上界是 <b>regret +0.069 / +0.074</b>，而非原报的 +0.173 / +0.179；
+      且<b>固定配额对约 79% 的题已是最优</b>，可动空间只有两成题。
+      均衡配额本身的收益已并入 E27 的静态配置</li>
+  <li><strong>RQ2</strong>（检索器路由）— 已用正确的 outcome 标签重做（E28③），
+      并在 <b>Phase 3（E35/E36）</b>换成成本提法重问了一遍。
+      质量提法上结论不变：路由达不到融合的质量。
+      成本提法上<b>分成了两个答案</b>——
+      文本侧「要不要融合」不可学（同预算下相对随机分配 0/4 格存活 Holm）；
+      图片侧「要不要看像素」<b>可学</b>（特征组事先固定时 3/4 格存活 Holm，
+      +0.0064 ~ +0.0111），且在 <b>5%~15%</b> 的 query 上调用 ColQwen 就能追平
+      「总是用 ColQwen」的质量。但把特征组也放进折内选择后只剩 1/8 存活，
+      capture 始终只有约一成，<b>只能写成「买到成本而不是质量」</b></li>
+  <li><strong>RQ3</strong>（粒度）— <b>仅完成文本-BM25 切片</b>。趋势结论（固定 top-k 与固定预算
+      给出相反的粒度排序）成立且量级大；但预算单位是 word-like token 而非 BPE，
+      且未覆盖视觉 region/page、parent section、稠密检索与下游生成</li>
+  <li><strong>RQ4</strong>（组合路由）— 三层中没有一层的逐题决策被证明能超过对应的静态强基线，
+      组合无从产生互补增益。这是 RQ4「更简单的策略是否已足够」的答案：
+      <b>更简单的静态融合配置就已足够</b></li>
+  <li><strong>RQ5</strong>（动态 top-k）— 未启动。E27 显示收益随预算收紧而增大，
+      预算轴上确有结构；但按 E19/E28 的经验，启动时<b>第一步必须是并列感知的排列对照</b>，
+      而不是直接训练预算预测器。E35 已把这一步做成可复用的脚本
+      （<code>router/tie_audit.py</code>），RQ5 启动时直接换动作空间即可</li>
+</ul>
+<div class="callout correction">
+  <div class="callout-label">2026-08-30 Phase 3 完成后重述</div>
+  <p>
+    proposal 标题承诺的<b>逐题路由不再是空的</b>，但它交付的东西和标题暗示的不一样。
+    E35 先证明空间存在：把动作限制在一半的 CPU 预算时，完美选择相对静态 RRF 为
+    <b>+0.0399 ~ +0.0520</b>（四格 CI 全不跨 0），而同预算的最优固定动作输
+    <b>−0.0164 ~ −0.0220</b>；路由器要补的缺口约是该预算内 oracle 空间的<b>三成</b>。
+    E36 去够这个数（以下为<b>特征组事先固定</b>的口径）：CPU 融合决策<b>够不到</b>
+    （capture −0.9%~8.6%，0/4 存活 Holm），GPU 升级决策<b>够到了一部分</b>
+    （capture 10.2%~11.8%，3/4 存活 Holm）。折内选特征组时 GPU 掉到 1/4 存活。
+  </p>
+  <p>
+    因此项目现在有两条并列的表述，<b>不能互相顶替</b>：
+    静态配置的改进是<b>质量</b>结论（E27 → E29 端到端 +2.90 F1）；
+    逐题路由的结果是<b>成本</b>结论（同质量下 ColQwen 调用从 100% 降到 5%~15%，
+    CPU 遍历相应多付 2%~7%），且强度取决于特征组是否事先固定。
+    <b>两条都必须标 exploratory</b>：该切分自 E9 起被反复观察并用于挑方法。
+  </p>
+</div>
+<p>
+  <b>下一步</b>，按依赖顺序：
+  (1) <b>document-grouped nested CV</b>——把 exploratory 变成可报告的泛化结论，零 API；
+  (2) <b>补 <code>--features</code> CLI 重跑 E9</b>，把撤下的表述换成可复现的；
+  (3) <b>把 tie-aware oracle 并入 <code>budget_alloc.py</code></b>，输出 regret 与安全区间；
+  (4) <b>用生成模型 tokenizer 重算 E25/E26 的预算轴</b>；
+  (5) <s>需批准：下载 bge-large-en-v1.5 与 ColQwen2-v0.1 重建真正的论文式对照</s><br>　　<b>已于 2026-08-30 执行并修正范围（E34）</b>：ColQwen2-v1.0 <b>本就在本地且真跑像素</b>，无需下载；论文未给任何版本，故换模型不构成「与论文一致」。实际主缺口是<b>图片池规模</b>——论文 63 图/篇，本项目此前 29.8 图/篇。已建 <code>colqwen_scores_fullpool.sqlite</code>（13,999 张图、63.9/篇）并下载 bge-large-en-v1.5（revision 已固定、逐文件 SHA-256 可复验）。<br>
+  (6) <b>把 E36 的 GPU 级联接到端到端生成</b>——目前 Phase 3 全部指标是 evidence recall，
+  「同质量、更少 ColQwen 调用」这句话在 F1 上尚未验证，需一次配对 API 运行；
+  (7) <b>补完 ColQwen 全池索引</b>（仍是 5/220 篇，见 E34 限制）。
+</p>
+
+
+<footer>
+  本记录随每次推进更新，URL 保持不变。
+  数字均出自仓库内可复现脚本；未核验项（价格）已在原地标注。
+</footer>
+
+</div>

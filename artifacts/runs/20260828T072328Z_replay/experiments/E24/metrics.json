@@ -1,0 +1,581 @@
+{
+  "experiment": "E24",
+  "title": "ColQwen2 vs image-description retrieval",
+  "run_id": "20260828T072328Z_replay",
+  "status": "ok",
+  "error": null,
+  "config": {
+    "pool": "canonical-image-quotes",
+    "k": 20,
+    "sample_unit": "document",
+    "retrievers": [
+      "dense",
+      "bm25",
+      "colqwen",
+      "rrf"
+    ],
+    "rrf_c": 60,
+    "allow_partial": false,
+    "partial": false,
+    "denominator": "unconditional (total_visual_gold)"
+  },
+  "config_missing": [],
+  "elapsed_sec": 0.002,
+  "created_utc": "2026-08-28T07:25:46Z",
+  "n_metrics": 27,
+  "n_per_question": 1995,
+  "notes": [
+    "Pool covers 6,487 / 13,999 unique evaluation images (46.34%). Being present in the full ranking is not the same as entering top-k; this measures top-k."
+  ],
+  "metrics": [
+    {
+      "experiment": "E24",
+      "name": "total_visual_gold",
+      "value": 3231.0,
+      "unit": "gold pairs",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "mapped_visual_gold",
+      "value": 3231.0,
+      "unit": "gold pairs",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "missing_visual_gold",
+      "value": 0.0,
+      "unit": "gold pairs",
+      "desc": "out of pool; counted as miss",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "ranking_coverage",
+      "value": 1.0,
+      "desc": "1995/1995 questions ranked by ColQwen",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "questions_with_visual_gold",
+      "value": 1995.0,
+      "unit": "questions",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "pool_median_per_document",
+      "value": 20.0,
+      "desc": "per document, NOT question-weighted",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "pool_mean_per_document",
+      "value": 29.763636363636362,
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@1_dense",
+      "value": 0.35871247291860103,
+      "retriever": "dense",
+      "k_eval": 1,
+      "desc": "BGE dense over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@5_dense",
+      "value": 0.6833797585886723,
+      "retriever": "dense",
+      "k_eval": 5,
+      "desc": "BGE dense over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@10_dense",
+      "value": 0.8272980501392758,
+      "retriever": "dense",
+      "k_eval": 10,
+      "desc": "BGE dense over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@20_dense",
+      "value": 0.9350046425255338,
+      "retriever": "dense",
+      "k_eval": 20,
+      "desc": "BGE dense over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@1_bm25",
+      "value": 0.3698545341999381,
+      "retriever": "bm25",
+      "k_eval": 1,
+      "desc": "BM25 over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@5_bm25",
+      "value": 0.7127824203033116,
+      "retriever": "bm25",
+      "k_eval": 5,
+      "desc": "BM25 over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@10_bm25",
+      "value": 0.8344165892912411,
+      "retriever": "bm25",
+      "k_eval": 10,
+      "desc": "BM25 over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@20_bm25",
+      "value": 0.929124110182606,
+      "retriever": "bm25",
+      "k_eval": 20,
+      "desc": "BM25 over VLM-text",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@1_colqwen",
+      "value": 0.37047353760445684,
+      "retriever": "colqwen",
+      "k_eval": 1,
+      "desc": "ColQwen2 (visual)",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@5_colqwen",
+      "value": 0.6880222841225627,
+      "retriever": "colqwen",
+      "k_eval": 5,
+      "desc": "ColQwen2 (visual)",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@10_colqwen",
+      "value": 0.819870009285051,
+      "retriever": "colqwen",
+      "k_eval": 10,
+      "desc": "ColQwen2 (visual)",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@20_colqwen",
+      "value": 0.9294336118848654,
+      "retriever": "colqwen",
+      "k_eval": 20,
+      "desc": "ColQwen2 (visual)",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@1_rrf",
+      "value": 0.3751160631383473,
+      "retriever": "rrf",
+      "k_eval": 1,
+      "desc": "RRF bm25+colqwen",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@5_rrf",
+      "value": 0.7282575054162798,
+      "retriever": "rrf",
+      "k_eval": 5,
+      "desc": "RRF bm25+colqwen",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@10_rrf",
+      "value": 0.8452491488703188,
+      "retriever": "rrf",
+      "k_eval": 10,
+      "desc": "RRF bm25+colqwen",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "recall@20_rrf",
+      "value": 0.943670690188796,
+      "retriever": "rrf",
+      "k_eval": 20,
+      "desc": "RRF bm25+colqwen",
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "delta_colqwen_minus_bm25@1",
+      "value": 0.0006190034045187249,
+      "comparison": "ColQwen - BM25",
+      "k_eval": 1,
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "delta_colqwen_minus_bm25@5",
+      "value": -0.024760136180748994,
+      "comparison": "ColQwen - BM25",
+      "k_eval": 5,
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "delta_colqwen_minus_bm25@10",
+      "value": -0.014546580006190035,
+      "comparison": "ColQwen - BM25",
+      "k_eval": 10,
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    },
+    {
+      "experiment": "E24",
+      "name": "delta_colqwen_minus_bm25@20",
+      "value": 0.00030950170225936243,
+      "comparison": "ColQwen - BM25",
+      "k_eval": 20,
+      "pool": "canonical-image-quotes",
+      "k": 20,
+      "sample_unit": "document",
+      "retrievers": [
+        "dense",
+        "bm25",
+        "colqwen",
+        "rrf"
+      ],
+      "rrf_c": 60,
+      "allow_partial": false,
+      "partial": false,
+      "denominator": "unconditional (total_visual_gold)"
+    }
+  ]
+}

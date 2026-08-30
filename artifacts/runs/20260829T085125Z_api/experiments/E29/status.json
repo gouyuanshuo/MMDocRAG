@@ -1,0 +1,219 @@
+{
+  "experiment": "E29",
+  "title": "端到端：检索改进能否传导到生成质量",
+  "run_id": "20260829T085125Z_api",
+  "lifecycle": "active",
+  "primary_metric": "quote-selection F1",
+  "sample_unit": "document",
+  "started_utc": "2026-08-29T08:51:25Z",
+  "commands": [
+    {
+      "label": "E29#0",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "-m",
+        "retrieval.make_eval_jsonl",
+        "--config",
+        "paper",
+        "--limit",
+        "600",
+        "--k",
+        "10",
+        "--out",
+        "dataset/evaluation_paperk10.jsonl"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd0/stdout.log",
+      "stderr_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd0/stderr.log",
+      "started_utc": "2026-08-29T08:51:25Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 2.792,
+      "ended_utc": "2026-08-29T08:51:28Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd0"
+    },
+    {
+      "label": "E29#1",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "-m",
+        "retrieval.make_eval_jsonl",
+        "--config",
+        "ours",
+        "--limit",
+        "600",
+        "--k",
+        "10",
+        "--out",
+        "dataset/evaluation_oursk10.jsonl"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd1/stdout.log",
+      "stderr_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd1/stderr.log",
+      "started_utc": "2026-08-29T08:51:28Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 2.789,
+      "ended_utc": "2026-08-29T08:51:30Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd1"
+    },
+    {
+      "label": "E29#2",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "inference_api.py",
+        "gemini-3.6-flash",
+        "--setting",
+        "paperk10",
+        "--mode",
+        "pure-text",
+        "--rpm",
+        "10"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd2/stdout.log",
+      "stderr_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd2/stderr.log",
+      "started_utc": "2026-08-29T08:51:30Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 1.621,
+      "ended_utc": "2026-08-29T08:51:32Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd2"
+    },
+    {
+      "label": "E29#3",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "inference_api.py",
+        "gemini-3.6-flash",
+        "--setting",
+        "oursk10",
+        "--mode",
+        "pure-text",
+        "--rpm",
+        "10"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd3/stdout.log",
+      "stderr_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd3/stderr.log",
+      "started_utc": "2026-08-29T08:51:32Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 1.455,
+      "ended_utc": "2026-08-29T08:51:33Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd3"
+    },
+    {
+      "label": "E29#4",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "eval_all.py",
+        "--model",
+        "gemini-3.6-flash",
+        "--setting",
+        "paperk10",
+        "--mode",
+        "pure-text",
+        "--no-judge"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd4/stdout.log",
+      "stderr_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd4/stderr.log",
+      "started_utc": "2026-08-29T08:51:33Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 13.23,
+      "ended_utc": "2026-08-29T08:51:47Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd4"
+    },
+    {
+      "label": "E29#5",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "eval_all.py",
+        "--model",
+        "gemini-3.6-flash",
+        "--setting",
+        "oursk10",
+        "--mode",
+        "pure-text",
+        "--no-judge"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd5/stdout.log",
+      "stderr_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd5/stderr.log",
+      "started_utc": "2026-08-29T08:51:47Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 6.947,
+      "ended_utc": "2026-08-29T08:51:54Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd5"
+    },
+    {
+      "label": "E29#6",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "eval_e29_paired.py"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd6/stdout.log",
+      "stderr_log": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd6/stderr.log",
+      "started_utc": "2026-08-29T08:51:54Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 3.257,
+      "ended_utc": "2026-08-29T08:51:57Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd6"
+    }
+  ],
+  "dry_run": false,
+  "status": "ok",
+  "ended_utc": "2026-08-29T08:51:57Z",
+  "elapsed_sec": 32.091,
+  "metrics_files": [
+    "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd6/metrics.json"
+  ],
+  "instrumented": true
+}

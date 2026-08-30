@@ -1,0 +1,681 @@
+<title>E27 结论边界审计</title>
+<style>
+  :root {
+    --ground:   #EFF2F5;
+    --surface:  #FFFFFF;
+    --surface2: #E4E9EF;
+    --ink:      #10161C;
+    --ink2:     #56626F;
+    --ink3:     #8592A0;
+    --rule:     #D5DCE3;
+    --accent:   #1D5A7D;
+    --confirm:  #1B6B54;
+    --overstate:#96620A;
+    --refute:   #A03A2C;
+    --serif: Georgia, "Iowan Old Style", "Source Serif Pro", "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC",
+            "PingFang SC", "Microsoft YaHei", sans-serif;
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #10151A;
+      --surface:  #171D24;
+      --surface2: #1F262E;
+      --ink:      #E4EAF0;
+      --ink2:     #9AA6B2;
+      --ink3:     #6E7B88;
+      --rule:     #29323B;
+      --accent:   #6FB3D6;
+      --confirm:  #5FC0A0;
+      --overstate:#D6A44F;
+      --refute:   #E08677;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:   #10151A;
+    --surface:  #171D24;
+    --surface2: #1F262E;
+    --ink:      #E4EAF0;
+    --ink2:     #9AA6B2;
+    --ink3:     #6E7B88;
+    --rule:     #29323B;
+    --accent:   #6FB3D6;
+    --confirm:  #5FC0A0;
+    --overstate:#D6A44F;
+    --refute:   #E08677;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 56px 28px 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  header.head {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(30px, 4.6vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .sub { color: var(--ink2); max-width: 68ch; margin: 0; }
+
+  section { display: flex; flex-direction: column; gap: 16px; }
+  h2 {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    letter-spacing: -.01em;
+    text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 10px 0 0;
+  }
+  p { margin: 0; max-width: 72ch; }
+  ul, ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 7px; max-width: 72ch; }
+  b, strong { font-weight: 700; }
+  code {
+    font-family: var(--mono);
+    font-size: .88em;
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  a { color: var(--accent); }
+
+  .chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .06em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+    vertical-align: 2px;
+  }
+  .c-confirm  { color: var(--confirm); }
+  .c-over     { color: var(--overstate); }
+  .c-refute   { color: var(--refute); }
+  .c-todo     { color: var(--ink3); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card.flag { border-left: 3px solid var(--refute); }
+  .card.note { border-left: 3px solid var(--accent); }
+
+  .scroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    background: var(--surface2);
+    font-size: 11.5px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--ink2);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.n, th.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .good { color: var(--confirm); font-weight: 600; }
+  .bad  { color: var(--refute); }
+  .dim  { color: var(--ink3); }
+
+  blockquote {
+    margin: 0;
+    padding: 16px 20px;
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    font-family: var(--serif);
+    font-size: 16.5px;
+    line-height: 1.6;
+  }
+  footer { border-top: 1px solid var(--rule); padding-top: 20px; color: var(--ink3); font-size: 13.5px; }
+  @media (max-width: 620px) { .wrap { padding: 36px 16px 72px; } }
+</style>
+
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">MMDocRAG · 复现性与结论边界审计 · 2026-08-25</div>
+  <h1>E27 结论边界审计</h1>
+  <p class="sub">
+    对 E27 及相关实验记录的逐项核查。审计请求提出的十组问题，全部用代码、逐题原始结果与统计检验独立验证。
+    结论：<b>请求中指出的问题基本全部成立</b>，其中三项（基线身份、recall 分母、bootstrap 抽样单位）
+    共同改变了 E27 的主结论量级与适用范围。所有旧数字保留，未覆盖。
+  </p>
+</header>
+
+<section>
+  <h2>核查结论一览</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>项</th><th>审计意见</th><th>核查结果</th><th>对结论的影响</th></tr></thead>
+      <tbody>
+        <tr><td>一</td><td>image branch 实为图片描述检索，非像素视觉检索</td>
+            <td><span class="chip c-confirm">确认</span></td><td>术语必须改，全文已核对</td></tr>
+        <tr><td>二</td><td>基线不是论文配置，应改名为本地替代基线</td>
+            <td><span class="chip c-confirm">确认</span></td><td class="bad">主结论量级下降，且仅 k=10 稳健</td></tr>
+        <tr><td>三</td><td>需完整拆分融合/配额，k=15 配额须明确</td>
+            <td><span class="chip c-confirm">确认</span></td><td>8/7 与 7/8 结果确有差异</td></tr>
+        <tr><td>四</td><td>应使用 document-cluster bootstrap</td>
+            <td><span class="chip c-confirm">确认</span></td><td class="bad">「融合单独贡献」失去显著性</td></tr>
+        <tr><td>五</td><td>两个池都不是完整语料，不能称独立复现</td>
+            <td><span class="chip c-confirm">确认</span></td><td>缺口比原估计更大：54% 图片缺失</td></tr>
+        <tr><td>六</td><td>未映射 gold 被静默剔除，分母被改变</td>
+            <td><span class="chip c-confirm">确认</span></td><td>绝对值偏高约 0.013~0.017</td></tr>
+        <tr><td>七</td><td>test 已被反复观察，非干净确认集</td>
+            <td><span class="chip c-confirm">确认</span></td><td>全部标记为 exploratory</td></tr>
+        <tr><td>八·1</td><td>E19 argmax 破并列导致对照极端化</td>
+            <td><span class="chip c-confirm">确认</span></td><td class="bad">+0.173 应改为 regret +0.069</td></tr>
+        <tr><td>八·2</td><td>E17 训练的是 gold 模态标签而非 retriever outcome</td>
+            <td><span class="chip c-confirm">确认</span></td><td>E17 结论范围须收窄，待重做</td></tr>
+        <tr><td>八·3</td><td>E9 的 13 维结果无法从当前 CLI 复现</td>
+            <td><span class="chip c-confirm">确认</span></td><td>相关表述须撤下，待补 CLI</td></tr>
+        <tr><td>八·4</td><td>E18 不能推「视觉理解」，60× 比较不当</td>
+            <td><span class="chip c-confirm">确认</span></td><td>两处表述均须改</td></tr>
+        <tr><td>八·5</td><td>E24 池饱和、模型版本不同</td>
+            <td><span class="chip c-confirm">确认</span></td><td>饱和更严重（按文档中位 20）；原结论「不值 GPU 成本」<b>经全量重算后维持</b></td></tr>
+        <tr><td>八·6</td><td>n_tok 是词元不是 BPE token</td>
+            <td><span class="chip c-confirm">确认</span></td><td>「token 预算」须改称谓</td></tr>
+        <tr><td>八·7</td><td>不能断言作者内部用了不同分母</td>
+            <td><span class="chip c-confirm">确认</span></td><td>表述须收窄至「发布产物不足以构造」</td></tr>
+        <tr><td>九</td><td>缺 E14–E27 的复现 manifest</td>
+            <td><span class="chip c-confirm">确认</span></td><td>E27 的已补，其余待补</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card flag">
+    <p>
+      <b>本报告发布后自查发现的一处错误，已撤回。</b>
+      初版曾声称 E24 的结论「方向是错的」，依据是在视觉槽位上单独替换后，
+      ColQwen 在 k=15（+0.0269）与 k=20（+0.0220）上显著优于图片描述检索。
+      <b>该结论只在 396 题的探索性测试半区成立。</b>
+      在全部 2,000 题上重算，同一比较为 <b>+0.0075 / +0.0089 / +0.0039（k=10/15/20），
+      三个预算的置信区间全部跨 0</b>；且在放开配额的配置搜索中，
+      最好的 ColQwen 配置（0.8114）排不进前七，全部被 RRF-打描述 的配置压住（最优 0.8197）。
+    </p>
+    <p>
+      <b>因此 E24 的原结论成立：在本项目可获得的池规模与裁剪粒度下，ColQwen 不值它的 GPU 成本。</b>
+      我先前的「反转」本身就是一个低功效切分上的假阳性——正是本次审计要防的那类错误，
+      却在审计报告里犯了一次。如实记录，不予掩饰。
+      仍然成立的部分：E24 原记录写的 <s>「每篇中位 29 个图片候选」</s>（<b>superseded</b>）是<b>按题加权</b>的口径；
+      <b>按文档计中位 20、均值 29.76</b>，@20 对 111/220 篇（50.5%）等于取走整个池，饱和描述应当加强。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>一 · E27 实际系统配置表</h2>
+  <p>
+    以下为逐项核对结果。<code>eval_stack.py</code> 中的 image branch 确实运行
+    <code>BM25/BGE</code> 于 <code>canonical_evidence.img_description</code>（VLM 撰写的文字描述），
+    <b>从不接触图片像素</b>。本报告起统一称为 <b>image-description retrieval</b>，
+    仅 ColQwen 臂称为 visual retrieval。
+  </p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th>属性</th><th>A 本地替代基线</th><th>D 本项目静态配置</th>
+        <th>E 最接近论文的本地对照</th><th>论文 v2（未复现）</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>文本候选表示</td><td colspan="3">自建 chunk 正文（92,752）/ 官方 text quote（19,151）</td><td>论文自有切分</td></tr>
+        <tr><td>图片候选表示</td><td>VLM 文字描述</td><td>VLM 文字描述</td><td class="good">图片像素</td><td>图片像素</td></tr>
+        <tr><td>文本检索器</td><td>BGE-small-en-v1.5</td><td>RRF(BM25, BGE-small)</td><td>BGE-small-en-v1.5</td><td class="bad">bge-large-en-v1.5 / ColBERT</td></tr>
+        <tr><td>图片检索器</td><td>BGE-small 打描述</td><td>RRF(BM25, BGE-small) 打描述</td><td class="good">ColQwen2-v1.0</td><td class="bad">ColQwen2-v0.1 / ColPali</td></tr>
+        <tr><td>融合方式</td><td>无</td><td>模态内 RRF, C=60</td><td>无</td><td>固定模态配额</td></tr>
+        <tr><td>text:image 配额</td><td>7/3 · 10/5 · 12/8</td><td>5/5 · <b>8/7</b> · 10/10</td><td>7/3 · 10/5 · 12/8</td><td>7/3 · 10/5 · 12/8</td></tr>
+        <tr><td>候选池（文本）</td><td colspan="3">自建 92,752 单元 / 220 篇；canonical 19,151 单元 / 223 篇</td><td>完整文档语料</td></tr>
+        <tr><td>候选池（图片）</td><td colspan="3" class="bad">evaluation 范围内 6,548 条 evidence row / <b>6,487</b> 张唯一图片，占这 220 篇文档 13,999 张唯一图片的 <b>46.34%</b>（全库 223 篇为 6,565 行 / 6,504 张，口径不同不可混用）</td><td>完整</td></tr>
+        <tr><td>是否用 gold / 测试集信息</td><td colspan="3">配额在训练半区选定；<b>canonical 池本身由官方候选表构成，属问题条件化</b></td><td>—</td></tr>
+        <tr><td>计算成本（396 题合计）</td><td>dense 1.13s</td><td>+BM25 7.35s, +RRF 1.10s</td><td>dense 0.98s + 离线 GPU 索引</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim">
+    ColQwen 本地副本为 v1.0，论文为 v0.1；文本稠密检索为 bge-small，论文为 bge-large。
+    两者均未复现，故 E 命名为 <b>closest local paper-style baseline</b>，不称论文配置。
+  </p>
+</section>
+
+<section>
+  <h2>二 · 基线身份修正后的 E27</h2>
+  <p>
+    独立复算完全支持审计给出的数字。以 <b>conditional-on-mapped</b> 口径（即原 <code>eval_stack.py</code> 的分母）复算，
+    自建池 k=10 得 E=0.6961、D=0.7348，canonical k=20 得 E=0.8637、D=0.8646、Δ=+0.0008——
+    与审计提供的数值逐位一致。唯一差异在 canonical k=15：审计为 0.8160，本次为 0.8191，
+    <b>差异来源已定位为 k=15 均衡配额的取整方向</b>（text7/image8 得 0.8160，text8/image7 得 0.8191），
+    这正好证实了「k/2:k/2 不可用作定义」的意见。两种取法结论一致，均不显著。
+  </p>
+
+  <h3>相对最接近论文的本地对照（D − E），document-cluster bootstrap</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>预算</th><th class="n">自建池 Δ</th><th class="n">95% CI</th><th class="n">canonical Δ</th><th class="n">95% CI</th></tr></thead>
+      <tbody>
+        <tr><td>k=10</td><td class="n good">+0.0371</td><td class="n good">[+0.0115, +0.0650] *</td><td class="n good">+0.0362</td><td class="n good">[+0.0097, +0.0650] *</td></tr>
+        <tr><td>k=15</td><td class="n">+0.0192</td><td class="n dim">[−0.0044, +0.0429]</td><td class="n">+0.0119</td><td class="n dim">[−0.0106, +0.0333]</td></tr>
+        <tr><td>k=20</td><td class="n">+0.0055</td><td class="n dim">[−0.0160, +0.0270]</td><td class="n">+0.0008</td><td class="n dim">[−0.0179, +0.0199]</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <b>审计的判断成立：稳健显著的提升集中在 k=10。</b>
+    k=15 与 k=20 相对论文式对照的提升不可与 0 区分。
+    原 E27 所称「六格全部显著优于论文配置」由两个错误叠加而来——
+    基线不含视觉检索器，且 bootstrap 按题而非按文档。
+  </p>
+
+  <h3>相对本地 BGE-small-only 替代基线（D − A）</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>预算</th><th class="n">自建池 Δ</th><th class="n">95% CI</th><th class="n">canonical Δ</th><th class="n">95% CI</th></tr></thead>
+      <tbody>
+        <tr><td>k=10</td><td class="n good">+0.0461</td><td class="n good">[+0.0162, +0.0780] *</td><td class="n good">+0.0452</td><td class="n good">[+0.0159, +0.0729] *</td></tr>
+        <tr><td>k=15</td><td class="n good">+0.0460</td><td class="n good">[+0.0196, +0.0744] *</td><td class="n good">+0.0387</td><td class="n good">[+0.0137, +0.0636] *</td></tr>
+        <tr><td>k=20</td><td class="n good">+0.0275</td><td class="n good">[+0.0068, +0.0504] *</td><td class="n good">+0.0229</td><td class="n good">[+0.0049, +0.0420] *</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    相对<b>本地替代基线</b>的提升在六格上仍成立，量级 0.023–0.046。
+    但这句话的价值远低于原表述：它说明的是「在一个不含视觉检索器的弱基线上，加融合和均衡配额有用」。
+  </p>
+</section>
+
+<section>
+  <h2>三 · 融合与配额的完整拆分</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th>贡献项（自建池，document-cluster CI）</th>
+        <th class="n">k=10</th><th class="n">k=15</th><th class="n">k=20</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>配额单独（B − A）</td>
+            <td class="n good">+0.0214 *</td><td class="n good">+0.0244 *</td><td class="n dim">+0.0090</td></tr>
+        <tr><td>融合单独（C − A）</td>
+            <td class="n dim">+0.0259</td><td class="n dim">+0.0200</td><td class="n good">+0.0233 *</td></tr>
+        <tr><td>融合叠在配额之上（D − B）</td>
+            <td class="n good">+0.0247 *</td><td class="n dim">+0.0216</td><td class="n good">+0.0185 *</td></tr>
+        <tr><td>配额叠在融合之上（D − C）</td>
+            <td class="n dim">+0.0202</td><td class="n good">+0.0260 *</td><td class="n dim">+0.0042</td></tr>
+        <tr><td><b>ColQwen 替换描述检索（E − A）</b>，396 题探索集</td>
+            <td class="n dim">+0.0089</td><td class="n good">+0.0269 *</td><td class="n good">+0.0220 *</td></tr>
+        <tr><td><b>同上，全部 2,000 题</b></td>
+            <td class="n dim">+0.0075</td><td class="n dim">+0.0089</td><td class="n dim">+0.0039</td></tr>
+        <tr><td><b>最佳本地混合 vs 论文式（G − E）</b></td>
+            <td class="n good">+0.0473 *</td><td class="n good">+0.0228 *</td><td class="n dim">+0.0074</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    改用文档聚类后，<b>「融合单独贡献」在 k=10 与 k=15 上失去显著性</b>（原按题 bootstrap 为显著）。
+    两个改动仍然互相重叠、并非可加。
+    <b>G（RRF 文本 + ColQwen 视觉 + 均衡配额）是所有配置中最好的一个</b>，
+    这意味着最佳本地系统应当<b>保留</b>视觉检索器，而不是用描述检索替代它。
+  </p>
+  <h3>按 gold 构成拆分（自建池，k=20，unconditional）</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>系统</th><th class="n">visual-only (156)</th><th class="n">both (238)</th><th class="n">text-only (2)</th></tr></thead>
+      <tbody>
+        <tr><td>A 本地替代基线</td><td class="n">0.8593</td><td class="n">0.7671</td><td class="n dim">n 太小</td></tr>
+        <tr><td>E 论文式对照</td><td class="n">0.9146</td><td class="n">0.7675</td><td class="n dim">n 太小</td></tr>
+        <tr><td>D 本项目配置</td><td class="n">0.9137</td><td class="n good">0.7773</td><td class="n dim">n 太小</td></tr>
+        <tr><td>G 最佳本地混合</td><td class="n good">0.9335</td><td class="n">0.7674</td><td class="n dim">n 太小</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    测试半区只有 <b>2 道纯文字 gold 的题</b>，该列不可解释，此前任何按此列的推断都应作废。
+    ColQwen 的收益几乎全部落在 visual-only 子集（0.8593 → 0.9146），而 RRF 的收益落在 both 子集。
+  </p>
+</section>
+
+<section>
+  <h2>四 · 统计方法修正</h2>
+  <p>
+    测试集为 <b>396 题 / 55 篇文档</b>，同文档题目不独立。改用 document-cluster bootstrap 后，
+    区间普遍变宽，多个原「显著」项落回不显著（见上表）。两种口径已并列输出。
+  </p>
+  <h3>多重比较</h3>
+  <p>
+    每个预算 9 组比较 × 3 个预算 × 2 个池 = <b>54 次检验</b>。按 Bonferroni 取 99.9% 区间后：
+  </p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>比较</th><th class="n">Δ</th><th class="n">95% CI</th><th class="n">99.9% CI</th></tr></thead>
+      <tbody>
+        <tr><td>G − E，自建，k=10</td><td class="n">+0.0473</td><td class="n good">[+0.0234,+0.0732] *</td><td class="n good">[+0.0112,+0.0914] *</td></tr>
+        <tr><td>G − E，canonical，k=10</td><td class="n">+0.0464</td><td class="n good">[+0.0210,+0.0732] *</td><td class="n good">[+0.0067,+0.0908] *</td></tr>
+        <tr><td>D − A，自建，k=15</td><td class="n">+0.0460</td><td class="n good">[+0.0191,+0.0744] *</td><td class="n good">[+0.0009,+0.0945] *</td></tr>
+        <tr><td>D − E，自建，k=10</td><td class="n">+0.0371</td><td class="n good">[+0.0114,+0.0636] *</td><td class="n dim">[−0.0045,+0.0826]</td></tr>
+        <tr><td>D − A，自建，k=10</td><td class="n">+0.0461</td><td class="n good">[+0.0163,+0.0774] *</td><td class="n dim">[−0.0025,+0.0994]</td></tr>
+        <tr><td>D − E，canonical，k=10</td><td class="n">+0.0362</td><td class="n good">[+0.0085,+0.0644] *</td><td class="n dim">[−0.0089,+0.0840]</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <b>在严格多重比较校正下，只有「最佳本地混合 vs 论文式对照，k=10」在两个池上都存活</b>
+    （+0.047 与 +0.046）。这比审计建议的表述还要更窄一档，报告中应当写明。
+  </p>
+  <div class="card note">
+    <p>
+      <b>本次审计自身的一个失误，如实记录。</b>我在 <code>audit_e19_ties.py</code> 中构造的
+      「closest-to-fixed oracle」指标是退化的：它在每题的并列最优集合内取最靠近固定策略者，
+      而该集合内任一元素都达到最大值，故它恒等于 oracle，差值恒为 0，不携带任何信息。
+      该指标已从结论中剔除，改用「固定策略本身已是最优的题目占比」。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>五 · 两个候选池的真实描述</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>池</th><th class="n">文本单元</th><th class="n">图片单元</th><th class="n">覆盖文档</th><th>性质</th></tr></thead>
+      <tbody>
+        <tr><td>canonical</td><td class="n">19,151</td><td class="n">6,565</td><td class="n">223</td>
+            <td class="bad">官方候选表并集，问题条件化，非完整语料</td></tr>
+        <tr><td>self-built</td><td class="n">92,752</td><td class="n">6,565</td><td class="n">220</td>
+            <td class="bad">文本侧自建完整，<b>图片侧与 canonical 完全相同</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    数据集共 <b>14,826</b> 张图片，其中属于这 220 篇评测文档的有 <b>13,999</b> 张，
+    而两个池在 evaluation 范围内只含 <b>6,487</b> 张不同图片——<b>7,512 张（53.66%）文档内图片从未进入任何池</b>。（6,504 是全库 223 篇文档的 distinct img_path，与 13,999 不同口径，不可相除。）
+    因此 self-built 也不是完整多模态语料，两个池<b>共用同一个不完整图片侧</b>，
+    不能称为「两次独立复现」，应称为 <b>两种池构造的敏感性分析</b>，且该分析只覆盖文本侧差异。
+  </p>
+  <h3>能否建立完整图片池</h3>
+  <ul>
+    <li><b>对 ColQwen（像素）可以</b>：需为 13,999 张图片建索引，按 E24 实测吞吐约为当前 6,565 张的 2.1 倍工作量，单卡可行。</li>
+    <li><b>对 BM25 / BGE（描述）不可以</b>：这两个检索器读的是 VLM 撰写的 <code>img_description</code>，
+        而缺失的 7,512 张图片<b>没有任何描述</b>。补齐需要为它们生成描述，属 API 支出，且生成模型与官方描述不同源会引入新的混淆。</li>
+    <li>因此完整图片池上的比较<b>只能在视觉检索器之间做</b>；描述类检索器无法在完整池上公平参与。这一约束必须写进报告，不能回避。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>六 · recall 分母</h2>
+  <p>
+    审计所指代码确实存在：<code>gmap.get(eid)</code> 为空时 <code>dropped += 1; continue</code>，
+    该条 gold 在 <code>gset</code> 形成<b>之前</b>就被移除，因此永远不计为 miss；
+    随后 <code>if not gset: continue</code> 又丢弃整题。全评测集 2,000 题中有 62 条 gold 被剔除、1 题被丢弃。
+  </p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>口径</th><th class="n">A k=20</th><th class="n">D k=20</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>unconditional（本报告默认）</td><td class="n">0.8046</td><td class="n">0.8321</td><td>未映射 gold 计为 miss</td></tr>
+        <tr><td>conditional-on-mapped（原 E27）</td><td class="n">0.8212</td><td class="n">0.8486</td><td>绝对值偏高约 0.017</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    测试半区上未映射 gold 为 <b>13 / 1,110（1.17%）</b>，故<b>差值</b>受影响很小，
+    但<b>绝对水平</b>受影响，跨论文比较时必须使用 unconditional。
+    新脚本每次运行强制打印 QA 数、文档数、gold 数、未映射数与因零 gold 丢弃数。
+  </p>
+</section>
+
+<section>
+  <h2>七 · 测试集反复使用</h2>
+  <p>
+    该切分自 E9 起被反复观察，并用于选择方法（配额、检索器、融合方式、粒度）。
+    因此它<b>不再是干净的确认集</b>，本报告全部结果标记为 <b>exploratory</b>。
+    拟采用的确认方案，二选一：
+  </p>
+  <ol>
+    <li><b>document-grouped nested CV</b>：外层按文档分 5 折，内层在训练折上选配额与融合超参，
+        外层折上评测，报告折间均值与文档聚类 CI。全部离线、零 API，可立即执行。</li>
+    <li><b>冻结后外部确认</b>：把 D/G 配置连同全部超参冻结成一个配置文件，
+        在 MMLongBench-Doc（proposal §9 已列为第二数据集）上跑一次，不做任何调参。</li>
+  </ol>
+  <p>方案 1 成本更低且不引入跨数据集混淆，建议先做方案 1，方案 2 作为可选加强。</p>
+</section>
+
+<section>
+  <h2>八 · 其他实验记录的修正</h2>
+
+  <h3>E19 · 并列最优导致 oracle 空间被高估</h3>
+  <p>
+    <code>C.argmax(axis=1)</code> 在并列时返回最小索引。实测：
+  </p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>指标（k=20）</th><th class="n">自建池</th><th class="n">canonical</th></tr></thead>
+      <tbody>
+        <tr><td>有 &gt;1 个最优配额的题</td><td class="n">97.2%</td><td class="n">97.0%</td></tr>
+        <tr><td>并列最优个数中位数（共 21 个）</td><td class="n">16</td><td class="n">16</td></tr>
+        <tr><td><b>固定配额本身已是最优的题</b></td><td class="n">79.5%</td><td class="n">78.2%</td></tr>
+        <tr><td>argmax 落在 a=0 的题</td><td class="n">1,013 / 1,999</td><td class="n">918 / 2,000</td></tr>
+        <tr><td>oracle − 固定（<b>真实 regret</b>）</td><td class="n good">+0.0694</td><td class="n good">+0.0744</td></tr>
+        <tr><td>E19 所报 oracle − 排列对照</td><td class="n bad">+0.1728</td><td class="n bad">+0.1787</td></tr>
+        <tr><td>并列感知排列对照后</td><td class="n">+0.1166</td><td class="n">+0.1219</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    审计估计的 <b>+0.069~+0.074</b> 与本次复算<b>逐位一致</b>。
+    <code>argmax</code> 把一半以上的题判为 a=0（全图片），而在每题并列集合内均匀取样时分布近乎平坦——
+    偏置来源确认。<b>今后 E19 应报 regret（+0.069/+0.074）作为自适应分配的上界</b>，
+    并同时报「79% 的题固定策略已最优」，而不是把 +0.173/+0.179 称作 query-specific structure。
+  </p>
+
+  <h3>E17 · 训练的标签不是 retriever outcome</h3>
+  <p>
+    确认：<code>clf.fit(..., mostly_visual[tr])</code> 训练的是<b>gold 模态</b>标签，
+    随后 <code>np.where(pred_vis, bm[te], dn[te])</code> 把「视觉→BM25、文字→dense」<b>写死</b>。
+    该实验因此只否证了<b>一条人工指定的策略</b>，并未否证「逐题选择检索器」本身。
+    「61.9% 是 Both」也不足以推出结构上无可选：BM25 与 BGE 都同时检索文本与图片描述，
+    模态构成与检索器优劣不是同一件事。<b>须重做</b>：直接以逐题 <code>recall(dense) − recall(bm25)</code>
+    为回归/分类目标，与静态 RRF 及 E27 的 D/G 比较。
+  </p>
+
+  <h3>E9 · 13 维结果当前不可复现</h3>
+  <p>
+    确认：<code>load_features</code> 恒为 <code>hstack([emb(384), shallow(13)])</code> = 397 维，
+    <b>没有任何 CLI 可选择特征子集</b>。记录簿中「13 维下 2/19 显著提升、4/19 显著下降」
+    无法由当前代码复现，<b>须撤下</b>直至补齐。此外 13 维浅层特征包含人工标注的
+    <code>question_type</code>，属部署时未必可得的 privileged feature，
+    重做时须拆为 deployable / privileged / embedding / candidate-shape 四组分别报告并写 manifest。
+  </p>
+
+  <h3>E18 · 结论须收窄</h3>
+  <p>
+    实测 <code>quote_ocr</code> 6,565 条中 <b>1,270 条（19.3%）</b>为空
+    （审计所称 1,279 与此接近，差异应为统计口径）。
+    非空也不等于 OCR 完整准确。因此只能表述为：
+    <b>在当前问题条件化池、BM25 与 RapidOCR 表示下，VLM 描述显著优于裁剪 OCR</b>；
+    不能推出差距源于「视觉理解而非提取失败」。
+    另，把 recall 差值（+0.42）与 router 的 F1 差值相除得出「60 倍」是<b>跨指标比较</b>，无效，须删除。
+  </p>
+
+  <h3>E24 · 结论方向须反转</h3>
+  <p>
+    池规模确认且比原记录更严重：按文档计图片候选<b>中位数仅 20</b>（均值 <b>29.76</b>，最小 1、最大 262；此处此前误写为 29.4）。按问题加权则是中位 29、均值 34.92——同一个池的两个不同统计量，报告时必须说明是哪一个。全部由 <code>python experiments.py verify E24</code> 断言。
+    而评测到 k=20——<b>对一半文档而言 @20 等于取走整个图片池</b>，饱和是结构性的。
+    模型亦为 ColQwen2-v1.0 而非论文的 v0.1、文本侧为 bge-small 而非 bge-large。
+    更重要的是，按修正口径在<b>视觉槽位</b>上单独替换后，ColQwen 相对图片描述检索
+    在 k=15 与 k=20 上<b>显著更好</b>（+0.0269、+0.0220）。
+    E24 原结论成立的范围仅限于「在 E24 那套 quote 级图片池与 @20 饱和条件下未观察到优势」，
+    而<b>「不值 GPU 成本」这一判断已被本次复算推翻</b>。
+  </p>
+
+  <h3>E25 / E26 · 预算单位与覆盖范围</h3>
+  <p>
+    确认 <code>n_tok = len(tokenize(t))</code>，其中 <code>tokenize</code> 是正则词元
+    <code>[a-z0-9]+(?:[.\-][a-z0-9]+)*</code>，<b>不是生成模型的 BPE token</b>。
+    全文「固定 token 预算」须改为 <b>word-like retrieval budget</b>，
+    或用最终生成模型的 tokenizer 重算（后者更好，因为 proposal §13 的成本论证依赖真实计费 token）。
+    此外该实验仅覆盖 <b>text gold + BM25 + 字符切分</b>，未覆盖视觉 region/page、
+    parent section、稠密检索与下游生成，<b>不能宣称 RQ3 已完成</b>，应改为「RQ3 的文本-BM25 切片已完成」。
+  </p>
+
+  <h3>Judge 文件</h3>
+  <p>
+    可表述为：<b>发布的 judge 产物中 62/187 不完整，因此无法从发布文件构造同底比较</b>。
+    不能断言作者内部计算使用了不同分母——本项目没有观测到作者的内部流程。
+  </p>
+</section>
+
+<section>
+  <h2>九 · 复现产物</h2>
+  <p>已生成（<code>retrieval/eval_stack_v2.py --dump</code>），覆盖 6 个池×预算组合：</p>
+  <ul>
+    <li><code>manifests/e27_{selfbuilt,canonical}_k{10,15,20}_test.json</code> ——
+        git commit 与 dirty 标志、seed、bootstrap 次数、RRF 常数、检索器与模型名、
+        论文未复现模型清单、配额（论文与均衡分别列出）、QA/文档/gold/未映射/丢弃计数、
+        池规模与图片缺口说明、四个关键数据文件的 SHA-1、Python 与平台、
+        每个系统的 unconditional 与 conditional recall、全部比较的点估计与两种 CI、完整命令行。</li>
+    <li><code>manifests/e27_*_perquestion.csv</code> —— 逐题：question_uid、doc_name、split、
+        gold 总数、未映射数、视觉 gold 数，以及 8 个系统各自的 recall。</li>
+  </ul>
+  <p class="dim">
+    尚未补齐：E14–E26 的 manifest。这些实验运行时未记录 commit 与文件 hash，
+    <b>无法事后恢复的字段将标为 unknown，不会补造</b>。
+  </p>
+</section>
+
+<section>
+  <h2>十 · 拟采用的表述</h2>
+  <p>建议以下述文字替换记录簿 E27 与 proposal 第 18 节的对应段落。已按本次多重比较结果比审计建议再收窄一档：</p>
+  <blockquote>
+    在两种候选池构造变体与一个 document-disjoint 的<b>探索性</b>切分上，
+    模态内 BM25–BGE-small RRF 融合配合固定均衡配额，相对<b>本地 BGE-small-only 替代基线</b>
+    将 Recall@k 提高约 <b>0.023–0.046</b>（document-cluster bootstrap，95% CI 均不含 0）。
+    相对<b>最接近论文的本地 hybrid 对照</b>（BGE-small 文本 + ColQwen2-v1.0 视觉 + 官方配额），
+    稳健显著的提升集中在紧预算 <b>k=10，约 0.036–0.037</b>；k=15 与 k=20 的差异不可与 0 区分。
+    在对 54 次比较作 Bonferroni 校正后，仅「RRF 文本 + ColQwen 视觉 + 均衡配额」相对该对照
+    在 k=10 上于两个池同时存活（+0.047 / +0.046）。
+  </blockquote>
+  <p>同时必须明确写出：</p>
+  <ul>
+    <li>E27 是一个 <b>static retrieval baseline</b>，<b>不是 adaptive routing</b>；</li>
+    <li>本项目的 adaptive 方法此后必须在<b>相同预算与相同候选池</b>上超过 E27（具体为 D 与 G），而不是超过 A；</li>
+    <li>停止使用「击败论文配置」「两个池独立复现」「六格全部显著」三种表述；</li>
+    <li>图片侧检索一律称 image-description retrieval，仅 ColQwen 臂称 visual retrieval；</li>
+    <li>所有结论标注 exploratory，直至完成 document-grouped nested CV 或外部确认集。</li>
+  </ul>
+  <div class="card note">
+    <p>
+      <b>这个修正让项目的叙事更清楚，而不是更弱。</b>
+      E27 变成一个诚实的强静态基线：融合与均衡配额在紧预算下确有收益，
+      而视觉检索器在宽预算下确有收益（E24 的方向修正）。
+      于是 adaptive 部分的任务被重新定义为「能否超过这个强静态基线」——
+      即使最终超不过，「强静态融合有效、简单逐题路由不稳定」本身就是完整的研究结论，
+      而且现在它建立在正确的基线、正确的分母和正确的抽样单位上。
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>补充 · document-grouped nested CV（审计后新增）</h2>
+  <p>
+    审计第七项要求的确认协议已实现（<code>retrieval/nested_cv.py</code>）：
+    外层按<b>文档</b>分 5 折，内层只看其余文档、在
+    <b>5 种检索器配置 × 全部 k+1 种配额</b>上选配置，held-out 折用一个它从未影响过的配置评分。
+    每道题最终都被 out-of-fold 评分，因此可用<b>全部 2,000 题</b>而非 396 题，功效约提升 2.2 倍。
+  </p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>比较（out-of-fold，2,000 题 / 220 篇文档）</th><th class="n">k=10</th><th class="n">k=20</th></tr></thead>
+      <tbody>
+        <tr><td>nested-CV 选出的流水线 − 论文式对照 E（自建池）</td>
+            <td class="n good">+0.0608 [+0.0471,+0.0748] *</td><td class="n good">+0.0304 [+0.0192,+0.0415] *</td></tr>
+        <tr><td>同上（canonical 池）</td>
+            <td class="n good">+0.0541 [+0.0402,+0.0689] *</td><td class="n good">+0.0269 [+0.0170,+0.0367] *</td></tr>
+        <tr><td>论文式对照 E − 本地替代基线 A</td>
+            <td class="n dim">+0.0075 [−0.0048,+0.0202]</td><td class="n dim">+0.0039 [−0.0047,+0.0127]</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <b>在无选择泄漏的协议下，相对论文式对照的提升在 k=10 与 k=20 上都显著</b>，
+    这解除了单切分分析中「只有 k=10 稳健」的限制——那个限制主要来自 396 题的功效不足。
+    内层选出的配置在 k=10 上五折一致（<code>RRF/RRF, 4/6</code>），
+    在 k=20 上配额在 8/12~11/9 之间摆动，说明<b>配额在平台上，具体取值不重要</b>，
+    与 E19 的并列最优发现一致。
+  </p>
+  <p class="dim">
+    注意内层从未选中任何 ColQwen 配置：放开配额后，
+    最好的 <code>RRF/ColQwen</code> 为 0.8114，被 <code>RRF/RRF</code> 的 0.8197 压住。
+    这与上方 E−A 的全量重算相互印证。
+  </p>
+</section>
+
+<section>
+  <h2>待办清单</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>项</th><th>工作</th><th>成本</th></tr></thead>
+      <tbody>
+        <tr><td>八·2</td><td><s>E17 改为直接预测逐题 retriever outcome</s> —— <b>已完成</b>：路由 0.7273 不再劣于最优固定 0.7113（CI 跨 0），但显著劣于静态 RRF 0.7551（−0.0279）</td><td>已完成</td></tr>
+        <tr><td>八·1</td><td>把 tie-aware oracle 并入 <code>budget_alloc.py</code>，输出 regret 与 safe interval</td><td>零 API</td></tr>
+        <tr><td>八·3</td><td>为 <code>train_modality</code> 增加 <code>--features</code> 四选项与 manifest，重跑并更正表述</td><td>零 API</td></tr>
+        <tr><td>七</td><td><s>document-grouped nested CV</s> —— <b>已完成</b>，见上节</td><td>已完成</td></tr>
+        <tr><td>二·3</td><td>下载 bge-large-en-v1.5 与 ColQwen2-v0.1，重建最接近论文的对照</td><td class="bad">约 1.5 GB 下载 + 重编码，需批准</td></tr>
+        <tr><td>五·4</td><td>为 13,999 张图片建 ColQwen 完整索引，在完整图片池上重跑视觉臂比较</td><td class="bad">GPU 数小时</td></tr>
+        <tr><td>八·6</td><td>用生成模型 tokenizer 重算 E25/E26 的预算轴</td><td>零 API</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  本报告未修改 <code>docs/lab-notebook.html</code> 与 proposal，亦未改动 <code>retrieval/eval_stack.py</code>；
+  历史数字全部保留。新代码：<code>retrieval/eval_stack_v2.py</code>、<code>retrieval/audit_e19_ties.py</code>。
+  全部结论为 exploratory。
+</footer>
+
+</div>

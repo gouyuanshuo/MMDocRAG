@@ -1,0 +1,35 @@
+# MMDocRAG — pinned dependencies
+#
+# Recorded from the working environment on 2026-08-24 (Python 3.13.7, Windows).
+# `python -m manifest` stamps the resolved versions into every experiment
+# manifest, so this file is the declared baseline and the manifest is the
+# as-run record.
+
+# --- evaluation (eval_all.py) — CPU only, no API keys needed ---
+nltk==3.9.3
+rouge_score==0.1.2
+tqdm==4.67.1
+numpy==2.4.5
+
+# --- API inference (inference_api.py, eval_llm_judge.py) ---
+# Only the providers you actually call need to be installed.
+openai==2.37.0
+# anthropic>=0.40          # required for claude-* models
+# google-genai>=1.0        # required for gemini-* models
+
+# --- retrieval / router (Phase 1B onwards) ---
+torch==2.6.0+cu124         # install from https://download.pytorch.org/whl/cu124
+transformers==4.57.3
+sentence-transformers==5.4.1
+pymupdf==1.28.2            # PDF parsing and page rendering
+
+# --- OCR (canonical/ocr.py) ---
+# 1,606 of the corpus's 14,763 pages carry no text layer and 28 documents are
+# image-only, so PyMuPDF alone cannot see them. RapidOCR is ONNX-based: pip
+# installable, no external binary, no admin rights, runs on CPU.
+rapidocr-onnxruntime==1.2.3
+
+# --- local checkpoint inference / finetuning (inference_checkpoint.py,
+#     train_swift_qwen.py). Not installed here: both need far more than the
+#     8 GB of VRAM available on this machine. ---
+# ms-swift>=3.0

@@ -1,0 +1,66 @@
+{
+  "name": "env/snapshot",
+  "created_utc": "2026-08-24T10:06:36Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "manifest.py",
+      "requirements.txt",
+      "tmp/",
+      "val_all.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": null,
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "dataset\\evaluation_20.jsonl",
+      "sha256": "7ba72aaa94407127955fa1a693897f500b2d9cb42b1ed629e424ba3e458608b9",
+      "bytes": 31612492
+    },
+    {
+      "path": "dataset\\dev_20.jsonl",
+      "sha256": "0419c15276e3f37a7b8943783f46f18265790744f5178d7b658363a93d514724",
+      "bytes": 34721636
+    },
+    {
+      "path": "prompt_bank\\multimodal_infer.txt",
+      "sha256": "9344cbb8a51e76f1541b72ad22a93ad024394ceadaaf19232a53cd9de0c23abc",
+      "bytes": 1276
+    }
+  ],
+  "config": {},
+  "results": {},
+  "argv": [
+    "manifest.py",
+    "--name",
+    "env/snapshot",
+    "--data",
+    "dataset/evaluation_20.jsonl",
+    "dataset/dev_20.jsonl",
+    "prompt_bank/multimodal_infer.txt"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "name": "canonical/build",
+  "created_utc": "2026-08-24T10:15:05Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "canonical/",
+      "eval_llm_judge.py",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "requirements.txt",
+      "tmp/",
+      "train_swift_qwen.py",
+      "val_all.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": null,
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "dataset\\evaluation_20.jsonl",
+      "sha256": "7ba72aaa94407127955fa1a693897f500b2d9cb42b1ed629e424ba3e458608b9",
+      "bytes": 31612492
+    },
+    {
+      "path": "dataset\\evaluation_15.jsonl",
+      "sha256": "09c210db52cacec50fc0871608b8a2da953f5c788a56aaa83363bba6ed3ff0d5",
+      "bytes": 23935992
+    },
+    {
+      "path": "dataset\\dev_20.jsonl",
+      "sha256": "0419c15276e3f37a7b8943783f46f18265790744f5178d7b658363a93d514724",
+      "bytes": 34721636
+    },
+    {
+      "path": "dataset\\dev_15.jsonl",
+      "sha256": "c41c460e03ccb4b9fac64085d2246976f1f7b0baa76a27604493035d2324b5c6",
+      "bytes": 26035437
+    }
+  ],
+  "config": {
+    "db": "D:\\Playground\\MMDocRAG\\canonical\\mmdocrag.sqlite",
+    "pdf_zip": "D:\\Dataset\\MMDocRAG\\doc_pdfs.zip"
+  },
+  "results": {
+    "questions": 4055,
+    "evidence": 25716,
+    "candidates": 141480,
+    "gold_rows": 21978,
+    "gold_total": 21978,
+    "alias_count": 14,
+    "gate1_pass": true,
+    "unresolved": 0
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\canonical\\build.py"
+  ]
+}

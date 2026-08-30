@@ -1,0 +1,201 @@
+{
+  "experiment": "E24",
+  "created_utc": "2026-08-28T08:05:51Z",
+  "status": "pass",
+  "counts": {
+    "pass": 22,
+    "fail": 0,
+    "skipped": 0
+  },
+  "notes": [],
+  "measured": {
+    "A.image_evidence_rows_all": 6565,
+    "A.distinct_img_path_all": 6504,
+    "A.doc_names_all": 223,
+    "B.image_evidence_rows_eval": 6548,
+    "B.distinct_img_path_eval": 6487,
+    "B.evaluation_documents": 220,
+    "B.evaluation_questions": 2000,
+    "C.original_images_eval_docs": 13999,
+    "C.unique_images_in_pool": 6487,
+    "C.images_not_in_pool": 7512,
+    "C.unique_image_coverage": 0.4633902421601543,
+    "C.WRONG_evidence_row_ratio": 0.46774769626401885,
+    "D.pool_median_per_document": 20,
+    "D.pool_mean_per_document": 29.7636,
+    "D.pool_min_per_document": 1,
+    "D.pool_max_per_document": 262,
+    "D.pool_median_per_question": 29,
+    "D.pool_mean_per_question": 34.921,
+    "E.colqwen_questions_covered": 2000,
+    "E.colqwen_ranking_rows": 69842,
+    "E.colqwen_length_mismatches": 0,
+    "E.visual_gold_pairs_setting20": 3231,
+    "E.visual_gold_missing_from_ranking": 0
+  },
+  "checks": [
+    {
+      "key": "A.image_evidence_rows_all",
+      "expected": 6565,
+      "measured": 6565,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "A.distinct_img_path_all",
+      "expected": 6504,
+      "measured": 6504,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "A.doc_names_all",
+      "expected": 223,
+      "measured": 223,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.image_evidence_rows_eval",
+      "expected": 6548,
+      "measured": 6548,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.distinct_img_path_eval",
+      "expected": 6487,
+      "measured": 6487,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.evaluation_documents",
+      "expected": 220,
+      "measured": 220,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.evaluation_questions",
+      "expected": 2000,
+      "measured": 2000,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.original_images_eval_docs",
+      "expected": 13999,
+      "measured": 13999,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.unique_images_in_pool",
+      "expected": 6487,
+      "measured": 6487,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.images_not_in_pool",
+      "expected": 7512,
+      "measured": 7512,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_median_per_document",
+      "expected": 20,
+      "measured": 20,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_min_per_document",
+      "expected": 1,
+      "measured": 1,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_max_per_document",
+      "expected": 262,
+      "measured": 262,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_median_per_question",
+      "expected": 29,
+      "measured": 29,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.colqwen_questions_covered",
+      "expected": 2000,
+      "measured": 2000,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.colqwen_ranking_rows",
+      "expected": 69842,
+      "measured": 69842,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.colqwen_length_mismatches",
+      "expected": 0,
+      "measured": 0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.visual_gold_pairs_setting20",
+      "expected": 3231,
+      "measured": 3231,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.visual_gold_missing_from_ranking",
+      "expected": 0,
+      "measured": 0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.unique_image_coverage",
+      "expected": 0.46339,
+      "measured": 0.4633902421601543,
+      "ok": true,
+      "tolerance": 1e-05,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_mean_per_document",
+      "expected": 29.7636,
+      "measured": 29.7636,
+      "ok": true,
+      "tolerance": 0.001,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_mean_per_question",
+      "expected": 34.921,
+      "measured": 34.921,
+      "ok": true,
+      "tolerance": 0.001,
+      "status": "pass"
+    }
+  ],
+  "correct_wording": {
+    "unique_image_coverage": "6,487 / 13,999 = 46.34%",
+    "deprecated_figure": "46.8% (evidence rows / unique images -- unit mismatch)",
+    "pool_size": "per document median 20, mean 29.8; per question median 29, mean 34.9",
+    "colqwen": "ranks 100% of the in-pool image evidence and no visual gold is absent from the full ranking; being in the ranking is NOT the same as entering top-k -- ColQwen Recall@10 approx 0.820, Recall@20 approx 0.929"
+  }
+}

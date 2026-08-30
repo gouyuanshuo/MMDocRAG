@@ -1,0 +1,134 @@
+{
+  "experiment": "E36",
+  "title": "逐题路由：GPU 决策可学，CPU 融合决策不可学",
+  "run_id": "20260830T111651Z_e36",
+  "lifecycle": "active",
+  "primary_metric": "同预算下 路由器 − 随机分配 的 Recall@k",
+  "sample_unit": "document",
+  "started_utc": "2026-08-30T11:16:51Z",
+  "commands": [
+    {
+      "label": "E36#0",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "-m",
+        "router.phase3_cells",
+        "--features",
+        "search"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd0/stdout.log",
+      "stderr_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd0/stderr.log",
+      "started_utc": "2026-08-30T11:16:51Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 2.916,
+      "ended_utc": "2026-08-30T11:16:54Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd0"
+    },
+    {
+      "label": "E36#1",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "-m",
+        "router.phase3_cells",
+        "--features",
+        "shape+firstpass"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd1/stdout.log",
+      "stderr_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd1/stderr.log",
+      "started_utc": "2026-08-30T11:16:54Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 2.813,
+      "ended_utc": "2026-08-30T11:16:57Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd1"
+    },
+    {
+      "label": "E36#2",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "-m",
+        "router.budget_router",
+        "--pool",
+        "selfbuilt",
+        "--k",
+        "10",
+        "--policy",
+        "A",
+        "--features",
+        "free"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2/stdout.log",
+      "stderr_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2/stderr.log",
+      "started_utc": "2026-08-30T11:16:57Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 342.283,
+      "ended_utc": "2026-08-30T11:22:39Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2"
+    },
+    {
+      "label": "E36#3",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "-m",
+        "router.budget_router",
+        "--pool",
+        "selfbuilt",
+        "--k",
+        "10",
+        "--policy",
+        "B",
+        "--features",
+        "shape+firstpass"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd3/stdout.log",
+      "stderr_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd3/stderr.log",
+      "started_utc": "2026-08-30T11:22:39Z",
+      "env_overlay": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 31.135,
+      "ended_utc": "2026-08-30T11:23:10Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd3"
+    }
+  ],
+  "dry_run": false,
+  "status": "ok",
+  "ended_utc": "2026-08-30T11:23:10Z",
+  "elapsed_sec": 379.147,
+  "metrics_files": [
+    "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd0/metrics.json",
+    "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd1/metrics.json",
+    "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2/metrics.json",
+    "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd3/metrics.json"
+  ],
+  "instrumented": true
+}

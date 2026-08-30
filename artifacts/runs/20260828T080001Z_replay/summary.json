@@ -1,0 +1,176 @@
+{
+  "run_id": "20260828T080001Z_replay",
+  "created_utc": "2026-08-28T08:05:38Z",
+  "suite": "replay",
+  "offline": true,
+  "counts": {
+    "stdout-only": 4,
+    "ok": 3
+  },
+  "n_metrics": 209,
+  "experiments": [
+    {
+      "id": "E1",
+      "title": "复现锚点",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 57.51,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E1/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "官方评测代码是否与论文公布的数字自洽？",
+      "how": "用仓库内已发布的 response 文件重算官方 17 项指标，不调用任何模型。",
+      "metric_meaning": "逐位命中论文公布的数字即代表本地评分口径与论文自洽。",
+      "limits": "这是评测复算，不是完整实验复现；没有重跑检索器，也没有重新调用模型。",
+      "primary_metric": "quote-selection F1",
+      "sample_unit": "question",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E2",
+      "title": "评测脚本的静默截断缺陷",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 55.542,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E2/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "断点续跑产生的部分结果会不会被静默地在更少样本上求均值？",
+      "how": "按 q_id join 替换 zip()，并显式打印共同样本数。",
+      "metric_meaning": "覆盖率 < 100% 时必须报错或显式声明，而不是静默在少数样本上求均值。",
+      "limits": "只能说明已发布 judge artifacts 无法构造同底比较，不能推断作者内部流程。",
+      "primary_metric": "覆盖率报告",
+      "sample_unit": "question",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E3",
+      "title": "工程可复现性",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 0.063,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E3/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "仓库能否在本机复现？",
+      "how": "检查 manifest 模块存在且可导入。",
+      "metric_meaning": "基础设施可用性检查，不产生实验数字。",
+      "limits": "这是工程整改，不是方法贡献。",
+      "primary_metric": "模块可导入",
+      "sample_unit": "question",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E24",
+      "title": "ColQwen2 在本项目的池规模下不值它的 GPU 成本",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 2.878,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E24/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E24/metrics.json"
+      ],
+      "asks": "视觉检索器能否胜过打在 VLM 描述上的文本检索器？",
+      "how": "在当前 evaluation 图片池上比较 ColQwen2 像素排序与 BM25/BGE/RRF 描述检索。第 0 条命令重建 GPU 索引（约 62 分钟），replay 只跑第 1 条评价命令。",
+      "metric_meaning": "视觉 gold 落入 top-k 的比例。注意「在完整 ranking 中」不等于「进入 top-k」。",
+      "limits": "池只覆盖 13,999 张原始图片中的 6,487 张（46.34% 唯一图片）；按文档中位仅 20 个候选，k=20 已接近饱和。这是公平的池内排序比较，不是完整文档图片池上的检索比较。",
+      "primary_metric": "image gold Recall@k（ColQwen vs 描述检索）",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "（审计初版曾称）E24 方向错误，ColQwen 在 k=15/20 显著有益 +0.0269 / +0.0220",
+        "那只在 396 题探索半区成立，全量重算 CI 跨 0，该主张已由作者撤回"
+      ]
+    },
+    {
+      "id": "E27",
+      "title": "静态检索配置的改进",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 121.725,
+      "n_commands": 6,
+      "logs": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd0/stdout.log",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd1/stdout.log",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd2/stdout.log",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd3/stdout.log",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd4/stdout.log",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd5/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd0/metrics.json",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd1/metrics.json",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd2/metrics.json",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd3/metrics.json",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd4/metrics.json",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E27/cmd5/metrics.json"
+      ],
+      "asks": "模态内 RRF 融合 + 均衡配额，能比基线好多少？",
+      "how": "文本与图片描述分支内分别 RRF(BM25,BGE-small)，再采用较均衡配额，与本地论文式对照（dense 文本 + ColQwen 视觉 + 官方配额）比较。",
+      "metric_meaning": "每题被找回的 gold evidence 比例；未映射 gold 计为 miss。",
+      "limits": "单切分结果为 exploratory；泛化性只由 E28 的 nested CV 支持。",
+      "primary_metric": "Evidence Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "比论文发布的检索配置高 +0.023 ~ +0.049，两个池 × 三个预算六格全显著",
+        "基线其实是本地 bge-small 同时跑文本与图片文字描述，既非论文的 bge-large 也不含 ColQwen 视觉检索器，不能称「优于论文配置」；且当时按题 bootstrap（396 题只来自 55 篇文档），并静默丢弃 62 条未映射 gold"
+      ]
+    },
+    {
+      "id": "E28",
+      "title": "复现性与结论边界审计",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 5.467,
+      "n_commands": 2,
+      "logs": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E28/cmd0/stdout.log",
+        "artifacts/runs/20260828T080001Z_replay/experiments/E28/cmd1/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "已发布的结论有哪些超出了证据？",
+      "how": "document-grouped 外层 CV，内层在训练折上重选检索器与配额，每题由未参与其配置选择的折评分。",
+      "metric_meaning": "无脚本内选择泄漏的 Recall；仍是 internal OOF，不是外部确认。",
+      "limits": "并非严格双层 inner-CV；方法空间此前已用同一 2,000 题开发，k=20 时各折选择不稳定。",
+      "primary_metric": "OOF Evidence Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E30",
+      "title": "归因消融：+0.054 究竟来自哪个组件",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 91.423,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E30/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260828T080001Z_replay/experiments/E30/metrics.json"
+      ],
+      "asks": "主结果同时改了文本检索器、图片检索方式和配额，三者各占多少？",
+      "how": "每格 2×2×2 因子设计，四格（两池 × 两预算）一次跑完，按文档 cluster bootstrap 求主效应，并对 4×3=12 个主效应做 Holm 校正。",
+      "metric_meaning": "每个主效应是该因子单独翻转、另两因子取遍所有水平的平均配对差。raw 95% CI 与 Holm 校正后的 p 同时给出，校正不隐藏任何东西。",
+      "limits": "这是**内部组件归因**，不是外部泛化验证：固定配置、单一 benchmark、且该 benchmark 已被本项目用于挑选方法。视觉因子同时换了表示（像素→VLM 文字）与检索器数量（单模型→双模型融合），因此必须整条命名为 visual branch，不能简称为表示效应。",
+      "primary_metric": "主效应（配额 / 图片描述检索 / RRF 文本融合）",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    }
+  ]
+}

@@ -1,0 +1,1488 @@
+{
+  "run_id": "20260829T084536Z_api",
+  "fingerprint": "3b8b74f748f59ef3",
+  "fingerprint_covers": "per-file sha256 of the source files listed below plus the full registry snapshot",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      ".gitignore",
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_oursk10_sidecar.json",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_paperk10_sidecar.json",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotesoursk10.txt",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotesoursk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tests/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ],
+    "patch": "artifacts/runs/20260829T084536Z_api/source.patch",
+    "patch_sha256": "76524a81f10f40f32e9a183473bee19f5315811844e11d61c175149c013bfa46",
+    "patch_covers": "tracked files only. `git diff HEAD` cannot see untracked files, so the patch alone does NOT reconstruct this run -- use source_bundle.zip.",
+    "patch_reconstructs_n_files": 7,
+    "reconstruct": "git checkout <commit> && git apply artifacts/runs/20260829T084536Z_api/source.patch  # tracked files only -- NOT sufficient"
+  },
+  "source_bundle": {
+    "path": "artifacts/runs/20260829T084536Z_api/source_bundle.zip",
+    "sha256": "1bec0c3342e277986b272c12063e73bdb1dc254805d859b7f7c678fd6cd97900",
+    "n_files": 20,
+    "bytes": 105892,
+    "members": {
+      "data_utils.py": {
+        "sha256": "464aff13cbf7ce41d2f91118d1a5af71a547b525714125bb9528ec1ccdffe51f",
+        "bytes": 1294
+      },
+      "eval_all.py": {
+        "sha256": "55a3c0081090c6aa4c4c36dac125657167d5fb8a9c7e6141d67f0398cdd7cef9",
+        "bytes": 20962
+      },
+      "experiments.py": {
+        "sha256": "46fccde1ca0b57fc7cc498bfd7292b02c3b1cc743c94734b4ed02b278d3c59c3",
+        "bytes": 92384
+      },
+      "expkit/__init__.py": {
+        "sha256": "bd67fca9097532efe11a30e6b4fdd522e996903f037e2d1be038bb9154427282",
+        "bytes": 1045
+      },
+      "expkit/apilog.py": {
+        "sha256": "eda6eb4d369946dc811d3ac841e1b5b59cc3746f2d4b579bdc4cd05234ae5b01",
+        "bytes": 11632
+      },
+      "expkit/artifacts.py": {
+        "sha256": "d0edf09b8127256aa8d17376a484eed3bdffc7e68f8c53b79ee6e95c69f333ce",
+        "bytes": 17928
+      },
+      "expkit/paths.py": {
+        "sha256": "3b24a59f98c42540d55fa6596e26d5e44528d4a647419cff69b1bb60488395dc",
+        "bytes": 6058
+      },
+      "expkit/report.py": {
+        "sha256": "25f68d01cb4322b491baddacab0ebf1f7686db7afdf4fd005d6c78a3f8a70c40",
+        "bytes": 19139
+      },
+      "expkit/results.py": {
+        "sha256": "56788ae66757af50fadb1b22bba11a6c0178a79af68fc9b373f0bb2a91912478",
+        "bytes": 8413
+      },
+      "expkit/runner.py": {
+        "sha256": "5c57e8cd185e9a8b15e04427791bd4e2295e6b6193e78ad44a705f3459ada54b",
+        "bytes": 9090
+      },
+      "expkit/source.py": {
+        "sha256": "a7fc7a5b566bce7176582e702db9e27ce965a0e4490f4a953f9a1026ab1eeb07",
+        "bytes": 27754
+      },
+      "expkit/verify.py": {
+        "sha256": "9b411957423c65570e9dfa310b0fcba637a256a5e2a9369bc961970f03f6bc92",
+        "bytes": 33398
+      },
+      "inference_api.py": {
+        "sha256": "77aa9bcf569a23ab92e33e7953177a93d6c55bc0e60d0267c3aa792cead65631",
+        "bytes": 26903
+      },
+      "inference_wrapper.py": {
+        "sha256": "c0df35ce80c896d92c1623f6d1bf80fbada6a7d3846904269278ca6ad79a9d20",
+        "bytes": 21723
+      },
+      "manifest.py": {
+        "sha256": "26945362f4048ecce74ac12335a44c807bc69330c25393ccd6b30c9c340ab943",
+        "bytes": 5974
+      },
+      "prompt_bank/evaluation_answer.txt": {
+        "sha256": "c831481b77110535ce42b1631dfac70707816489b01485f7b3ee4de9c59fbda7",
+        "bytes": 3209
+      },
+      "prompt_bank/multimodal_infer.txt": {
+        "sha256": "9344cbb8a51e76f1541b72ad22a93ad024394ceadaaf19232a53cd9de0c23abc",
+        "bytes": 1276
+      },
+      "prompt_bank/pure_text_infer.txt": {
+        "sha256": "f401a7dcc9d345fbe4b6aa3de0fb5783d982327dbeed27d470e2756f77870630",
+        "bytes": 1469
+      },
+      "retrieval/__init__.py": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "retrieval/make_eval_jsonl.py": {
+        "sha256": "975a46fb991e8a027d420c125fd293b0b887c72732f1882a7c297cd758fa63b0",
+        "bytes": 11496
+      }
+    },
+    "excluded": [],
+    "contains": "source only: the files listed in source_files. No dataset, model, vector, index, API log, response or credential is included.",
+    "selfcheck": {
+      "status": "pass",
+      "n_members": 20,
+      "n_ok": 20,
+      "n_bad": 0,
+      "unexpected_members": [],
+      "failures": []
+    },
+    "reconstruction": [
+      "git archive --format=zip <commit> -o head.zip   # read-only; never `git checkout` a dirty tree",
+      "unzip head.zip -d <tree>",
+      "cd <tree> && git apply <run>/source.patch        # tracked-file working-tree deltas",
+      "unzip -o <run>/source_bundle.zip -d <tree>       # authoritative: overwrites with the exact bytes that ran",
+      "python -m expkit.source reconstruct --run <run_id>  # does all of the above and re-hashes every file"
+    ],
+    "authority": "source_bundle.zip is the final source snapshot. The patch records working-tree modifications to tracked files and is kept for review; where the two differ, the bundle is what ran."
+  },
+  "python": {
+    "executable": "D:\\Python313\\python.exe",
+    "version": "3.13.7"
+  },
+  "source_files": {
+    "experiments.py": {
+      "sha256": "46fccde1ca0b57fc7cc498bfd7292b02c3b1cc743c94734b4ed02b278d3c59c3",
+      "bytes": 92384
+    },
+    "manifest.py": {
+      "sha256": "26945362f4048ecce74ac12335a44c807bc69330c25393ccd6b30c9c340ab943",
+      "bytes": 5974
+    },
+    "data_utils.py": {
+      "sha256": "464aff13cbf7ce41d2f91118d1a5af71a547b525714125bb9528ec1ccdffe51f",
+      "bytes": 1294
+    },
+    "eval_all.py": {
+      "sha256": "55a3c0081090c6aa4c4c36dac125657167d5fb8a9c7e6141d67f0398cdd7cef9",
+      "bytes": 20962
+    },
+    "inference_api.py": {
+      "sha256": "77aa9bcf569a23ab92e33e7953177a93d6c55bc0e60d0267c3aa792cead65631",
+      "bytes": 26903
+    },
+    "inference_wrapper.py": {
+      "sha256": "c0df35ce80c896d92c1623f6d1bf80fbada6a7d3846904269278ca6ad79a9d20",
+      "bytes": 21723
+    },
+    "expkit/__init__.py": {
+      "sha256": "bd67fca9097532efe11a30e6b4fdd522e996903f037e2d1be038bb9154427282",
+      "bytes": 1045
+    },
+    "expkit/apilog.py": {
+      "sha256": "eda6eb4d369946dc811d3ac841e1b5b59cc3746f2d4b579bdc4cd05234ae5b01",
+      "bytes": 11632
+    },
+    "expkit/artifacts.py": {
+      "sha256": "d0edf09b8127256aa8d17376a484eed3bdffc7e68f8c53b79ee6e95c69f333ce",
+      "bytes": 17928
+    },
+    "expkit/paths.py": {
+      "sha256": "3b24a59f98c42540d55fa6596e26d5e44528d4a647419cff69b1bb60488395dc",
+      "bytes": 6058
+    },
+    "expkit/report.py": {
+      "sha256": "25f68d01cb4322b491baddacab0ebf1f7686db7afdf4fd005d6c78a3f8a70c40",
+      "bytes": 19139
+    },
+    "expkit/results.py": {
+      "sha256": "56788ae66757af50fadb1b22bba11a6c0178a79af68fc9b373f0bb2a91912478",
+      "bytes": 8413
+    },
+    "expkit/runner.py": {
+      "sha256": "5c57e8cd185e9a8b15e04427791bd4e2295e6b6193e78ad44a705f3459ada54b",
+      "bytes": 9090
+    },
+    "expkit/source.py": {
+      "sha256": "a7fc7a5b566bce7176582e702db9e27ce965a0e4490f4a953f9a1026ab1eeb07",
+      "bytes": 27754
+    },
+    "expkit/verify.py": {
+      "sha256": "9b411957423c65570e9dfa310b0fcba637a256a5e2a9369bc961970f03f6bc92",
+      "bytes": 33398
+    },
+    "prompt_bank/evaluation_answer.txt": {
+      "sha256": "c831481b77110535ce42b1631dfac70707816489b01485f7b3ee4de9c59fbda7",
+      "bytes": 3209
+    },
+    "prompt_bank/multimodal_infer.txt": {
+      "sha256": "9344cbb8a51e76f1541b72ad22a93ad024394ceadaaf19232a53cd9de0c23abc",
+      "bytes": 1276
+    },
+    "prompt_bank/pure_text_infer.txt": {
+      "sha256": "f401a7dcc9d345fbe4b6aa3de0fb5783d982327dbeed27d470e2756f77870630",
+      "bytes": 1469
+    },
+    "retrieval/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "retrieval/make_eval_jsonl.py": {
+      "sha256": "975a46fb991e8a027d420c125fd293b0b887c72732f1882a7c297cd758fa63b0",
+      "bytes": 11496
+    }
+  },
+  "invoked_modules": [
+    "eval_all.py",
+    "inference_api.py",
+    "retrieval/__init__.py",
+    "retrieval/make_eval_jsonl.py"
+  ],
+  "key_data_files": {
+    "canonical/mmdocrag.sqlite": {
+      "sha256_head_tail_size": "0e9adfc2345a592aa4001eaa5f06abdde4ba80f184d56fc6ff9d5dc6f9f0c1f3",
+      "bytes": 49606656,
+      "note": "head+tail+size digest; full hash in manifest.json"
+    },
+    "retrieval/quotes.sqlite": {
+      "sha256_head_tail_size": "526b518a8cbaa7de138ce132f209f581cea31d54bebe2e7e32fc1345f0e6fc2b",
+      "bytes": 58863616,
+      "note": "head+tail+size digest; full hash in manifest.json"
+    },
+    "retrieval/colqwen_scores.sqlite": {
+      "sha256_head_tail_size": "f1ab45a5a9aad13dde77d567f53f01f5fb4a90ec626679e0f5f1d39d1eb043b9",
+      "bytes": 8933376,
+      "note": "head+tail+size digest; full hash in manifest.json"
+    },
+    "retrieval/pages.sqlite": {
+      "sha256_head_tail_size": "324adbd8a785a406b2fafe666ec14889e9315d87c998e06fb5e00ec266b42c95",
+      "bytes": 51830784,
+      "note": "head+tail+size digest; full hash in manifest.json"
+    },
+    "manifests/split_doc_disjoint.json": {
+      "sha256_head_tail_size": "7e1a97e075db378180c6933ee350f6bb72256a17aeb868008b32054a1fb89d1d",
+      "bytes": 51014,
+      "note": "head+tail+size digest; full hash in manifest.json"
+    },
+    "manifests/e29_subset.json": {
+      "sha256_head_tail_size": "b89bc29028bcda8b14adf3ecb564d280a191a698b1420e4ff9ca64e560a7e89c",
+      "bytes": 28372,
+      "note": "head+tail+size digest; full hash in manifest.json"
+    }
+  },
+  "registry_snapshot": [
+    {
+      "id": "E1",
+      "phase": "1A",
+      "status": "pass",
+      "lifecycle": "active",
+      "title": "复现锚点",
+      "asks": "官方评测代码是否与论文公布的数字自洽？",
+      "cmds": [
+        "{py} eval_all.py --model gemini-2.0-flash --setting 20 --mode multimodal"
+      ],
+      "suites": [
+        "replay"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "quote-selection F1",
+      "sample_unit": "question",
+      "expected_outputs": [
+        "stdout metrics table"
+      ],
+      "estimated_runtime": 90,
+      "result": "17 项指标逐位命中：3708.7 & 226.4 & 72.8 & 69.7 & 71.2 & 37.8 & 63.4 & 47.4 & 60.0 & 0.130 & 0.292；judge 3.69/2.79/3.17/2.86/3.05/3.11",
+      "note": "这条是全项目的回归测试。改动任何评测路径后都必须重跑，且必须逐位一致。",
+      "how": "用仓库内已发布的 response 文件重算官方 17 项指标，不调用任何模型。",
+      "metric_meaning": "逐位命中论文公布的数字即代表本地评分口径与论文自洽。",
+      "limits": "这是评测复算，不是完整实验复现；没有重跑检索器，也没有重新调用模型。"
+    },
+    {
+      "id": "E2",
+      "phase": "0",
+      "status": "fix",
+      "lifecycle": "active",
+      "title": "评测脚本的静默截断缺陷",
+      "asks": "断点续跑产生的部分结果会不会被静默地在更少样本上求均值？",
+      "cmds": [
+        "{py} eval_all.py --model gemini-2.0-flash --setting 20 --mode multimodal"
+      ],
+      "suites": [
+        "replay"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "覆盖率报告",
+      "sample_unit": "question",
+      "expected_outputs": [],
+      "estimated_runtime": 90,
+      "result": "会。eval_all.py:155 用 zip(gold, eval)，对较短列表静默截断且不报错。已改为按 q_id 建字典 join 并显式报告覆盖率。",
+      "note": "同时修了 :216 的 judge 未对齐——judge 独立遍历，与自动指标不在同一题集上。",
+      "how": "按 q_id join 替换 zip()，并显式打印共同样本数。",
+      "metric_meaning": "覆盖率 < 100% 时必须报错或显式声明，而不是静默在少数样本上求均值。",
+      "limits": "只能说明已发布 judge artifacts 无法构造同底比较，不能推断作者内部流程。"
+    },
+    {
+      "id": "E3",
+      "phase": "0",
+      "status": "fix",
+      "lifecycle": "active",
+      "title": "工程可复现性",
+      "asks": "仓库能否在本机复现？",
+      "cmds": [
+        "{py} -c \"import manifest; print('manifest module present')\""
+      ],
+      "suites": [
+        "replay"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "模块可导入",
+      "sample_unit": "question",
+      "expected_outputs": [],
+      "estimated_runtime": 5,
+      "result": "API key 改环境变量、NLTK 资源预下载、断点续跑、删除硬编码 CUDA_VISIBLE_DEVICES、requirements 冻结、每次实验写 manifest。",
+      "note": "",
+      "how": "检查 manifest 模块存在且可导入。",
+      "metric_meaning": "基础设施可用性检查，不产生实验数字。",
+      "limits": "这是工程整改，不是方法贡献。"
+    },
+    {
+      "id": "E4",
+      "phase": "0.5",
+      "status": "correct",
+      "lifecycle": "active",
+      "title": "局部 quote 标签不是身份，q_id 也不是主键",
+      "asks": "text5 / image7 这样的局部编号能否当全局 ID？",
+      "cmds": [
+        "{py} -m canonical.build"
+      ],
+      "suites": [
+        "full-local"
+      ],
+      "replay": [],
+      "deps": [
+        "corpora/canonical-db"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "gold 映射率",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 600,
+      "result": "不能。同题 gold 在 15 档与 20 档下局部标签字符串仅 4.6% 相同，canonical 身份 100% 相同。q_id 跨 split 碰撞，主键必须是 (split, q_id)。answer_interleaved 也是设置相关的（3,890/4,055 题不同），须单表存放。",
+      "result2": "另：官方 187 个模型-设置组合中 62 个 judge 文件不完整（最低 1,165/2,000），因此无法从发布产物构造同底的跨模型 Judge 比较。",
+      "superseded": [
+        "曾表述为「论文的 Judge 列不是同底比较」，暗示作者内部用了不同分母",
+        "只能就发布文件立论：发布产物不足以构造同底比较，不对作者内部流程作断言"
+      ],
+      "note": "",
+      "how": "构建 canonical evidence 数据层，用 (doc,page,layout) 生成稳定证据身份。",
+      "metric_meaning": "局部 quote 编号是位置不是身份；canonical ID 才能跨设置比较。",
+      "limits": "不要把 answer_interleaved 里的局部编号当成跨设置固定的答案文本。"
+    },
+    {
+      "id": "E5",
+      "phase": "0.5",
+      "status": "pass",
+      "lifecycle": "active",
+      "title": "Gate 1 — gold 全部可映射",
+      "asks": "所有 gold quote 能否映射回 canonical evidence？",
+      "cmds": [
+        "{py} -m canonical.build"
+      ],
+      "suites": [
+        "full-local"
+      ],
+      "replay": [],
+      "deps": [
+        "corpora/canonical-db"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "Gate 1 映射率 21978/21978",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 600,
+      "result": "21,978 / 21,978 = 100%。",
+      "note": "",
+      "how": "构建五张表并做往返检查。",
+      "metric_meaning": "100% 指官方两档候选可归一到统一证据层。",
+      "limits": "100% 是官方处理结果之间的映射，不代表能映射到任意自建 chunk。"
+    },
+    {
+      "id": "E6",
+      "phase": "0.5",
+      "status": "pass",
+      "lifecycle": "active",
+      "title": "Gate 2 — 自建 chunk 能否文本匹配回官方 gold",
+      "asks": "自己切的 chunk 能不能承载官方 gold？",
+      "cmds": [
+        "{py} -m canonical.gate2"
+      ],
+      "suites": [
+        "full-local"
+      ],
+      "replay": [],
+      "deps": [
+        "corpora/canonical-db",
+        "corpora/quotes-selfbuilt"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "Gate 2 映射率 ~98.63%",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 900,
+      "result": "82%（精确子串）→ 94.28%（字符 8-gram）→ 98.47%（页级 OCR）→ 98.63%（全语料 OCR + 拼接）。",
+      "note": "精确匹配失败是因为 MinerU 往 gold 里塞幻觉字形（把 62% 写成 $\\mathbf{\\mathcal{G}}_{62}\\%$）。凡是 gold↔chunk 对齐一律用 8-gram 重叠，不能用精确包含。",
+      "how": "字符 8-gram 覆盖替代精确子串匹配。",
+      "metric_meaning": "重新切 chunk 后 gold 仍可评价的比例。",
+      "limits": "未映射项必须计为 miss；阈值变化要做敏感性报告。"
+    },
+    {
+      "id": "E7",
+      "phase": "0.5",
+      "status": "pass",
+      "lifecycle": "active",
+      "title": "全语料 OCR",
+      "asks": "没有文本层的页面能否救回？",
+      "cmds": [
+        "{py} -m canonical.ocr --min-chars 100"
+      ],
+      "suites": [
+        "full-local"
+      ],
+      "replay": [],
+      "deps": [
+        "corpora/canonical-db"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "无文本页数",
+      "sample_unit": "document",
+      "expected_outputs": [
+        "retrieval/pages.sqlite"
+      ],
+      "estimated_runtime": 5600,
+      "result": "1,983 页 / 93 分钟。无文本页 1,748 → 357，100% 不可见的文档 27 → 0。",
+      "note": "",
+      "how": "RapidOCR 扫描低文本页（<100 字符），与原文本层拼接。",
+      "metric_meaning": "OCR 后仍无可用文本的页数，衡量文本索引的可达性。",
+      "limits": "约 93 分钟。OCR 能找出文字，不等于理解图表关系。"
+    },
+    {
+      "id": "E8",
+      "phase": "1A.5",
+      "status": "correct",
+      "lifecycle": "active",
+      "title": "oracle 增益不是机会，它是测量噪声的产物",
+      "asks": "逐题在两种模态间取较好者，能得到多少增益？",
+      "cmds": [
+        "{py} -m router.build_outcomes",
+        "{py} -m router.splits --write",
+        "{py} -m router.features --setting 20",
+        "{py} -m router.oracle --setting 20 --pareto"
+      ],
+      "suites": [
+        "full-local"
+      ],
+      "replay": [],
+      "deps": [
+        "embeddings/bge-small-vlm"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "oracle 增益 vs 同族对照",
+      "sample_unit": "question",
+      "expected_outputs": [],
+      "estimated_runtime": 900,
+      "result": "同模型跨模态 oracle 增益 +8.7 F1（19/19 模型一致，+5.8~+12.3）；但两个不同模型、同一模态的对照增益是 +9.0。增益不是模态特有的。",
+      "note": "L1 的来源：凡报告 oracle 上界，必同时报告同类系统之间的参照水平。",
+      "how": "计算逐题 oracle，并用两个同模态不同模型的系统做参照水平。",
+      "metric_meaning": "oracle 增益必须减去同族对照才是真实可路由空间。",
+      "limits": "oracle 仍可作上界，但必须配排列对照并使用 regret。"
+    },
+    {
+      "id": "E9",
+      "phase": "1A.5",
+      "status": "neg",
+      "lifecycle": "active",
+      "title": "模态路由不可学",
+      "asks": "能否只看问题就判断这题该用图片还是文字描述？",
+      "cmds": [
+        "{py} -m router.train_modality --all --features shape",
+        "{py} -m router.train_modality --all --features all",
+        "{py} -m router.diagnose"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0,
+        1,
+        2
+      ],
+      "deps": [
+        "embeddings/bge-small-vlm"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "test AUC / kappa",
+      "sample_unit": "question",
+      "expected_outputs": [],
+      "estimated_runtime": 600,
+      "result": "六个探针。正对照预测 question_type AUC 0.874（管道没坏）；test 加权 AUC 0.513；171 个模型对的 Cohen's kappa 均值 0.038，0/171 超过 0.2；106 道所有模型都有严格偏好的题里零道达成一致。",
+      "result2": "特征分组重跑：shape(5维,可部署) 8/19、+0.2 F1、2% 空间；shape+qtype(13维) 9/19、+0.2 F1、2%；emb(384维) 6/19、−0.3 F1、−5%；all(397维) 5/19、−0.4 F1、−6%。",
+      "superseded": [
+        "13 维下 2/19 显著提升、4/19 显著下降",
+        "平均 +0.2 F1 / 2% 空间已复现；但显著性计数需要逐模型 bootstrap，当前脚本只输出原始胜负计数，故显著性数字仍撤下"
+      ],
+      "note": "决定性证据是 kappa 0.038：若「这题适合多模态」是问题的属性，模型之间就该达成一致。另：5 维可部署特征即可拿到与 13 维相同的结果，人工标注的 question_type 无额外贡献。",
+      "how": "19 个模型的成对结果上训练轻量分类器，检查 AUC、kappa 与跨模型迁移。",
+      "metric_meaning": "kappa≈0 表示不同模型对「这题该用哪种输入」几乎不一致。",
+      "limits": "不能写成「该属性不存在」或「所有 Router 都不可能」。"
+    },
+    {
+      "id": "E10",
+      "phase": "1A.5",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "模态选择的成本-质量表",
+      "asks": "多模态输入值不值它的 token？",
+      "cmds": [
+        "{py} -m router.cost_quality"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "tok / F1 点",
+      "sample_unit": "question",
+      "expected_outputs": [],
+      "estimated_runtime": 120,
+      "result": "2000 题配对 bootstrap：7/19 模型两种模式 ΔF1 的 CI 跨 0；4 个模型多模态明显更差（gpt-4.1-nano −11.9、internvl3-8b −11.1、llama4-scout −9.3）；13 个 token 可信模型中 6 个被纯文本严格支配。盈亏平衡 548（gpt-4o）~ 43,906（gpt-4.1-mini）token / F1 点。",
+      "note": "价格未核验：router/prices.json 每条都是 verified:false，脚本会打印横幅。引用任何美元数字前必须先核对。Gemini 系的 in_tok 不含图片 token，成本数字不可用。",
+      "how": "比较同一模型 pure-text/multimodal 的 F1、token 与 Pareto 前沿。",
+      "metric_meaning": "每换 1 分 F1 需要多付的输入 token，provider-neutral。",
+      "limits": "Gemini 图片 token 未计入；美元价格未核验，跨供应商成本不可直接比。"
+    },
+    {
+      "id": "E11",
+      "phase": "1A.5",
+      "status": "fix",
+      "lifecycle": "active",
+      "title": "泄漏探针的一个自查 bug",
+      "asks": "按 gold 模态路由（需要答案）能否胜过固定策略？",
+      "cmds": [
+        "{py} -m router.diagnose"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "探针一致性",
+      "sample_unit": "question",
+      "expected_outputs": [],
+      "estimated_runtime": 300,
+      "result": "我的探针写成 `\"image\" in s or \"table\" in s`，但 evidence_modality_type 从不含 \"image\"，所以它其实只匹配了 table。改用 VISUAL_KINDS 后，结论是即使知道 gold 模态也只在 2/19 模型上胜过 best-fixed。",
+      "note": "",
+      "how": "修正 evidence 类型识别后重跑泄漏探针。",
+      "metric_meaning": "原探针只识别 table，修正后覆盖全部视觉类型。",
+      "limits": "这是 bug 修复，结论随之改变。"
+    },
+    {
+      "id": "E12",
+      "phase": "1B",
+      "status": "correct",
+      "lifecycle": "active",
+      "title": "我自己的 OCR 消解了我自己的立论",
+      "asks": "有多少 gold 落在文本检索够不着的地方？",
+      "cmds": [
+        "{py} -m router.retrieval_signal",
+        "{py} -m router.retrieval_signal --no-ocr"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0,
+        1
+      ],
+      "deps": [
+        "corpora/page-corpus"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "gold 不可达比例",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 300,
+      "result": "补 OCR 前 12.1% 的 gold 够不着、30 篇文档完全不可见；补 OCR 后降到 0.7%、0 篇。",
+      "note": "「结构性不可见」的论据不成立，RQ1b 必须改为实证立论。该不该跑这个 OCR？该跑——真实系统一定会 OCR，不跑等于打稻草人。但结论必须随之修正。",
+      "how": "在补 OCR 前后分别重算 gold 证据的文本可达性。",
+      "metric_meaning": "补 OCR 后从 12.1% 降到 0.7%，原「结构性不可见」论据被消解。",
+      "limits": "OCR 后文本可达不代表视觉关系已被正确理解。"
+    },
+    {
+      "id": "E13",
+      "phase": "1B",
+      "status": "neg",
+      "lifecycle": "active",
+      "title": "页粒度上文本检索对视觉证据没有劣势",
+      "asks": "页粒度上视觉 gold 是不是更难被文本检索找到？",
+      "cmds": [
+        "{py} -m retrieval.corpus",
+        "{py} -m retrieval.eval_page_recall"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        1
+      ],
+      "deps": [
+        "corpora/page-corpus"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "页级 Recall@k",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 240,
+      "result": "text gold 0.845 vs figure/table gold 0.829 @10，差 +0.015。混淆已排除：758 道纯视觉 gold 的题 recall@10 仍有 0.780。",
+      "note": "",
+      "how": "以整页为证据单元比较文本 gold 与视觉 gold 的召回。",
+      "metric_meaning": "页粒度上两类 gold 差距很小，因为图与周围文字捆在一起。",
+      "limits": "找到正确页不等于找到图中正确区域。"
+    },
+    {
+      "id": "E14",
+      "phase": "1B",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "模态信号是粒度依赖的",
+      "asks": "模态差距为什么在页粒度上消失？",
+      "cmds": [
+        "{py} -m retrieval.eval_quote_recall"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [
+        "corpora/canonical-db"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "quote 级 Recall@k",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 180,
+      "result": "quote 粒度上 text gold 0.501、image gold 0.680 @10。页粒度上图表与周边文字捆绑，文本检索顺带找到；quote 粒度上图被剥离出来，差距才显现。",
+      "note": "L2 的来源：粒度决定模态问题是否可见。这是 RQ1b × RQ3 的交互效应。",
+      "how": "以细粒度 quote/region 为证据单元重做同一比较。",
+      "metric_meaning": "模态效应是粒度依赖的：quote 级才显现交叉。",
+      "limits": "报告任何模态结论都必须同时说明证据粒度。"
+    },
+    {
+      "id": "E15",
+      "phase": "1B",
+      "status": "neg",
+      "lifecycle": "active",
+      "title": "「图片 quote 更好检索」是池组成的产物",
+      "asks": "图片 quote 更容易被检索，是因为 VLM 描述与问题词汇对齐吗？",
+      "cmds": [
+        "{py} -m retrieval.diagnose_modality"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [
+        "corpora/canonical-db"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "长度匹配后的覆盖率差",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 180,
+      "result": "不是。按长度分桶后，idf 加权的覆盖率差距从 +0.080 翻转为 −0.014。反事实分解：@10 处池大小贡献 +0.236、表示质量贡献 −0.013。",
+      "note": "L3 的来源：长度与池组成是最常见的两个混淆。",
+      "how": "控制 quote 长度并分解文字/图片池规模的贡献。",
+      "metric_meaning": "+0.080 的表观优势在长度匹配后翻转为 −0.014。",
+      "limits": "池级分解是描述性诊断，不替代完整对照语料实验。"
+    },
+    {
+      "id": "E16",
+      "phase": "1B",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "检索器交叉：符号翻转，四个 k 全部一致",
+      "asks": "BM25 与 dense 的相对优劣是否随证据模态变化？",
+      "cmds": [
+        "{py} -m retrieval.dense --image-repr vlm",
+        "{py} -m retrieval.eval_retrievers"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        1
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "embeddings/bge-small-vlm"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "按 gold 类型的 Recall@k",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 300,
+      "result": "dense − bm25 = +0.091（文字 gold）/ −0.082（图片 gold），所有 k 一致。",
+      "note": "池是问题条件化的 canonical，绝对值偏乐观；可比的是同池内的相对关系。",
+      "how": "同一候选池上按 gold 类型比较 BM25 与 BGE 的逐证据召回。",
+      "metric_meaning": "符号随证据类型翻转，说明存在值得融合的词法—语义互补性。",
+      "limits": "证据条目层 ±0.09 的效应聚合到整题会缩小。"
+    },
+    {
+      "id": "E17",
+      "phase": "1B",
+      "status": "correct",
+      "lifecycle": "active",
+      "title": "二元检索器路由：结论已被正确的标签推翻一半",
+      "asks": "逐题在 BM25 与 dense 之间二选一，能否胜过固定策略？",
+      "cmds": [
+        "{py} -m retrieval.route_headroom",
+        "{py} -m retrieval.route_outcome --features scores --k 10",
+        "{py} -m retrieval.route_outcome --features all --k 10"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0,
+        1,
+        2
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "embeddings/bge-small-vlm"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "Router recall vs 固定 vs RRF",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 420,
+      "result": "用正确的 outcome 标签（逐题 recall 差值、按 |regret| 加权）重做：路由 0.7273 vs 最优固定 0.7113（+0.0160，CI [−0.0052,+0.0371] 跨 0），但显著输给静态 RRF 0.7551（−0.0279，CI [−0.0503,−0.0050]）。regret 加权 AUC 0.574；加入 384 维句向量压到 0.517。",
+      "superseded": [
+        "路由 0.706 输给最优固定 0.711，二元路由被证伪；「61.9% 的题两种模态都有 gold」被用作结构性论据",
+        "原实验训练的是 gold 模态标签再写死映射，只否证了那一条人工策略。正确结论：路由达不到融合的质量，它买到的只是把两次检索省成一次"
+      ],
+      "note": "L15 的来源：训练的标签必须就是你要的决策。",
+      "how": "以逐题 recall(Dense)−recall(BM25) 为标签和权重重新训练路由器。",
+      "metric_meaning": "对固定 +0.016（CI 跨 0），对静态 RRF −0.0279（CI 不跨 0）。",
+      "limits": "旧 E17 用 gold 模态标签写死映射，只能否证那一条人工策略。"
+    },
+    {
+      "id": "E18",
+      "phase": "1B",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "VLM 描述 vs 裁剪 OCR：+0.42 recall",
+      "asks": "图表证据用 VLM 描述还是用裁剪 OCR 来检索？",
+      "cmds": [
+        "{py} -m retrieval.ocr_quotes",
+        "{py} -m retrieval.eval_retrievers --image-repr ocr",
+        "{py} -m retrieval.eval_retrievers --image-repr vlm"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        1,
+        2
+      ],
+      "deps": [
+        "corpora/canonical-db"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "image gold Recall@20",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 300,
+      "result": "image gold @20：VLM 描述 0.791 vs 裁剪 OCR 0.369，差 +0.422。两者拼接不改善（0.779）。",
+      "superseded": [
+        "差距来自视觉理解而非 OCR 提取失败（因为在 OCR 确实提取到文字的 3,031 条上差距仍有 +0.416）；该效应比任何路由效应大 60 倍",
+        "只能说：在当前问题条件化池、BM25 与 RapidOCR 表示下 VLM 描述显著更好。6,565 条中 1,270 条（19.3%）OCR 为空，非空也不代表提取完整准确。「60 倍」是把 recall 差值与 router 的 F1 差值相除，跨指标比较无效，已作废"
+      ],
+      "note": "",
+      "how": "同一图片池、同一 BM25 下比较 VLM 描述与裁剪 OCR 两种文字表示。",
+      "metric_meaning": "0.791 对 0.369，差距在 OCR 成功提取的子集上仍为 +0.416。",
+      "limits": "OCR 有大量空/不完整结果；不能把全部差距断言为「视觉理解」。"
+    },
+    {
+      "id": "E19",
+      "phase": "1B",
+      "status": "correct",
+      "lifecycle": "active",
+      "title": "自适应预算分配：上界远小于原报数字",
+      "asks": "逐题分配文本/图片配额，有多少可争取的空间？",
+      "cmds": [
+        "{py} -m retrieval.budget_alloc --pool canonical --k 20",
+        "{py} -m retrieval.audit_e19_ties --pool selfbuilt --k 20",
+        "{py} -m retrieval.audit_e19_ties --pool canonical --k 20"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0,
+        1,
+        2
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "embeddings/bge-small-vlm"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "tie-aware regret 上界",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 360,
+      "result": "97% 的题有多个并列最优配额（中位 16 个 / 共 21 个），np.argmax 恒取最小索引，把 1,013/1,999 题判为 a=0，排列对照被推向极端。真实 regret（oracle − 最优固定）= +0.0694（自建）/ +0.0744（canonical）。固定配额对 79.5% / 78.2% 的题本身已是最优。",
+      "superseded": [
+        "查询特异成分 +0.173 / +0.179",
+        "那是 oracle 减一个退化对照。自适应分配的上界是 regret +0.069 / +0.074，且近八成的题没有任何可改进空间"
+      ],
+      "note": "L14 的来源：argmax 会在并列时悄悄制造结构。",
+      "how": "计算 21 种配额的逐题 Recall 曲线，审计并列最优，改用 oracle−best-fixed regret。",
+      "metric_meaning": "真实 regret 上界 0.069/0.074；约 79% 问题固定配额已最优。",
+      "limits": "原 +0.173~+0.179 受 argmax 恒取最小并列索引影响，已作废。"
+    },
+    {
+      "id": "E20",
+      "phase": "1B",
+      "status": "pass",
+      "lifecycle": "active",
+      "title": "真实规模自建池上复现 E19",
+      "asks": "E19 的结论是不是池偏差造成的？",
+      "cmds": [
+        "{py} -m retrieval.quote_corpus",
+        "{py} -m retrieval.budget_alloc --pool selfbuilt --k 20"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        1
+      ],
+      "deps": [
+        "corpora/quotes-selfbuilt",
+        "embeddings/bge-small-chunks"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "配额结论方向一致性",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 300,
+      "result": "自建 92,752 chunk / 220 篇 = 422/篇（论文 536 的 79%），gold 转移 96.86%。文字:图片比从 3.2:1 变到 14.3:1（真值 8.5:1），结论不变。",
+      "note": "两个池从两侧夹住真实比例——但它们共用同一个不完整的图片侧，见 E28⑤。",
+      "how": "重建更大的文本 chunk 池，保持同一 QA、gold 与图片侧重跑。",
+      "metric_meaning": "方向一致说明结论对文本池规模有一定稳健性。",
+      "limits": "不是独立复现；视觉池仍相同且不完整。"
+    },
+    {
+      "id": "E21",
+      "phase": "1B",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "瓶颈收敛成一个可量化目标",
+      "asks": "外部报告提出的比例分配规则管用吗？",
+      "cmds": [
+        "{py} -m retrieval.budget_alloc --pool canonical --target mostly"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "embeddings/bge-small-vlm"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "visual share 预测 R²",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 240,
+      "result": "用真实模态比例分配可兑现 41%~49% 的空间——规则本身是对的；但预测该比例的 R² 为负，所以输入拿不到。",
+      "note": "外部报告另有三处硬错误，见 E22。",
+      "how": "以 gold 视觉占比为目标训练回归并评价实际 Recall 增益。",
+      "metric_meaning": "R² 提升不一定转化为检索收益。",
+      "limits": "visual share 是 gold 派生的诊断目标，不等同于最优行动。"
+    },
+    {
+      "id": "E22",
+      "phase": "1B",
+      "status": "pass",
+      "lifecycle": "manual",
+      "title": "核实外部报告引用的四篇论文",
+      "asks": "外部研究报告引用的文献是否属实？",
+      "cmds": [],
+      "suites": [],
+      "replay": [],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "（人工核对）",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 0,
+      "result": "四篇中两篇属实、两篇的具体主张与原文不符。相关建议按核实结果取舍。",
+      "note": "无脚本，人工核对。",
+      "how": "人工核对，没有可执行命令。",
+      "metric_meaning": "—",
+      "limits": "不能被 run-suite 假装执行成功。"
+    },
+    {
+      "id": "E23",
+      "phase": "1B",
+      "status": "correct",
+      "lifecycle": "active",
+      "title": "高维特征一直在埋掉低维真信号",
+      "asks": "二次反思能否预测该用多少视觉配额？",
+      "cmds": [
+        "{py} -m retrieval.reflect_alloc --pool canonical",
+        "{py} -m retrieval.reflect_alloc --pool selfbuilt"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0,
+        1
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "embeddings/bge-small-vlm",
+        "corpora/quotes-selfbuilt"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "反射式配额的实际增益",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 360,
+      "result": "R² −0.155（384 维句向量）→ +0.110（11 维分数）→ +0.136（22 维分数+首轮）。但分配收益仍是 0~2%。",
+      "note": "L10 的来源：1,211 个训练样本 + 384 维句向量，把 R²=+0.11 的真实信号压成 −0.07。报负结果之前必须单独测一遍最小特征集。这条倒逼重查了 E9。",
+      "how": "用首轮检索结果反射式地重新分配配额，两个池分别跑。",
+      "metric_meaning": "预测目标改善不一定转化为检索收益。",
+      "limits": "输入信号弱、样本少且目标平坦。"
+    },
+    {
+      "id": "E24",
+      "phase": "1B",
+      "status": "neg",
+      "lifecycle": "active",
+      "title": "ColQwen2 在本项目的池规模下不值它的 GPU 成本",
+      "asks": "视觉检索器能否胜过打在 VLM 描述上的文本检索器？",
+      "cmds": [
+        ".venv-colpali/Scripts/python.exe -m retrieval.colqwen_index",
+        "{py} -m retrieval.eval_colqwen"
+      ],
+      "suites": [
+        "replay",
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        1
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "embeddings/bge-small-vlm",
+        "indexes/colqwen-rankings"
+      ],
+      "requires_api": false,
+      "requires_gpu": true,
+      "expensive": true,
+      "primary_metric": "image gold Recall@k（ColQwen vs 描述检索）",
+      "sample_unit": "document",
+      "expected_outputs": [
+        "metrics.json",
+        "per_question.csv"
+      ],
+      "estimated_runtime": 180,
+      "result": "同一图片池 @20：BGE 0.935 / BM25 0.929 / ColQwen 0.929，三者打平。互补性 +0.095，但两个文本检索器已给 +0.081 → 视觉特有只剩 +0.014。",
+      "result2": "全量 2,000 题复核（E28）：在视觉槽位上单独替换，ColQwen − 描述检索 = +0.0075 / +0.0089 / +0.0039（k=10/15/20），CI 全部跨 0。原结论维持。",
+      "superseded": [
+        "（审计初版曾称）E24 方向错误，ColQwen 在 k=15/20 显著有益 +0.0269 / +0.0220",
+        "那只在 396 题探索半区成立，全量重算 CI 跨 0，该主张已由作者撤回"
+      ],
+      "note": "池饱和是结构性的：图片候选按文档计中位仅 20 个（原记录写的 29 是按题计的），@20 对一半文档等于取走整个池。模型为 ColQwen2-v1.0、文本侧 bge-small，与论文的 v0.1 / bge-large 不同，故结论限于本项目可获得的池规模与裁剪粒度。",
+      "how": "在当前 evaluation 图片池上比较 ColQwen2 像素排序与 BM25/BGE/RRF 描述检索。第 0 条命令重建 GPU 索引（约 62 分钟），replay 只跑第 1 条评价命令。",
+      "metric_meaning": "视觉 gold 落入 top-k 的比例。注意「在完整 ranking 中」不等于「进入 top-k」。",
+      "limits": "池只覆盖 13,999 张原始图片中的 6,487 张（46.34% 唯一图片）；按文档中位仅 20 个候选，k=20 已接近饱和。这是公平的池内排序比较，不是完整文档图片池上的检索比较。"
+    },
+    {
+      "id": "E25",
+      "phase": "4",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "粒度 × 预算：两个轴给出完全相反的排序",
+      "asks": "证据粒度能否改善质量与上下文成本的平衡？",
+      "cmds": [
+        "{py} -m retrieval.quote_corpus --target-chars 600 --out retrieval/quotes_t600.sqlite --no-gold-map",
+        "{py} -m retrieval.eval_granularity",
+        "{py} -m retrieval.eval_granularity --pack greedy"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        1
+      ],
+      "deps": [
+        "corpora/quotes-selfbuilt"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "固定 top-k vs 固定预算下的 Recall",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 900,
+      "result": "固定 top-k 下越粗越好（t2400 比官方粒度高 +0.137 @20）；固定预算下排序完全倒转（t2400 在 500 预算处低 −0.097）。两向每一格都显著。粗粒度 top-20 花 4,273 个词元，细粒度只花 1,236——优势是用未计价的上下文买的。七档语料确认最优区是 50~300 字符的宽平台，且存在下限（不合并的原始区块显著更差）。",
+      "superseded": [
+        "固定 token 预算；RQ3 已完成",
+        "n_tok 是正则词元不是 BPE token，应称 word-like retrieval budget；且仅覆盖 text gold + BM25 + 字符切分，应称「RQ3 的文本-BM25 切片已完成」"
+      ],
+      "note": "没有任何粒度在论文自己的预算点上显著更优，所以 RQ3 的正面形式不成立；但「用 recall@k 比较 chunk 粒度会系统性偏袒粗粒度」是一个量级很大的方法学结论。",
+      "how": "按 target-chars 建多档语料，分别在固定 top-k 与固定 word-like 预算下比较。",
+      "metric_meaning": "固定 top-k 会把粗 chunk 携带的额外上下文当成免费收益。",
+      "limits": "预算单位是正则 word-like token，不是 LLM BPE；仅覆盖文本 gold 与 BM25。"
+    },
+    {
+      "id": "E26",
+      "phase": "4",
+      "status": "neg",
+      "lifecycle": "active",
+      "title": "small-to-big 被证伪；细粒度优势一半是预算量化损失",
+      "asks": "用细 chunk 排序、返回其粗 parent，能否兼得两者？",
+      "cmds": [
+        "{py} -m retrieval.eval_small2big --fine retrieval/quotes_t100.sqlite --coarse retrieval/quotes_t600.sqlite",
+        "{py} -m retrieval.eval_small2big --fine retrieval/quotes_t100.sqlite --coarse retrieval/quotes_t600.sqlite --pack greedy"
+      ],
+      "suites": [
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0,
+        1
+      ],
+      "deps": [
+        "corpora/quotes-selfbuilt"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "small-to-big vs 纯臂的 Recall",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 600,
+      "result": "small-to-big 在每个预算上都劣于两个纯臂（−0.006~−0.017），parent 映射率 99.94%。细粒度优势在 prefix 规则下 +0.028/+0.022/+0.015（显著），改 greedy 后降到 +0.015/+0.015/+0.011（均不显著）。",
+      "note": "greedy 更贴近真实系统，因此不把 prefix 下的 +0.028 当作结论。这是第四次靠对照拦下会被写成正面结果的数字。",
+      "how": "比较 prefix-stop 与 greedy-skip 两种预算装填规则。",
+      "metric_meaning": "早期正增益约一半来自「遇到塞不下就停止」的量化损失。",
+      "limits": "仅覆盖特定档位、BM25 与文本证据，不能封闭整个 RQ3。"
+    },
+    {
+      "id": "E27",
+      "phase": "2",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "静态检索配置的改进",
+      "asks": "模态内 RRF 融合 + 均衡配额，能比基线好多少？",
+      "cmds": [
+        "{py} -m retrieval.dense_chunks",
+        "{py} -m retrieval.eval_stack_v2 --k 10 --pool selfbuilt --dump",
+        "{py} -m retrieval.eval_stack_v2 --k 20 --pool canonical --dump",
+        "{py} -m retrieval.nested_cv --pool selfbuilt --k 10",
+        "{py} -m retrieval.nested_cv --pool selfbuilt --k 20",
+        "{py} -m retrieval.nested_cv --pool canonical --k 10",
+        "{py} -m retrieval.nested_cv --pool canonical --k 20"
+      ],
+      "suites": [
+        "replay",
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "corpora/quotes-selfbuilt",
+        "embeddings/bge-small-vlm",
+        "embeddings/bge-small-chunks",
+        "indexes/colqwen-rankings"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": true,
+      "primary_metric": "Evidence Recall@k",
+      "sample_unit": "document",
+      "expected_outputs": [
+        "metrics.json",
+        "per_question.csv",
+        "manifest.json"
+      ],
+      "estimated_runtime": 240,
+      "result": "document-grouped 5 折 OOF（无脚本内选择泄漏，全部 2,000 题 out-of-fold，未映射 gold 计为 miss）相对最接近论文的本地 hybrid，完整 2x2：自建池 k=10 +0.0608、k=20 +0.0304；canonical 池 k=10 +0.0541、k=20 +0.0269；四格 document-cluster CI 全部不跨 0。相对本地 BGE-small-only 替代基线：k=10 +0.0683 / +0.0616，k=20 +0.0343 / +0.0308。以上数字由 `python experiments.py verify E27` 从指定 run 的 metrics.json 断言，不从本段文字读取。",
+      "superseded": [
+        "比论文发布的检索配置高 +0.023 ~ +0.049，两个池 × 三个预算六格全显著",
+        "基线其实是本地 bge-small 同时跑文本与图片文字描述，既非论文的 bge-large 也不含 ColQwen 视觉检索器，不能称「优于论文配置」；且当时按题 bootstrap（396 题只来自 55 篇文档），并静默丢弃 62 条未映射 gold"
+      ],
+      "note": "这是 static retrieval baseline，不是 adaptive routing。本项目的自适应方法此后必须在相同预算与相同候选池上超过它。成本：基线本就跑 dense，融合只多加一遍文档内 BM25，纯 CPU。",
+      "how": "文本与图片描述分支内分别 RRF(BM25,BGE-small)，再采用较均衡配额，与本地论文式对照（dense 文本 + ColQwen 视觉 + 官方配额）比较。",
+      "metric_meaning": "每题被找回的 gold evidence 比例；未映射 gold 计为 miss。",
+      "limits": "单切分结果为 exploratory；泛化性只由 E28 的 nested CV 支持。"
+    },
+    {
+      "id": "E28",
+      "phase": "audit",
+      "status": "correct",
+      "lifecycle": "active",
+      "title": "复现性与结论边界审计",
+      "asks": "已发布的结论有哪些超出了证据？",
+      "cmds": [
+        "{py} -m retrieval.audit_e19_ties --pool selfbuilt --k 20",
+        "{py} -m retrieval.route_outcome --features scores --k 10"
+      ],
+      "suites": [
+        "replay",
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0,
+        1
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "corpora/quotes-selfbuilt",
+        "embeddings/bge-small-vlm",
+        "embeddings/bge-small-chunks"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "OOF Evidence Recall@k",
+      "sample_unit": "document",
+      "expected_outputs": [
+        "metrics.json",
+        "per_question.csv"
+      ],
+      "estimated_runtime": 120,
+      "result": "三处系统性错误：基线身份、bootstrap 抽样单位（396 题 / 55 篇文档）、recall 分母（62 条未映射 gold 被静默剔除）。四条结论被改写（E4/E9/E17/E19/E24/E25/E27）。并设计了 document-grouped nested CV，把主结果从 exploratory 提升为无脚本内选择泄漏；该协议的四格结果现由 E27 拥有并执行，本条目只保留审计实验本身。",
+      "note": "审计过程中本人一度依据 396 题切分宣称 E24 方向反转，随后全量重算发现 CI 跨 0，已撤回——低功效切分上的假阳性，一并记录。",
+      "how": "document-grouped 外层 CV，内层在训练折上重选检索器与配额，每题由未参与其配置选择的折评分。",
+      "metric_meaning": "无脚本内选择泄漏的 Recall；仍是 internal OOF，不是外部确认。",
+      "limits": "并非严格双层 inner-CV；方法空间此前已用同一 2,000 题开发，k=20 时各折选择不稳定。"
+    },
+    {
+      "id": "E30",
+      "phase": "audit",
+      "status": "pos",
+      "lifecycle": "active",
+      "title": "归因消融：+0.054 究竟来自哪个组件",
+      "asks": "主结果同时改了文本检索器、图片检索方式和配额，三者各占多少？",
+      "cmds": [
+        "{py} -m retrieval.ablation --all-cells"
+      ],
+      "suites": [
+        "replay",
+        "retrieval",
+        "full-local"
+      ],
+      "replay": [
+        0
+      ],
+      "deps": [
+        "corpora/canonical-db",
+        "corpora/quotes-selfbuilt",
+        "embeddings/bge-small-vlm",
+        "embeddings/bge-small-chunks",
+        "indexes/colqwen-rankings"
+      ],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "主效应（配额 / 图片描述检索 / RRF 文本融合）",
+      "sample_unit": "document",
+      "expected_outputs": [
+        "metrics.json",
+        "per_question.csv",
+        "manifest.json"
+      ],
+      "estimated_runtime": 120,
+      "result": "2x2x2 因子设计，四格（两池 x 两预算）全部近乎完美可加（交互残差 |r|<0.00005）。12 个主效应（4 格 × 3 因子）的 raw 95% CI 全部不跨 0，且 **12/12 在 Holm 校正后仍然存活**（最大 p_holm = 0.0165）。量级排序随预算翻转：k=10 配额 +0.026~+0.028 > 图片描述检索 +0.016 > RRF 文本融合 +0.010~+0.012；k=20 图片描述检索 +0.014 > RRF 文本融合 +0.010~+0.013 > 配额 +0.005~+0.006。即：RRF 文本融合在任何一格都是三者中最小的一项，紧预算下只占总量约 19%。",
+      "note": "补上了 E28 自己提出但一直未做的归因要求。三点边界：(1) 这是归因不是确认——每格用固定配置在全部 2,000 题上评价，区间描述的是效应在本 benchmark 上的稳定性，泛化性仍只由 nested_cv 支持；(2) 配额因子用的是事先命名的 BALANCED_QUOTA，不是各折选出的配额，否则会把选择偷渡进分解；(3) 「ColQwen -> 描述检索 +0.014~+0.016 显著」与 E24「CI 跨 0」不矛盾——E24/nested_cv 比的是 ColQwen 对 **dense-only** 描述检索（+0.0075，CI 跨 0），本实验比的是对 **RRF** 描述检索。即 dense 描述 ≈ ColQwen < RRF 描述。ColQwen 臂经审计未被削弱：它排完每篇文档图片池的 100%，一条视觉 gold 都没漏；但该池只覆盖这 220 篇 evaluation 文档 13,999 张唯一图片中的 6,487 张（46.34%；此前写的 46.8% 是用 6,548 条 evidence row 除以唯一图片数，单位不一致，已作废），按文档中位仅 20 个候选，k=20 已接近饱和，因此这是 image-description retrieval 在**当前不完整池**上的结果，不能写成视觉检索器能力不如描述检索。",
+      "how": "每格 2×2×2 因子设计，四格（两池 × 两预算）一次跑完，按文档 cluster bootstrap 求主效应，并对 4×3=12 个主效应做 Holm 校正。",
+      "metric_meaning": "每个主效应是该因子单独翻转、另两因子取遍所有水平的平均配对差。raw 95% CI 与 Holm 校正后的 p 同时给出，校正不隐藏任何东西。",
+      "limits": "这是**内部组件归因**，不是外部泛化验证：固定配置、单一 benchmark、且该 benchmark 已被本项目用于挑选方法。视觉因子同时换了表示（像素→VLM 文字）与检索器数量（单模型→双模型融合），因此必须整条命名为 visual branch，不能简称为表示效应。"
+    },
+    {
+      "id": "E31",
+      "phase": "infra",
+      "status": "fix",
+      "lifecycle": "active",
+      "title": "可复现运行系统：一条命令重算全部当前有效实验",
+      "asks": "终端里出现过的数字，还能不能被找回、被复算、被 diff？",
+      "cmds": [
+        "{py} experiments.py run-suite replay --offline",
+        "{py} experiments.py verify E24",
+        "{py} -m tests.test_runner"
+      ],
+      "suites": [],
+      "replay": [
+        1,
+        2
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "断言通过数",
+      "sample_unit": "question",
+      "expected_outputs": [
+        "artifacts/runs/<run_id>/summary.md",
+        "artifacts/verify/E24_latest.json"
+      ],
+      "estimated_runtime": 180,
+      "result": "新增 expkit/ 六个模块（paths/results/artifacts/runner/report/verify/apilog）与四个套件（replay / retrieval / full-local / api）。每次运行落在 artifacts/runs/<run_id>/：完整 stdout+stderr、每实验 status.json、metrics.json、per_question.csv、manifest.json，以及 run 级 summary.{json,csv,md,html} 与 metrics.jsonl。首个 replay 运行 20260828T073440Z_replay 落盘 188 条指标，E24/E27/E28/E30 原生输出结构化结果，E1/E2/E3 如实标为「仅日志」。verify E24 的 22 项断言全过；tests/test_runner.py 44 项断言全过。",
+      "result2": "同时修掉三个会静默出错的地方：(1) eval_colqwen 的 `if eid not in eids: continue` 会在候选池缺 gold 时悄悄缩小分母——改为用全部视觉 gold 建分母、池外 gold 计 miss，覆盖率不足时默认 fail loudly，需 --allow-partial 才继续并打标；实测：抽掉 40 题的 ranking 后，旧口径仍会报 0.9294，新口径降到 0.9149。(2) colqwen_index 的 `except: pass` 改为写 colqwen_failed_images.jsonl 并汇报。(3) runner 从 shell=True 改为 argv + shell=False；E29 里的 Unix `cp` 改用 make_eval_jsonl 的 --out。",
+      "superseded": [
+        "图片池覆盖率 46.8%；图片候选每篇文档中位 29",
+        "唯一图片覆盖率 46.34%（6,487/13,999）；按文档中位 20、均值 29.76，按问题加权中位 29、均值 34.92。46.8% 是拿 6,548 条 evidence row 除以13,999 张唯一图片得到的，单位不一致；6,504 则是全库 223 篇文档的 distinct img_path，与 13,999 也不同口径。"
+      ],
+      "note": "API 侧只用 mock provider 验证，本次没有发生任何真实调用、模型下载或索引重建。每个请求记录 request_hash（含实际展示的 quotes，因此换检索配置不会串用旧答案）、token usage、provider request id、错误与 rate-limit 详情；密钥经 redact() 过滤，且已断言 input_tokens/total_tokens 不被误删。价格一律作为 price_verified=false 的估计，只有 token 数是实测量。",
+      "how": "run-suite 跑套件并落盘；verify E24 断言 22 项池口径；tests/test_runner.py 断言失败处理、断点续跑与产物复用决策。",
+      "metric_meaning": "全部断言必须通过；任何一项 FAIL 都意味着某个已发布数字的口径或某条日志路径已经失效。",
+      "limits": "API 路径只用 mock 验证过，真实 provider 的错误形态可能不同。"
+    },
+    {
+      "id": "E33",
+      "phase": "infra",
+      "status": "fix",
+      "lifecycle": "active",
+      "title": "可追溯性与科学表述收尾：source bundle、E24 视觉分支命名、覆盖率数据模型",
+      "asks": "source_manifest 说能还原源码——它真的还原得了吗？E24 那一行「隔离了两种表示」，隔离的到底是什么？",
+      "cmds": [
+        "{py} experiments.py run-suite replay --offline",
+        "{py} experiments.py verify E24",
+        "{py} experiments.py verify E27",
+        "{py} -m tests.test_runner --scratch-root artifacts/test-runs",
+        "{py} -m tests.test_source_bundle --scratch-root artifacts/test-runs"
+      ],
+      "suites": [],
+      "replay": [
+        1,
+        2,
+        3
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "断言通过数",
+      "sample_unit": "question",
+      "expected_outputs": [
+        "artifacts/runs/<run_id>/source_bundle.zip",
+        "artifacts/runs/<run_id>/source_manifest.json",
+        "artifacts/verify/E24_latest.json"
+      ],
+      "estimated_runtime": 420,
+      "result": "source_manifest 此前声明 `git checkout <commit> && git apply source.patch` 可还原本次源码，实测**做不到**：`git diff HEAD` 只看得见已跟踪文件，而 25 个被指纹覆盖的源文件里有 **18 个从未提交**（experiments.py、整个 expkit/、retrieval/nested_cv.py、retrieval/ablation.py 等）。对基准 run 20260828T080756Z_replay 实测：commit+patch 只还原 7/25，其余 18 个文件缺失。指纹能**发现**源码不同，却**产生不出**跑过的源码——这正好是源码记录一半的用处。现在每个 run 生成 source_bundle.zip：按原相对路径存放 manifest 中全部源文件的字节，tracked 与 untracked 一视同仁；manifest 记录 bundle 路径、SHA-256、文件数与每个成员的路径/大小/哈希。bundle 只含源码——数据集、模型、向量、索引、API 日志、response 与任何凭据形状的路径都被构造性排除并二次校验。run.json 与 summary 显示 fingerprint、bundle 路径与哈希、源文件数、重建命令与**重建测试状态**：每次 run 会在 artifacts/test-runs 下用 `git archive`（只读，绝不 checkout 脏工作区）→ `git apply` → 解压 bundle 的顺序重建一棵树并重算全部哈希，结果直接写进 run.json。",
+      "result2": "E24 的表述与覆盖率数据模型一并修正。(1) `RRF(描述) − ColQwen` 此前被写成「isolates the two representations」——不成立：这一步同时改了**表示**（原始像素 → VLM 文字描述）与**检索架构**（单个后交互检索器 → 两个检索器 RRF 融合），一个同时移动两个变量的对比无法把效应归给其中任何一个。现更名为 visual branch comparison，并写明它是完整的视觉分支比较、不是被隔离出来的表示效应。可支持的说法只有：在当前不完整的图片池中、紧预算 k=10 下，完整的 description-RRF 分支检索更好（+0.0269，CI 不跨 0；k=20 为 +0.0111，CI 跨 0）；**不能**说 VLM 文字表示优于像素表示。(2) 覆盖率不再硬编码 2000，全部由数据算出并分成两个总体：全部问题 2000/2000，有视觉 gold 的问题 1995/1995，实际计分 1995；另外 5 题没有视觉 gold，因此视觉 Recall 对它们没有分母——这是总体的边界，不是被悄悄缩小的分母。(3) verify E24 从 22 项扩到读取指定 run 的 metrics：断言覆盖率的分子/分母/比值三者自洽、四类比较在 k=10/20 都在且都带 document-cluster CI、指标名未漂移、被禁表述未复活。",
+      "superseded": [
+        "source_manifest 声明 commit+patch 可还原本次源码；E24 的 RRF(描述)−ColQwen「隔离了两种表示」；「每篇文档中位 29 个图片候选，@20 等于取走 69% 的池」",
+        "commit+patch 只还原 7/25 个源文件，须叠加 source_bundle.zip；该对比同时改变表示与架构，只能称为完整视觉分支比较；按文档中位 20、均值 29.76，k=20 对 111/220 篇（50.5%）等于取走整个池，29 与 69% 都只在按问题加权口径下成立。"
+      ],
+      "note": "本轮没有调用任何真实 API、没有下载模型、没有重跑 OCR、没有重建向量/语料/ColQwen 索引，旧 run 全部保留。",
+      "how": "run 写出 source_bundle.zip 并当场从 commit+patch+bundle 重建一棵树、重算全部源文件哈希；verify E24 在数据库口径之外再读该 run 的 metrics，断言覆盖率三元组自洽与四类比较齐全。",
+      "metric_meaning": "重建测试必须 25/25 逐字节命中；任何一个文件缺失或被改动都会让 `python -m expkit.source reconstruct` exit 1。",
+      "limits": "bundle 覆盖 source_manifest 列出的源文件，不含第三方依赖的字节内容（只记版本号），也不含数据集与模型——完整复现仍需要本地的 canonical DB、向量与 ColQwen 排名。"
+    },
+    {
+      "id": "E32",
+      "phase": "infra",
+      "status": "fix",
+      "lifecycle": "active",
+      "title": "replay 完整性与可追溯性修复",
+      "asks": "报告出来的四格结果，真的都是这一次跑出来的吗？跑它的源码还找得回来吗？",
+      "cmds": [
+        "{py} experiments.py run-suite replay --offline",
+        "{py} experiments.py verify E24",
+        "{py} experiments.py verify E27",
+        "{py} -m tests.test_runner --scratch-root artifacts/test-runs"
+      ],
+      "suites": [],
+      "replay": [
+        1,
+        2,
+        3
+      ],
+      "deps": [],
+      "requires_api": false,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "断言通过数",
+      "sample_unit": "question",
+      "expected_outputs": [
+        "artifacts/runs/<run_id>/source_manifest.json",
+        "artifacts/verify/E27_latest.json"
+      ],
+      "estimated_runtime": 300,
+      "result": "E27 的 2x2 主结果矩阵此前只跑两格（自建 k=10、canonical k=20），另两格来自 result 文字。现在四格全部由 E27 执行，`verify E27` 的 61 项断言只读指定 run 的 metrics.json——缺任意一格 exit 1（已用旧 run 实测：pass 0 / FAIL 29 / exit 1）。E28 去掉与 E27 重复的 selfbuilt k=10，只保留审计实验。每个 run 新增 source_manifest.json：25 个源文件的 SHA-256、完整注册表快照、关键数据文件哈希、脱敏 git diff patch，以及 16 位 source fingerprint，summary 中显示。",
+      "result2": "E24 增补三组配对 document-cluster bootstrap CI，并补了一个描述端融合臂——此前的 `rrf` 是 RRF(BM25描述, ColQwen)，它**包含** ColQwen，拿它减 ColQwen 只能测互补性。结果：ColQwen−BM25 与 ColQwen−BGE 在 k=10/20 上 CI 全部跨 0；描述端 RRF 分支 − ColQwen 在 k=10 为 +0.0269（显著）、k=20 为 +0.0111（跨 0）。【E33 更正】当时把这一项写成「隔离出两种表示」是错的，见 E33。E30 改为单命令 --all-cells，对 4 格×3 主效应共 12 个检验做 Holm 校正：raw CI 12/12 不跨 0，Holm 后 **12/12 存活**（最大 p_holm=0.0165），raw CI 一并保留。视觉因子更名为 「visual branch: ColQwen over images -> BM25+BGE RRF over VLM descriptions」，因为它同时换了表示与检索器数量，不能简称为表示效应。",
+      "superseded": [
+        "E27 四格主结果（其中两格未在同一次运行中产生）；E24 的 `rrf` 臂被当作「RRF over descriptions」",
+        "四格全部由 E27 在同一次 run 中产生并由 verify E27 从 metrics 断言；描述端融合臂单列为 rrf_desc，原 `rrf` 更名为 RRF(BM25-text, ColQwen) 并注明它包含 ColQwen"
+      ],
+      "note": "derived registry 增加 model name / revision / dtype / shape / normalization / input corpus hash / id order hash / 生成命令 / 软件版本；无法确认的字段写 unknown 并置 metadata_incomplete=true，不猜测——例如 legacy 向量的 model_revision 与 production-time corpus hash。实测 bge-small-vlm 为 float32 (25716,384)、已归一化（row norm 中位 1.0000）、3 行零向量。测试隔离：inference_api.py 增加 --dataset-dir/--response-dir，mock 不再写入正式 dataset/ 与 response/，此前遗留的三个测试文件已移入 artifacts/test-runs/legacy-mocktest/；tests 增加 --scratch-root 并断言两个正式目录未被污染。Git 策略见 docs/artifacts-git-policy.md：轻量 summary/manifest/metrics 入库，日志/逐题 CSV/向量/模型缓存/API 原始流量不入库，API 内容按敏感处理。",
+      "how": "四格 E27 由同一次 run 产生；verify E27 只读该 run 的 metrics；source_manifest 把 run 绑定到源码哈希与注册表快照。",
+      "metric_meaning": "verify E27 61 项、verify E24 22 项、tests 49 项全部必须通过。",
+      "limits": "source fingerprint 覆盖被调用的模块与注册表，不覆盖第三方依赖的字节内容（只记版本号）。"
+    },
+    {
+      "id": "E29",
+      "phase": "2",
+      "status": "pending",
+      "lifecycle": "blocked",
+      "title": "端到端：检索改进能否传导到生成质量",
+      "asks": "k=10 上 +0.054 的检索优势，能否变成 quote-selection F1 的提升？",
+      "cmds": [
+        "{py} -m retrieval.make_eval_jsonl --config paper --limit 600 --k 10 --out dataset/evaluation_paperk10.jsonl",
+        "{py} -m retrieval.make_eval_jsonl --config ours  --limit 600 --k 10 --out dataset/evaluation_oursk10.jsonl",
+        "{py} inference_api.py gemini-3.6-flash --setting paperk10 --mode pure-text --rpm 10",
+        "{py} inference_api.py gemini-3.6-flash --setting oursk10  --mode pure-text --rpm 10",
+        "{py} eval_all.py --model gemini-3.6-flash --setting paperk10 --mode pure-text --no-judge",
+        "{py} eval_all.py --model gemini-3.6-flash --setting oursk10 --mode pure-text --no-judge"
+      ],
+      "suites": [
+        "api"
+      ],
+      "replay": [],
+      "deps": [
+        "corpora/canonical-db",
+        "embeddings/bge-small-vlm",
+        "indexes/colqwen-rankings"
+      ],
+      "requires_api": true,
+      "requires_gpu": false,
+      "expensive": false,
+      "primary_metric": "quote-selection F1",
+      "sample_unit": "document",
+      "expected_outputs": [],
+      "estimated_runtime": 3600,
+      "result": "被配额阻断（2026-08-25）。gemini-3.6-flash 免费层实测为 5 RPM / **20 RPD**（错误详情 quotaId=GenerateRequestsPerDayPerProjectPerModel-FreeTier, quotaValue=20），1,200 次调用需 60 天，不可行。已完成 15 条（paper 臂），保留在 response/ 下，--resume 会复用。该子集上检索差距 +0.0327（doc-cluster CI [+0.0103,+0.0567]，显著），全量为 +0.0541。",
+      "note": "配额实测：网上流传的「免费层 250 RPD」是旧模型的数字，当前模型是 20 RPD。可行路径只剩三条：(1) 付费 API，约 $1.5~2 的用量（最低充值通常 $5）；(2) 本地 Qwen2.5-7B——论文评过、发布 F1 45.8，但 8GB 卡需 4-bit 量化（就不再是发布的那个模型了）且依赖 ms-swift；(3) 放弃 E29，项目以检索侧结果交付——E27 已由 nested CV 确认，本身完整。本地 Qwen2.5-3B 虽可跑，但发布 F1 仅 25.0、文本引用 recall 10.7，太弱，会把要检测的信号压掉。生成模型不是复现锚点：gemini-2.0-flash 已下线（404），gemini-2.5-flash 对新 key 不可用，论文用过的 Gemini 模型全部调不到。改用 gemini-3.6-flash——它不在论文的模型表里，因此本实验的绝对 F1 不可与论文任何一行比较；但两臂用同一模型、同一批题，配对比较仍然有效。6 次调用的对照测试显示它比 gemini-3.1-flash-lite 引用更克制（flash-lite 过度引用会压低精确率）。见 `python experiments.py plan`。",
+      "how": "把两种检索配置的 top-k 写成官方 schema，用同一模型同一批题配对生成。",
+      "metric_meaning": "未检索到的 gold 用哨兵 id 计入分母，因此 F1 对检索质量敏感。",
+      "limits": "BLEU/ROUGE 在此无效不可报告。gemini-3.6-flash 不在论文模型表里，因此绝对 F1 不可与论文任何一行比较；有效的只有两臂的配对比较。成本口径：2026-08-29 已对照官方定价页核验并写入 router/prices.json（标准付费层 $0.75/Mtok 输入、$3.75/Mtok 输出，verified=true）。此前曾用 gemini-2.0-flash 的未核验价 $0.10/$0.40 代算，输入低估 7.5 倍、输出低估 9.4 倍——价格表里没有该模型时，正确做法是不报美元，而不是拿最像的一条顶上。"
+    }
+  ],
+  "n_source_files": 20,
+  "n_source_files_tracked_by_git": 7,
+  "n_source_files_untracked": 13,
+  "n_registry_entries": 33
+}

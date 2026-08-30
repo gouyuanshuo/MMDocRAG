@@ -1,0 +1,34 @@
+{
+  "label": "E27#3",
+  "argv": [
+    "D:\\Python313\\python.exe",
+    "-m",
+    "retrieval.nested_cv",
+    "--pool",
+    "selfbuilt",
+    "--k",
+    "20"
+  ],
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "python": "D:\\Python313\\python.exe",
+  "stdout_log": "artifacts/runs/20260830T090052Z_replay/experiments/E27/cmd3/stdout.log",
+  "stderr_log": "artifacts/runs/20260830T090052Z_replay/experiments/E27/cmd3/stderr.log",
+  "started_utc": "2026-08-30T09:03:43Z",
+  "env_overlay": {
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "HF_DATASETS_OFFLINE": "1",
+    "HF_HOME": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache",
+    "HUGGINGFACE_HUB_CACHE": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache\\hub",
+    "TRANSFORMERS_CACHE": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache\\transformers",
+    "SENTENCE_TRANSFORMERS_HOME": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache\\sentence-transformers",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONUTF8": "1"
+  },
+  "returncode": 0,
+  "elapsed_sec": 27.583,
+  "ended_utc": "2026-08-30T09:04:11Z",
+  "timed_out": false,
+  "status": "ok"
+}

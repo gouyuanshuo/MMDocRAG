@@ -1,0 +1,152 @@
+{
+  "name": "E24",
+  "created_utc": "2026-08-30T11:49:27Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_oursk10_sidecar.json",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_paperk10_sidecar.json",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_e29_paired.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotesoursk10.txt",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotesoursk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tests/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    },
+    {
+      "path": "retrieval\\colqwen_scores.sqlite",
+      "sha256": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+      "bytes": 8933376
+    }
+  ],
+  "config": {
+    "experiment": "E24",
+    "run_id": "20260830T114742Z_replay",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\eval_colqwen.py"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pool": "canonical-image-quotes",
+    "k": 20,
+    "sample_unit": "document",
+    "retrievers": [
+      "dense",
+      "bm25",
+      "colqwen",
+      "rrf_desc",
+      "rrf"
+    ],
+    "rrf_c": 60,
+    "allow_partial": false,
+    "partial": false,
+    "denominator": "unconditional (total_visual_gold)"
+  },
+  "results": {
+    "total_visual_gold": 3231.0,
+    "mapped_visual_gold": 3231.0,
+    "missing_visual_gold": 0.0,
+    "n_evaluation_questions": 2000.0,
+    "n_evaluation_questions_ranked": 2000.0,
+    "ranking_coverage_all_questions": 1.0,
+    "n_visual_gold_questions": 1995.0,
+    "n_visual_gold_questions_ranked": 1995.0,
+    "ranking_coverage_visual_gold_questions": 1.0,
+    "n_questions_without_visual_gold": 5.0,
+    "ranking_coverage": 1.0,
+    "questions_with_visual_gold": 1995.0,
+    "pool_median_per_document": 20.0,
+    "pool_mean_per_document": 29.763636363636362,
+    "recall@1_dense": 0.35871247291860103,
+    "recall@5_dense": 0.6833797585886723,
+    "recall@10_dense": 0.8272980501392758,
+    "recall@20_dense": 0.9350046425255338,
+    "recall@1_bm25": 0.3698545341999381,
+    "recall@5_bm25": 0.7127824203033116,
+    "recall@10_bm25": 0.8344165892912411,
+    "recall@20_bm25": 0.929124110182606,
+    "recall@1_colqwen": 0.37047353760445684,
+    "recall@5_colqwen": 0.6880222841225627,
+    "recall@10_colqwen": 0.819870009285051,
+    "recall@20_colqwen": 0.9294336118848654,
+    "recall@1_rrf_desc": 0.3797585886722377,
+    "recall@5_rrf_desc": 0.7298050139275766,
+    "recall@10_rrf_desc": 0.8467966573816156,
+    "recall@20_rrf_desc": 0.9405756731662024,
+    "recall@1_rrf": 0.3751160631383473,
+    "recall@5_rrf": 0.7282575054162798,
+    "recall@10_rrf": 0.8452491488703188,
+    "recall@20_rrf": 0.943670690188796,
+    "paired_delta[ColQwen - BM25]@10": -0.014546580006190035,
+    "paired_delta[ColQwen - BM25]@20": 0.00030950170225936243,
+    "paired_delta[ColQwen - BGE]@10": -0.007428040854224698,
+    "paired_delta[ColQwen - BGE]@20": -0.005571030640668524,
+    "paired_delta[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@10": 0.02692664809656453,
+    "paired_delta[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@20": 0.011142061281337047,
+    "paired_delta[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@10": 0.025379139585267718,
+    "paired_delta[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@20": 0.01423707830393067,
+    "questions_scored_here": 1995.0
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\eval_colqwen.py"
+  ]
+}

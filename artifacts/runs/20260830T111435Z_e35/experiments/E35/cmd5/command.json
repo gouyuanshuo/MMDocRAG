@@ -1,0 +1,26 @@
+{
+  "label": "E35#5",
+  "argv": [
+    "D:\\Python313\\python.exe",
+    "-m",
+    "router.tie_audit",
+    "--pool",
+    "canonical",
+    "--k",
+    "20"
+  ],
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "python": "D:\\Python313\\python.exe",
+  "stdout_log": "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd5/stdout.log",
+  "stderr_log": "artifacts/runs/20260830T111435Z_e35/experiments/E35/cmd5/stderr.log",
+  "started_utc": "2026-08-30T11:14:41Z",
+  "env_overlay": {
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONUTF8": "1"
+  },
+  "returncode": 0,
+  "elapsed_sec": 2.01,
+  "ended_utc": "2026-08-30T11:14:43Z",
+  "timed_out": false,
+  "status": "ok"
+}

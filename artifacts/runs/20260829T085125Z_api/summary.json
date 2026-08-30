@@ -1,0 +1,40 @@
+{
+  "run_id": "20260829T085125Z_api",
+  "created_utc": "2026-08-29T08:53:31Z",
+  "suite": "api",
+  "offline": false,
+  "counts": {
+    "ok": 1
+  },
+  "n_metrics": 7,
+  "experiments": [
+    {
+      "id": "E29",
+      "title": "端到端：检索改进能否传导到生成质量",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 32.091,
+      "n_commands": 7,
+      "logs": [
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd0/stdout.log",
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd1/stdout.log",
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd2/stdout.log",
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd3/stdout.log",
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd4/stdout.log",
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd5/stdout.log",
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd6/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260829T085125Z_api/experiments/E29/cmd6/metrics.json"
+      ],
+      "asks": "k=10 上 +0.054 的检索优势，能否变成 quote-selection F1 的提升？",
+      "how": "把两种检索配置的 top-k 写成官方 schema，用同一模型同一批题配对生成；eval_e29_paired.py 复用 eval_all 的 extract_citations/get_scores 算逐题 F1，按文档聚类做配对 bootstrap（B=4000）。",
+      "metric_meaning": "未检索到的 gold 用哨兵 id 计入分母，因此 F1 对检索质量敏感。主结果是配对差 +2.90 F1，CI [+1.01,+4.77] 不跨 0；两个绝对值本身不可与论文比较。",
+      "limits": "BLEU/ROUGE 在此无效不可报告。gemini-3.6-flash 不在论文模型表里，因此绝对 F1 不可与论文任何一行比较；有效的只有两臂的配对比较。成本口径：2026-08-29 已对照官方定价页核验并写入 router/prices.json（标准付费层 $0.75/Mtok 输入、$3.75/Mtok 输出，verified=true）。此前曾用 gemini-2.0-flash 的未核验价 $0.10/$0.40 代算，输入低估 7.5 倍、输出低估 9.4 倍——价格表里没有该模型时，正确做法是不报美元，而不是拿最像的一条顶上。",
+      "primary_metric": "quote-selection F1",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    }
+  ]
+}

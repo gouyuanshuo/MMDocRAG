@@ -1,0 +1,40 @@
+{
+  "run_id": "20260830T111651Z_e36",
+  "created_utc": "2026-08-30T11:25:06Z",
+  "suite": "single:E36",
+  "offline": false,
+  "counts": {
+    "ok": 1
+  },
+  "n_metrics": 169,
+  "experiments": [
+    {
+      "id": "E36",
+      "title": "逐题路由：GPU 决策可学，CPU 融合决策不可学",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 379.147,
+      "n_commands": 4,
+      "logs": [
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd0/stdout.log",
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd1/stdout.log",
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2/stdout.log",
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd3/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd0/metrics.json",
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd1/metrics.json",
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2/metrics.json",
+        "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd3/metrics.json"
+      ],
+      "asks": "静态 RRF 对每个 query 都付两个检索器。路由器能否用更少的检索代价达到同样的质量？",
+      "how": "折外预测（文档分组 5 折，折内再 4 折选模型族，--features search 时连特征组一起在折内选）；按预测增益排序买升级；对照是同预算的随机分配（逐题期望精确计算而非抽样）、同预算 oracle、两个端点；8 格一个 Holm 家族。每格结果落盘可续跑。",
+      "metric_meaning": "主指标不是「比不升级好」——升级本身就多做检索。唯一能证明路由器懂 query 的是它在**同样预算**下胜过随机挑哪些 query 升级。capture = (路由器 AUC − 随机 AUC) / (oracle AUC − 随机 AUC)。",
+      "limits": "exploratory：该切分自 E9 起被反复观察并用于挑方法。oracle regret 仍然很大（+0.034 ~ +0.070），路由器只实现了可得空间的约十分之一，**不能**写成「路由有效」，只能写成「在图片侧的升级决策上存在可学的逐题信号，且它买到的是成本而不是质量」。B=0.05~0.15 这个「追平静态系统的预算」是看着曲线读出来的，属描述性数字，不是检验。端到端生成质量未测——本条全部指标是 evidence recall，要接到 F1 需要一次配对 API 运行，未做。",
+      "primary_metric": "同预算下 路由器 − 随机分配 的 Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    }
+  ]
+}

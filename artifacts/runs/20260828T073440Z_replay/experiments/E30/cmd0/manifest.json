@@ -1,0 +1,133 @@
+{
+  "name": "E30",
+  "created_utc": "2026-08-28T07:36:37Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_mocktest.jsonl",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "response/mock-model-v1_pure-text_fail_quotesmocktest.txt",
+      "response/mock-model-v1_pure-text_quotesmocktest_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tests/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    },
+    {
+      "path": "retrieval\\quotes.sqlite",
+      "sha256": "efbb2602397f23a623ba0e4ae74f201cf234106509767bb1b223fd84d82570bc",
+      "bytes": 58863616
+    },
+    {
+      "path": "retrieval\\colqwen_scores.sqlite",
+      "sha256": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+      "bytes": 8933376
+    }
+  ],
+  "config": {
+    "experiment": "E30",
+    "run_id": "20260828T073440Z_replay",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\ablation.py",
+      "--pool",
+      "canonical",
+      "--k",
+      "10"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pool": "canonical",
+    "k": 10,
+    "seed": 20260825,
+    "bootstrap": 4000,
+    "sample_unit": "document",
+    "design": "2x2x2 factorial",
+    "quota_paper": "7/3",
+    "quota_balanced": "5/5",
+    "n_questions": 2000,
+    "n_documents": 220,
+    "note_quota_level": "pre-named BALANCED_QUOTA, not the fold-selected quota"
+  },
+  "results": {
+    "cell_recall@10[text=dense,visual=colqwen,quota=7/3]": 0.6786349567099567,
+    "cell_recall@10[text=dense,visual=colqwen,quota=5/5]": 0.7038728354978354,
+    "cell_recall@10[text=dense,visual=rrf,quota=7/3]": 0.6931688852813852,
+    "cell_recall@10[text=dense,visual=rrf,quota=5/5]": 0.7212802128427129,
+    "cell_recall@10[text=rrf,visual=colqwen,quota=7/3]": 0.6890323773448774,
+    "cell_recall@10[text=rrf,visual=colqwen,quota=5/5]": 0.7135131132756133,
+    "cell_recall@10[text=rrf,visual=rrf,quota=7/3]": 0.7035663059163059,
+    "cell_recall@10[text=rrf,visual=rrf,quota=5/5]": 0.7309204906204907,
+    "total_E_to_all_three@10": 0.052285533910533914,
+    "main_effect: text: dense -> RRF(bm25,dense)": 0.010018849206349205,
+    "main_effect: visual: ColQwen -> RRF over descriptions": 0.015970652958152958,
+    "main_effect: quota: official -> balanced": 0.026296031746031744,
+    "interaction_residual": 6.938893903907228e-18,
+    "one_at_a_time: RRF text only": 0.010397420634920636,
+    "one_at_a_time: image-description only": 0.014533928571428571,
+    "one_at_a_time: balanced quota only": 0.02523787878787879
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\ablation.py",
+    "--pool",
+    "canonical",
+    "--k",
+    "10"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "label": "E36#2",
+  "argv": [
+    "D:\\Python313\\python.exe",
+    "-m",
+    "router.budget_router",
+    "--pool",
+    "selfbuilt",
+    "--k",
+    "10",
+    "--policy",
+    "A",
+    "--features",
+    "free"
+  ],
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "python": "D:\\Python313\\python.exe",
+  "stdout_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2/stdout.log",
+  "stderr_log": "artifacts/runs/20260830T111651Z_e36/experiments/E36/cmd2/stderr.log",
+  "started_utc": "2026-08-30T11:16:57Z",
+  "env_overlay": {
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONUTF8": "1"
+  },
+  "returncode": 0,
+  "elapsed_sec": 342.283,
+  "ended_utc": "2026-08-30T11:22:39Z",
+  "timed_out": false,
+  "status": "ok"
+}

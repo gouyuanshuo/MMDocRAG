@@ -1,0 +1,78 @@
+{
+  "name": "canonical/gate2",
+  "created_utc": "2026-08-24T10:28:04Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "canonical/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "requirements.txt",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": null,
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    }
+  ],
+  "config": {
+    "pdf_root": "D:\\Dataset\\MMDocRAG\\doc_pdfs\\doc_pdfs",
+    "limit": 0,
+    "seed": 42,
+    "neighbours": 2,
+    "threshold": 95.0
+  },
+  "results": {
+    "alignable_pct": 94.278,
+    "same_page_pct": 92.276,
+    "gate2_pass": false,
+    "total": 3146,
+    "hit_exact_page": 2903,
+    "hit_long": 2885,
+    "hit_neighbour_page": 18,
+    "hit_short": 81,
+    "hit_elsewhere_in_doc": 45,
+    "miss": 180,
+    "miss_long": 135,
+    "miss_text_present": 32,
+    "miss_short": 45,
+    "no_pdf": 5,
+    "miss_no_text_layer": 148
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\canonical\\gate2.py"
+  ]
+}

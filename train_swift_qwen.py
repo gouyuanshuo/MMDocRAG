@@ -1,5 +1,24 @@
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '3,4'
+import sys
+
+
+def _select_devices():
+    """Pick the visible GPUs before torch/swift import.
+
+    CUDA_VISIBLE_DEVICES has to be set before the CUDA runtime is initialised,
+    which happens on the swift import below -- too early for argparse. So the
+    flag is pre-scanned here. Precedence: --devices, then an already-exported
+    CUDA_VISIBLE_DEVICES, then the first GPU.
+    """
+    for i, arg in enumerate(sys.argv):
+        if arg == '--devices' and i + 1 < len(sys.argv):
+            return sys.argv[i + 1]
+        if arg.startswith('--devices='):
+            return arg.split('=', 1)[1]
+    return os.environ.get('CUDA_VISIBLE_DEVICES', '0')
+
+
+os.environ['CUDA_VISIBLE_DEVICES'] = _select_devices()
 
 from swift.llm import get_model_tokenizer, load_dataset, get_template, EncodePreprocessor
 from swift.utils import get_logger, find_all_linears, get_model_parameter_info, seed_everything
@@ -13,8 +32,14 @@ seed_everything(42)
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('model_name', type=str, help='Model name, e.g. qwen3-32b')
+    parser.add_argument('--devices', type=str, default=None,
+                        help='GPUs to expose, e.g. "0" or "0,1". Defaults to CUDA_VISIBLE_DEVICES, '
+                             'else "0". Applied at import time by _select_devices().')
+    parser.add_argument('--seed', type=int, default=42, help='Random seed')
 
     args = parser.parse_args()
+    seed_everything(args.seed)
+    logger.info(f'CUDA_VISIBLE_DEVICES={os.environ["CUDA_VISIBLE_DEVICES"]} seed={args.seed}')
 
     model_id_or_path = args.model_name # model_id or model_path
     sys_prompt = open("prompt_bank/pure_text_infer.txt", "r", encoding="utf-8").read()

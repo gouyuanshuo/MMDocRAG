@@ -1,0 +1,82 @@
+[
+  {
+    "evidence_id": "bf358624f97d635d",
+    "doc_name": "3276a5b991c49cf5f9a4af0f7d6fce67",
+    "page_id": 15,
+    "layout_id": 82,
+    "gold_len": 306,
+    "page_len": 55,
+    "best_coverage": 0.0,
+    "gold_head": "I, Marc Silski, am a Special Agent of the Federal Bureau of Investigation (\"FBI'). I have read the foregoing Complaint for Forfeiture, and declare under penalty"
+  },
+  {
+    "evidence_id": "905ad2d422d6924f",
+    "doc_name": "52b3137455e7ca4df65021a200aef724",
+    "page_id": 2,
+    "layout_id": 18,
+    "gold_len": 597,
+    "page_len": 68,
+    "best_coverage": 0.128,
+    "gold_head": "● Module 1: You will start by making various basic flat and clustered maps in Wikidata using SPARQL queries. Next you will make some layered maps,where groups o"
+  },
+  {
+    "evidence_id": "df505f0cc8aba786",
+    "doc_name": "52b3137455e7ca4df65021a200aef724",
+    "page_id": 2,
+    "layout_id": 14,
+    "gold_len": 152,
+    "page_len": 68,
+    "best_coverage": 0.117,
+    "gold_head": "In this 90-120 minutes workshop you will learn how to make both flat, clustered, layered,embedded,interactive,on-Wiki andoff-Wiki maps from sets of geo-referenc"
+  },
+  {
+    "evidence_id": "afb13efdd9982a7a",
+    "doc_name": "52b3137455e7ca4df65021a200aef724",
+    "page_id": 3,
+    "layout_id": 28,
+    "gold_len": 26,
+    "page_len": 101,
+    "best_coverage": 0.316,
+    "gold_head": "Prerequisites for this Module "
+  },
+  {
+    "evidence_id": "e1efc9fad49d75f8",
+    "doc_name": "52b3137455e7ca4df65021a200aef724",
+    "page_id": 101,
+    "layout_id": 464,
+    "gold_len": 137,
+    "page_len": 141,
+    "best_coverage": 0.697,
+    "gold_head": "\"It is part of Module 3 of the map making workshop [From Wikidata to interactive off-Wiki maps in three steps] (https://github.com/ookgezelli   /Wiki data Map M"
+  },
+  {
+    "evidence_id": "a0cd777a34ca4e66",
+    "doc_name": "52b3137455e7ca4df65021a200aef724",
+    "page_id": 106,
+    "layout_id": 488,
+    "gold_len": 178,
+    "page_len": 111,
+    "best_coverage": 0.459,
+    "gold_head": "This Jupyter notebook shows you step by step how to make a Wikidata-driven layered map that can be used off-Wiki It is part of Module 3 of the map making worksh"
+  },
+  {
+    "evidence_id": "74d1d7bb863af579",
+    "doc_name": "ADOBE_2015_10K",
+    "page_id": 100,
+    "layout_id": 1041,
+    "gold_len": 371,
+    "page_len": 2216,
+    "best_coverage": 0.795,
+    "gold_head": "Interest and other income (expense), net: Interest income ..... Foreign exchange gains (losses) Realized gains on fixed income investment. Realized losses on fi"
+  },
+  {
+    "evidence_id": "113480eeaf0c1311",
+    "doc_name": "Bergen-Brochure-en-2022-23",
+    "page_id": 43,
+    "layout_id": 999,
+    "gold_len": 241,
+    "page_len": 4670,
+    "best_coverage": 0.752,
+    "gold_head": "    AdO Arena       Bergen Aquarium       Bergen Philharmonic Orchestr       The Fish Market       Fløibanen Funicular       Bergen Climbing Park, Høyt & Lavt  "
+  }
+]

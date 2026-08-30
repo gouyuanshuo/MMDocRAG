@@ -1,0 +1,30 @@
+{
+  "label": "E29#0",
+  "argv": [
+    "D:\\Python313\\python.exe",
+    "-m",
+    "retrieval.make_eval_jsonl",
+    "--config",
+    "paper",
+    "--limit",
+    "600",
+    "--k",
+    "10",
+    "--out",
+    "dataset/evaluation_paperk10.jsonl"
+  ],
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "python": "D:\\Python313\\python.exe",
+  "stdout_log": "artifacts/runs/20260829T084536Z_api/experiments/E29/cmd0/stdout.log",
+  "stderr_log": "artifacts/runs/20260829T084536Z_api/experiments/E29/cmd0/stderr.log",
+  "started_utc": "2026-08-29T08:45:36Z",
+  "env_overlay": {
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONUTF8": "1"
+  },
+  "returncode": 0,
+  "elapsed_sec": 8.131,
+  "ended_utc": "2026-08-29T08:45:44Z",
+  "timed_out": false,
+  "status": "ok"
+}

@@ -1,0 +1,154 @@
+{
+  "name": "E27",
+  "created_utc": "2026-08-28T07:36:01Z",
+  "git": {
+    "commit": "2fd7505c6a576376b4a92aafaff6d87494765bb7",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/",
+      "canonical/",
+      "cost_estimate.py",
+      "dataset/evaluation_mocktest.jsonl",
+      "dataset/evaluation_oursk10.jsonl",
+      "dataset/evaluation_paperk10.jsonl",
+      "dataset/evaluation_smoke.jsonl",
+      "docs/",
+      "eval_all.py",
+      "eval_llm_judge.py",
+      "experiments.py",
+      "expkit/",
+      "gitignore",
+      "inference_api.py",
+      "manifest.py",
+      "manifests/",
+      "models/",
+      "requirements.txt",
+      "response/gemini-2.0-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.0-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-2.5-flash_pure-text_fail_quotessmoke.txt",
+      "response/gemini-2.5-flash_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.1-flash-lite_pure-text_quotessmoke_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_fail_quotespaperk10.txt",
+      "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+      "response/gemini-3.6-flash_pure-text_quotessmoke_response.jsonl",
+      "response/mock-model-v1_pure-text_fail_quotesmocktest.txt",
+      "response/mock-model-v1_pure-text_quotesmocktest_response.jsonl",
+      "retrieval/",
+      "router/",
+      "tests/",
+      "tmp/",
+      "train_swift_qwen.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    },
+    {
+      "path": "retrieval\\quotes.sqlite",
+      "sha256": "efbb2602397f23a623ba0e4ae74f201cf234106509767bb1b223fd84d82570bc",
+      "bytes": 58863616
+    },
+    {
+      "path": "retrieval\\colqwen_scores.sqlite",
+      "sha256": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+      "bytes": 8933376
+    },
+    {
+      "path": "manifests\\split_doc_disjoint.json",
+      "sha256": "fb191cc28da7f6fac881e952924840aa19caaa06b37e05fc3535d0616b0723d2",
+      "bytes": 51014
+    }
+  ],
+  "config": {
+    "experiment": "E27",
+    "run_id": "20260828T073440Z_replay",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\eval_stack_v2.py",
+      "--k",
+      "20",
+      "--pool",
+      "canonical",
+      "--dump"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pool": "canonical",
+    "k": 20,
+    "seed": 20260825,
+    "bootstrap": 4000,
+    "rrf_c": 60,
+    "eval_split": "test",
+    "sample_unit": "document",
+    "quota_paper": "12/8",
+    "quota_balanced": "10/10",
+    "n_questions": 396,
+    "n_documents": 55,
+    "n_gold": 1110,
+    "n_unmapped_gold_counted_as_miss": 0,
+    "dense_model": "BAAI/bge-small-en-v1.5",
+    "visual_retriever": "vidore/colqwen2-v1.0 (local copy; paper uses v0.1)",
+    "status": "EXPLORATORY"
+  },
+  "results": {
+    "recall_uncond[A]": 0.8417204148264755,
+    "recall_cond[A]": 0.8417204148264755,
+    "recall_uncond[B]": 0.8468240303467577,
+    "recall_cond[B]": 0.8468240303467577,
+    "recall_uncond[C]": 0.8562958225837015,
+    "recall_cond[C]": 0.8562958225837015,
+    "recall_uncond[D]": 0.8645819668546941,
+    "recall_cond[D]": 0.8645819668546941,
+    "recall_uncond[E]": 0.8637332014225954,
+    "recall_cond[E]": 0.8637332014225954,
+    "recall_uncond[E2]": 0.8638975432536039,
+    "recall_cond[E2]": 0.8638975432536039,
+    "recall_uncond[F]": 0.8085453197195621,
+    "recall_cond[F]": 0.8085453197195621,
+    "recall_uncond[G]": 0.8664618770679378,
+    "recall_cond[G]": 0.8664618770679378,
+    "delta: D - A   full stack vs dense-only baseline": 0.02286155202821869,
+    "delta: D - E   full stack vs closest paper-style": 0.0008487654320987638,
+    "delta: G - E   best local hybrid vs paper-style": 0.002728675645342312,
+    "delta: B - A   quota alone": 0.005103615520282186,
+    "delta: C - A   fusion alone": 0.01457540775722594,
+    "delta: D - C   quota on top of fusion": 0.008286144270992755,
+    "delta: D - B   fusion on top of quota": 0.01775793650793651,
+    "delta: E - A   ColQwen visual vs image-description": 0.022012786596119927,
+    "delta: E2 - E  quota on paper-style hybrid": 0.00016434183100849667
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\eval_stack_v2.py",
+    "--k",
+    "20",
+    "--pool",
+    "canonical",
+    "--dump"
+  ]
+}
