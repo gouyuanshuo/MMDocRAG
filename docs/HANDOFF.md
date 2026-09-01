@@ -288,7 +288,7 @@ Phase 3 现在全部指标是 **evidence recall**。「同质量下 ColQwen 调�
 预算参照 E29：600 题、1,225 次调用、12.09 AUD。**开跑前先定死 thinking 开关**（§5.3-12）。
 若 F1 差值的 CI 包含 0 而 ColQwen 调用少了 85%，那就是本项目最干净的成本结论。
 
-### ② 补完 ColQwen 全池索引
+### ② 补完 ColQwen 全池索引 —— **已完成 2026-09-01**（原始判断与预测保留在下方，更正见本节末表）
 机制全部就绪且测试通过，只差 GPU 时间（**5–9 小时**）。显存空闲时：
 ```bash
 .venv-colpali/Scripts/python.exe -m retrieval.colqwen_index \
