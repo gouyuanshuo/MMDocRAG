@@ -428,7 +428,15 @@ dict(id="E27", phase="2", status="pos",
           "[+0.0468,+0.0753] 变为 [+0.0471,+0.0748]，四格显著性与符号全部不变。"
           "另一条同期核对：为 Phase 3 给 `eval_stack_v2.build` 加的 "
           "`keep_scores` / `top_keep` 两个参数在默认关闭时是死代码，"
-          "E27 四个点估计逐位复现，确认无影响。"),
+          "E27 四个点估计逐位复现，确认无影响。",
+     result2="**2026-09-01：头条已在 bge-large 上复核，见 E40。**"
+             "四格全部存活且点估计几乎不动（+0.0605 / +0.0329 / +0.0525 / +0.0267，"
+             "对应本条的 +0.0608 / +0.0304 / +0.0541 / +0.0269，最大变动 +0.0025）。"
+             "**本条的数字仍由 bge-small 产出**，作为历史记录保留；对外表述头条时"
+             "应引用 E40，因为 bge-large 是本项目唯一字节可证的模型。"
+             "另注：相对替代基线 A 的差值对编码器强度敏感（缩水 0.006~0.008），"
+             "**头条应报相对论文式对照 E 的差值**。"
+     ),
 
 dict(id="E28", phase="audit", status="correct",
      title="复现性与结论边界审计",
@@ -509,6 +517,38 @@ dict(id="E35", phase="3", status="pos",
      limits="exploratory：该切分自 E9 起被反复观察并用于挑方法。"
             "配额固定为 BALANCED_QUOTA，--include-quota 可展开为"
             "检索器 × 配额的联合空间，但配额是免费的，那只是空间上界而不是预算问题。"),
+
+dict(id="E40", phase="2", status="pos",
+     title="E27 头条在 bge-large 上复核：提升不是弱编码器的产物",
+     asks="E27 的 +0.061 是真实的配置提升，还是 bge-small 太弱制造出来的？"
+          "换成本项目唯一字节可证、且更接近论文规模的文本检索器之后，四格还剩几格？",
+     cmds=["{py} -m retrieval.nested_cv --pool selfbuilt --k 10 --dense-model models/bge-large-en-v1.5",
+           "{py} -m retrieval.nested_cv --pool selfbuilt --k 20 --dense-model models/bge-large-en-v1.5",
+           "{py} -m retrieval.nested_cv --pool canonical --k 10 --dense-model models/bge-large-en-v1.5",
+           "{py} -m retrieval.nested_cv --pool canonical --k 20 --dense-model models/bge-large-en-v1.5"],
+     result="**四格全部存活，且点估计几乎不动。**折外提升相对论文式对照 E："
+            "自建池 k=10 **+0.0605** [+0.0466,+0.0752]、k=20 **+0.0329** [+0.0232,+0.0428]；"
+            "canonical 池 k=10 **+0.0525** [+0.0379,+0.0672]、k=20 **+0.0267** [+0.0173,+0.0361]。"
+            "与 bge-small 的 +0.0608 / +0.0304 / +0.0541 / +0.0269 相比，"
+            "最大变动是 selfbuilt k=20 的 +0.0025，四格 CI 全部不跨 0。"
+            "**结论：E27 的头条提升不是编码器强度的产物**，"
+            "这正是 E34 撤回 E−A 那条结论之后必须补上的对照。",
+     result2="**但相对替代基线 A 的差值确实缩水了**，方向与 E34 的 D−A 一致："
+             "自建池 k=10 从 +0.0683 落到 +0.0626，k=20 从 +0.0343 落到 +0.0291；"
+             "canonical 池 k=20 从 +0.0308 落到 +0.0229。"
+             "机制清楚——A 本身就是纯 dense 文本臂，换强编码器只让基线单边变强，"
+             "而选出的流水线是 RRF 融合，增益来源本就不止 dense。"
+             "**因此头条应当报相对 E 的差值，而不是相对 A 的**，后者对编码器强度敏感。",
+     note="L-encoder：`retrieval/nested_cv.py` 此前没有 `--dense-model`，"
+          "第 117 行按位置调用 `build(...)` 因而静默使用 bge-small 默认值——"
+          "**头条结果的编码器是一个从不出现在 argv 里的自由变量**。"
+          "本次先补上该参数，再用默认值重跑 selfbuilt k=10 作对照，"
+          "拿到 +0.0608 / +0.0683 与记录逐位相同，证明改动是 no-op，"
+          "然后才相信 bge-large 的四格。**先证明重构没改变旧数，再报新数。**",
+     limits="本条只搬了 E27。其余 14 个依赖 bge-small-vlm 的实验仍是 bge-small 的结果，"
+            "作为历史记录保留；其中 E35/E36/E37 的增益是两臂同时换编码器的相对量，"
+            "对编码器不敏感，但**尚未实测**，不应写成已复核。"
+            "同样地，这条切分自 E9 起被反复观察，本结果与 E27 一样只能标 exploratory。"),
 
 dict(id="E37", phase="2", status="pos",
      title="静态提升按题型切片：增益集中在纯视觉题，且只在 k=10",
@@ -946,6 +986,10 @@ QUOTES = "corpora/quotes-selfbuilt"
 PAGES = "corpora/page-corpus"
 BGE = "embeddings/bge-small-vlm"
 BGEC = "embeddings/bge-small-chunks"
+# E18 compares the VLM-description surrogate against the OCR one, so it reads
+# these vectors -- but it declared only the canonical db, which left the suite
+# planner unable to see that the OCR encode is a prerequisite.
+BGEO = "embeddings/bge-small-ocr"
 COLQ = "indexes/colqwen-rankings"
 
 META = {
@@ -1047,7 +1091,7 @@ META = {
              metric_meaning="对固定 +0.016（CI 跨 0），对静态 RRF −0.0279（CI 不跨 0）。",
              limits="旧 E17 用 gold 模态标签写死映射，只能否证那一条人工策略。"),
  "E18": dict(suites=("retrieval", "full-local"), replay=(1, 2),
-             deps=(CANON,), expensive=True, estimated_runtime=300,
+             deps=(BGEO, CANON,), expensive=True, estimated_runtime=300,
              primary_metric="image gold Recall@20",
              how="同一图片池、同一 BM25 下比较 VLM 描述与裁剪 OCR 两种文字表示。",
              metric_meaning="0.791 对 0.369，差距在 OCR 成功提取的子集上仍为 +0.416。",
@@ -1136,6 +1180,16 @@ META = {
                     "且该 benchmark 已被本项目用于挑选方法。"
                     "视觉因子同时换了表示（像素→VLM 文字）与检索器数量（单模型→双模型融合），"
                     "因此必须整条命名为 visual branch，不能简称为表示效应。"),
+ "E40": dict(suites=("retrieval", "full-local"), lifecycle="active",
+             # all four commands only READ artifacts -- nested_cv builds
+             # nothing -- so every one of them is replay-safe.
+             replay=(0, 1, 2, 3),
+             deps=(CANON, QUOTES, "embeddings/bge-large-vlm", COLQ),
+             estimated_runtime=240, primary_metric="Recall@k（折外）",
+             sample_unit="document",
+             expected_outputs=("metrics.json",),
+             how="与 E27 完全相同的 document-grouped 5 折折外协议，"
+                 "只把 dense 文本臂换成 models/bge-large-en-v1.5。"),
  "E37": dict(suites=("retrieval", "full-local"), lifecycle="active",
              deps=(CANON, QUOTES, BGE, BGEC, COLQ), estimated_runtime=240,
              primary_metric="折外选择 − 论文式基线 E 的 Recall@k，按切片",

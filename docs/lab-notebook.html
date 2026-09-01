@@ -168,7 +168,7 @@
   <p class="meta">
     <span>代码库 D:\Playground\MMDocRAG</span>
     <span>数据 D:\Dataset\MMDocRAG</span>
-    <span>最后更新 2026-09-01 · E37 提升按题型稳健但集中在纯视觉题 · E38 RQ1b 的 R² 目标问错了 · 新增统计机器测试 25 项</span>
+    <span>最后更新 2026-09-01 · E40 头条换 bge-large 后四格全部存活 · E37 提升按题型稳健但集中在纯视觉题 · E38 RQ1b 的 R² 目标问错了 · 新增统计机器测试 25 项</span>
   </p>
 </header>
 
@@ -3019,6 +3019,68 @@ python -m retrieval.slice_by_type --pool canonical</code></pre>
 </div>
 
 
+
+<div class="entry">
+  <div class="gutter"><span class="eid">E40</span><span class="status pos">正向（稳健性）</span></div>
+  <div class="body">
+    <p class="entry-title">头条提升不是弱编码器的产物：换成 bge-large，四格全部存活</p>
+    <p class="why">
+      E34 用 bge-large 重跑静态对照时，撤回了一条结论——「ColQwen 读像素优于在图片描述上
+      做检索」在 bge-small 下是 k=20 <b>+0.0220*</b>，换 bge-large 后塌到
+      <b>+0.0086 [−0.0101,+0.0274]</b> 且跨 0。那个表观的视觉优势其实来自
+      <b>文本检索器太弱</b>。既然一条结论已经这样倒掉，就必须问：
+      <b>E27 的头条 +0.061 会不会是同一个毛病？</b>
+    </p>
+
+    <h3>① 先发现一个更难看的问题：编码器是个不出现在 argv 里的自由变量</h3>
+    <p>
+      <code>retrieval/eval_stack_v2.py</code> 自 E34 起就有 <code>--dense-model</code>，
+      但产出 E27 折外结果的 <code>retrieval/nested_cv.py</code> <b>没有</b>——
+      它在第 117 行按位置调用 <code>build(args.db, args.quotes, args.colqwen, args.pool)</code>，
+      因而<b>静默使用 bge-small 默认值</b>。也就是说，头条数字的编码器身份
+      既不在命令行里、也就不会进入 run 记录的 argv。这是最糟的一种形状：
+      <b>一个决定结论的变量，在记录里查不到。</b>先补上该参数。
+    </p>
+
+    <h3>② 先证明重构没改旧数，再相信新数</h3>
+    <p>
+      改完之后用默认值重跑 selfbuilt k=10，拿到 <b>+0.0608 / +0.0683</b>，
+      与注册表里记录的逐位相同——改动是 no-op。这一步不能省：
+      如果不先做，之后任何差异都分不清是换了编码器还是重构改坏了什么。
+    </p>
+
+    <h3>③ 四格全部存活，点估计几乎不动</h3>
+    <table class="num">
+      <thead><tr><th>池</th><th>k</th><th>bge-small</th><th>bge-large</th><th>doc-cluster 95% CI</th></tr></thead>
+      <tbody>
+        <tr><td>selfbuilt</td><td>10</td><td>+0.0608</td><td><b>+0.0605</b></td><td>[+0.0466,+0.0752]*</td></tr>
+        <tr><td>selfbuilt</td><td>20</td><td>+0.0304</td><td><b>+0.0329</b></td><td>[+0.0232,+0.0428]*</td></tr>
+        <tr><td>canonical</td><td>10</td><td>+0.0541</td><td><b>+0.0525</b></td><td>[+0.0379,+0.0672]*</td></tr>
+        <tr><td>canonical</td><td>20</td><td>+0.0269</td><td><b>+0.0267</b></td><td>[+0.0173,+0.0361]*</td></tr>
+      </tbody>
+    </table>
+    <p>
+      最大变动是 selfbuilt k=20 的 +0.0025。<b>头条提升不是编码器强度的产物</b>，
+      这正是 E34 撤回那条结论之后必须补上的对照。
+    </p>
+
+    <h3>④ 但有一个必须改的表述习惯</h3>
+    <p>
+      相对<b>替代基线 A</b> 的差值确实缩水了：selfbuilt k=10 从 +0.0683 到 +0.0626、
+      k=20 从 +0.0343 到 +0.0291，canonical k=20 从 +0.0308 到 +0.0229。
+      方向与 E34 的 D−A 一致，机制也清楚——A 本身就是纯 dense 文本臂，
+      换强编码器只让基线<b>单边</b>变强，而选出的流水线是 RRF 融合。
+      <b>所以头条应当报相对论文式对照 E 的差值，而不是相对 A 的</b>：后者对编码器强度敏感。
+    </p>
+
+    <p class="limit">
+      <b>边界</b>：本次只搬了 E27。其余 14 个依赖 bge-small 的实验仍是 bge-small 的结果，
+      作为历史记录保留；E35/E36/E37 的增益是两臂同时换编码器的相对量，
+      理论上对编码器不敏感，但<b>尚未实测</b>，不应写成已复核。
+      这条切分自 E9 起被反复观察，本结果与 E27 一样只能标 exploratory。
+    </p>
+  </div>
+</div>
 
 <div class="entry">
   <div class="gutter"><span class="eid">E38</span><span class="status neg">负结果（结案性）</span></div>

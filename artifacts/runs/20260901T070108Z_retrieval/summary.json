@@ -1,0 +1,30 @@
+{
+  "run_id": "20260901T070108Z_retrieval",
+  "created_utc": "2026-09-01T07:01:43Z",
+  "suite": "retrieval",
+  "offline": true,
+  "counts": {
+    "skipped": 1
+  },
+  "n_metrics": 0,
+  "experiments": [
+    {
+      "id": "E40",
+      "title": "E27 头条在 bge-large 上复核：提升不是弱编码器的产物",
+      "state": "skipped",
+      "reason": "本实验没有 replay 安全的命令（其命令会重建产物）",
+      "elapsed_sec": 0.0,
+      "n_commands": 0,
+      "logs": [],
+      "metrics_files": [],
+      "asks": "E27 的 +0.061 是真实的配置提升，还是 bge-small 太弱制造出来的？换成本项目唯一字节可证、且更接近论文规模的文本检索器之后，四格还剩几格？",
+      "how": "与 E27 完全相同的 document-grouped 5 折折外协议，只把 dense 文本臂换成 models/bge-large-en-v1.5。",
+      "metric_meaning": "",
+      "limits": "本条只搬了 E27。其余 14 个依赖 bge-small-vlm 的实验仍是 bge-small 的结果，作为历史记录保留；其中 E35/E36/E37 的增益是两臂同时换编码器的相对量，对编码器不敏感，但**尚未实测**，不应写成已复核。同样地，这条切分自 E9 起被反复观察，本结果与 E27 一样只能标 exploratory。",
+      "primary_metric": "Recall@k（折外）",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    }
+  ]
+}

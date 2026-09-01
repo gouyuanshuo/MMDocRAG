@@ -54,6 +54,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from retrieval.eval_stack_v2 import (BALANCED_QUOTA, DEFAULT_COLQWEN,  # noqa: E402
                                      DEFAULT_DB, DEFAULT_QUOTES,
                                      PAPER_QUOTA, SEED, build, recall)
+from retrieval.dense import MODEL as DENSE_MODEL                     # noqa: E402
 from expkit.results import ExperimentResult, add_output_args   # noqa: E402
 
 BOOT = 4000
@@ -110,11 +111,23 @@ def main():
     ap.add_argument("--pool", default="selfbuilt", choices=("selfbuilt", "canonical"))
     ap.add_argument("--k", type=int, default=20)
     ap.add_argument("--folds", type=int, default=5)
+    # eval_stack_v2 has had --dense-model since E34; this script did not, and
+    # called build() positionally, so it silently used the bge-small default no
+    # matter what the caller believed it was measuring. That is the worst shape
+    # for a headline result: the encoder is a free variable that never appears
+    # in the argv the run records. It is a declared argument now, and it lands
+    # in the manifest with everything else.
+    ap.add_argument("--dense-model", default=DENSE_MODEL,
+                    help="sentence-transformers model or local path for the "
+                         "dense text arm. Must match a model already encoded by "
+                         "retrieval.dense and retrieval.dense_chunks "
+                         f"(default: {DENSE_MODEL}).")
     add_output_args(ap)
     args = ap.parse_args()
     k = args.k
 
-    rows, meta = build(args.db, args.quotes, args.colqwen, args.pool)
+    rows, meta = build(args.db, args.quotes, args.colqwen, args.pool,
+                       dense_model=args.dense_model)
     docs = np.asarray([r["doc"] for r in rows])
     uniq = sorted(set(docs.tolist()))
     rng = np.random.default_rng(SEED)
