@@ -1,0 +1,179 @@
+<h2>Research gap, as the evidence actually supports it</h2>
+
+<div class="note">
+<p><strong>The proposal's gap statement survives, but only once it is scoped and
+dated.</strong> Section 3 claims that current systems "typically adapt only one
+stage" of the pipeline, and warns that this is preliminary and must be confirmed
+by review rather than asserted. The review confirms a narrower version: within
+<em>multimodal document RAG through 2025</em>, the claim holds and is
+independently corroborated. Stated without that scope, it is false.</p>
+</div>
+
+<h3>The corroboration</h3>
+
+<p>An ACL 2026 survey of multimodal RAG for document understanding tabulates 48
+systems and identifies <strong>no system performing query-conditioned routing
+across two or more dimensions simultaneously</strong>. It characterises the
+nearest misses explicitly: VisDoMRAG, HM-RAG and ViDoRAG retrieve per modality
+but combine by <em>union or fusion</em> rather than routing; MG-RAG and
+MMRAG-DocQA build hierarchical multi-granularity indexes but do not select
+granularity per query; agent-based systems orchestrate iterative refinement
+rather than deciding upfront.</p>
+
+<p>This review reached the same conclusion independently before reading the
+survey. Three multimodal systems were read in full — VisDoM, ViDoRAG and
+MMRAG-DocQA — and each turned out to pay for everything and merge. ViDoRAG
+retrieves through both pipelines for every query and unions them, varying only
+how many items each returns. MMRAG-DocQA defines retrieval as the union of its
+in-page and cross-page indexes. <strong>Union, not selection, is how this field
+currently handles multiple modalities and granularities</strong> — which is
+precisely the cost structure a budget-framed router would attack.</p>
+
+<h3>The counterexample, and why the scope matters</h3>
+
+<p>UniversalRAG (ACL 2026) does route modality and granularity together, and
+must be cited. Its scope is different — text, image and video corpora rather
+than documents — and it is concurrent with the survey that does not list it. Read
+in full, it narrows what it refutes in three ways. Its router is a
+<strong>single flat six-way classifier</strong> over {None, Paragraph, Document,
+Image, Clip, Video}, so modality and granularity are one prediction, not a
+hierarchy. Its labels come from <strong>benchmark inductive bias</strong> —
+queries from a dataset meant to be answered parametrically are labelled "None" —
+which is a proxy, not a measured outcome. And it <strong>reports no cost at
+all</strong>: no latency, no compute, no pass counts.</p>
+
+<h3>Where the ground is genuinely taken</h3>
+
+<p><strong>Retrieval depth is crowded</strong> — eight of 36 works, including
+Adaptive-RAG, Self-RAG, CRAG and SAM-RAG. <strong>The cost-framed retriever
+question was asked in 2021</strong>: Arabzadeh, Yan and Clarke train a per-query
+classifier over sparse, dense and hybrid, motivated by cutting GPU calls, using
+a cascade design — the sparse-versus-hybrid classifier sees the query <em>and</em>
+the top passage from an initial sparse pass — and using <strong>matched-budget
+random allocation as its primary baseline</strong>. Both the cascade and the
+control this project treats as central are precedented there.
+<strong>Granularity routing exists for text</strong> in Mix-of-Granularity and
+RAPTOR.</p>
+
+<h3>The concurrent result</h3>
+
+<p><em>Modality Relevance is not Modality Utility</em> (July 2026) independently
+reaches several of this project's conclusions on MultiModalQA: the same cost
+asymmetry, the same finding that modality relevance poorly predicts modality
+<em>need</em>, and the same observation that a pre-retrieval router escalating on
+apparent visual relevance over-escalates against an oracle. Its utility oracle
+reaches 0.469 accuracy at a 12% escalation rate, above the 0.446 of an always-on
+vision pipeline. That 12% sits in the same range as this project's 0.05–0.15, on
+a different corpus and metric; the agreement in order of magnitude is
+corroboration and should be reported as such rather than buried.</p>
+
+<h3>What remains open, after 15 close readings</h3>
+
+<ol>
+<li><strong>Nobody prices two retrieval currencies that have no exchange
+rate.</strong> <em>This statement was narrowed on 2026-09-01 after MAGE-RAG was
+read.</em> The original claim &mdash; that cost, where reported at all, collapses
+to one scalar &mdash; is no longer defensible: MAGE-RAG carries a seven-element
+budget vector and reports 20.99 images, 4.05 context pages and 3.23 LLM calls per
+sample, with efficiency as 0.162 score per LLM call. What survives is narrower and
+still unmet. Its budget dimensions are <em>quantities of evidence</em> inside one
+pipeline, all convertible into reader context. No work read here separates a CPU
+retrieval pass from a GPU late-interaction pass and then <em>declines to sum
+them</em> because no exchange rate between the two was measured. ColPali supplies
+the reason that separation matters: a page costs 256&nbsp;KB of index against
+8.6&nbsp;KB for BGE-M3, while query encoding differs by only 30&nbsp;ms against
+22&nbsp;ms &mdash; the two costs do not scale together, so one number cannot
+represent both.</li>
+
+<li><strong>Hierarchy, as opposed to a flat joint label or a free-running
+agent.</strong> <em>A second counterexample was added on 2026-09-01.</em>
+UniversalRAG's six-way classifier is flat: modality and granularity are one
+prediction. R1-Router (arXiv 2505.22095, retitled Mixture-of-Retrieval Experts in
+its 2026 revision) is the other end &mdash; it routes each intermediate query to
+whichever knowledge base suits the evolving reasoning state, trained by Step-GRPO,
+which is adaptive and multi-step but has no fixed decision structure at all and
+operates over open-domain knowledge bases rather than the retrievers available for
+one document. So the field has a flat joint label at one extreme and an
+unconstrained agent at the other; a declared hierarchy of a few cheap decisions,
+each priced, is still absent. Neither work reports a retrieval-call count or a
+latency figure: R1-Router's v1 abstract claims it is &ldquo;reducing unnecessary
+retrievals and improving both efficiency and accuracy&rdquo; without quantifying
+it, and the v2 abstract drops the sentence.</li>
+
+<li><strong>Proxy labels are the norm.</strong> UniversalRAG labels by dataset
+identity; Adaptive-RAG falls back to the same shortcut where outcome labels are
+unavailable, and its classifier reaches only <strong>54.52% accuracy</strong>,
+leaving roughly nine F1 points of its own oracle unclaimed. Training on measured
+per-question outcomes, which this project adopted only after correcting E17, is
+not standard practice.</li>
+
+<li><strong>Oracles and tie-awareness are almost absent.</strong> Of the 15 papers
+read in full, only Adaptive-RAG reports an oracle at all, and none reports a
+tie-aware oracle, a permutation control over action marginals, or the fraction of
+oracle advantage a router captures. MAGE-RAG, the most cost-conscious system in
+this registry, reports none of the three either. Recall at k is a ratio of small
+integers, so ties dominate: 47.9% of this project's questions have every action
+tied.</li>
+
+<li><strong>Routing machinery is rarely charged for.</strong> CRAG is the honest
+exception, reporting +0.15 TFLOPs per token and 0.512 s against 0.363 s — a 41%
+overhead for the routing decision itself. Self-RAG reports no cost and never says
+how often it skips retrieval. SAM-RAG reports documents retrieved (1.77 against a
+gold 1.55) while omitting the three verifier calls that produced the saving.</li>
+
+<li><strong>Fusion is the missing baseline.</strong> UniversalRAG's strongest
+comparator is a shared-embedding corpus its own analysis says suffers a modality
+gap. Nothing compares a router against retrieving every modality and fusing the
+ranked lists — the static baseline this project must beat, and does not.</li>
+</ol>
+
+<h3>A boundary this review imposes on the project's own claims</h3>
+
+<div class="note">
+<p>ColPali's baselines include a <strong>captioning pipeline</strong> in which
+visual elements are described by Claude-3 Sonnet and retrieved as text. ColPali
+reaches 81.3 NDCG@5 against roughly 67 for captioning — about fourteen points in
+favour of pixels over VLM-written descriptions, at page granularity on whole
+pages. This project measures no such advantage for ColQwen over image-description
+retrieval, but it measures it on <em>cropped quote regions inside a
+question-conditioned candidate pool</em> with a median of about twenty image
+candidates per document, where recall at 20 is near saturation. The project's
+result must be stated as bounded to that regime. It must not be generalised into
+a claim that descriptions match pixels.</p>
+<p>VisRAG, notably, never makes this comparison at all: its text baseline is OCR
+and parser output, not VLM transcription. So the specific contrast this project
+runs is one the visual-RAG literature has largely skipped — which is a
+contribution, provided it is scoped.</p>
+</div>
+
+<p class="scope"><strong>Scope of this claim.</strong> 36 works, 8 themes, 36
+recorded queries across the ACL Anthology, NeurIPS, ICLR/OpenReview, ACM DL, IEEE
+Xplore, AAAI and arXiv. Fifteen are read in full and are set out above; the other
+21 are recorded at abstract level and labelled as such, so anything resting on
+them is provisional in the way an abstract is. Two corrections were forced during
+the review and are recorded in the affected entries: a claim that the
+Modality-Utility paper reports no random control was withdrawn after reading its
+Table 2, and an apparent finding that no prior work routes modality turned out to
+be an artefact of not having searched for it. Vendor blogs and LLM-generated
+summary aggregators were used only as pointers to primary sources and are never
+cited.</p>
+
+<div class="note">
+<p><strong>The four outstanding leads were resolved on 2026-09-01, and two of
+them were one paper.</strong> &ldquo;R1-Router&rdquo; and
+&ldquo;Mixture-of-Retrieval Experts&rdquo; are the same arXiv submission
+(2505.22095) under two titles, renamed by the same authors between v1
+(2025-05-28) and v2 (2026-04-06) around the same Step-GRPO method. Recording them
+separately would have counted one system twice in the coverage matrix. A lead
+list assembled from titles can contain duplicates that only a version check
+reveals, which is worth stating because nothing in the search results themselves
+flagged it.</p>
+<p>The three resulting records are abstract-level and labelled as such. Reading
+them changed two of the six statements above: MAGE-RAG forced statement (1) to be
+narrowed, because it does price more than one dimension; R1-Router was added to
+statement (2) as a second counterexample. CogPlanner changed nothing &mdash; it
+plans query reformulation rather than selecting a retriever or a modality, and
+like most of this registry it claims efficiency without quantifying it. Statement
+(4) was reinforced rather than weakened: MAGE-RAG reports no oracle, no
+matched-budget random control and no tie analysis.</p>
+</div>

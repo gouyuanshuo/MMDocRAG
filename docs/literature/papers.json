@@ -1,0 +1,1512 @@
+{
+  "papers": [
+    {
+      "key": "adaptive-rag",
+      "title": "Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity",
+      "authors": "Soyeong Jeong, Jinheon Baek, Sukmin Cho, Sung Ju Hwang, Jong C. Park",
+      "year": 2024,
+      "venue": "NAACL 2024 (Long Papers), pp. 7036-7050",
+      "url": "https://aclanthology.org/2024.naacl-long.389/",
+      "arxiv": "2403.14403",
+      "themes": [
+        "adaptive-rag"
+      ],
+      "stages": [
+        "depth"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "single-step retriever + LLM; IRCoT for the multi-step branch"
+      ],
+      "datasets": [
+        "single-hop: SQuAD, Natural Questions, TriviaQA",
+        "multi-hop: MuSiQue, HotpotQA, 2WikiMultiHopQA",
+        "classifier trained on 400 queries per dataset (2,400 total); 500 test samples per dataset"
+      ],
+      "metrics": [
+        "F1",
+        "seconds per query",
+        "average retrieval steps",
+        "classifier accuracy"
+      ],
+      "limitation": "Read in full 2026-08-31. The authors concede that automatic labelling introduces errors and that the gap to their oracle leaves room to improve the classifier. Two weaknesses matter for this project. First, LABELS ARE PARTLY DATASET IDENTITY: where outcome-based labels are unavailable, single-hop datasets are labelled B and multi-hop C -- the same proxy-label shortcut UniversalRAG takes, and the same one this project had to correct in E17. Second, there is NO MATCHED-COST CONTROL: the oracle comparison uses a perfect classifier without equalising the computational budget.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2403.14403",
+        "date": "2026-08-31",
+        "note": "title, authors, year and the routed stage read off the arXiv abstract page; venue and pagination from the ACL Anthology listing | 2026-08-31 full text read at arxiv.org/html/2403.14403v1."
+      },
+      "close_reading": "THE FLAGSHIP ADAPTIVE-RAG PAPER HAS A WEAK ROUTER, AND SAYS SO. Classifier accuracy is 54.52% over three labels, with 31% of multi-step queries misrouted to single-step. The oracle reaches 56.28 F1 while the deployed system reaches 46.94 -- so roughly nine F1 points of the available headroom go unclaimed. This is the closest thing in the literature to the ceiling analysis E35 performs, and it is reported as a number rather than as a controlled experiment.\n\nTHE EFFICIENCY CLAIM IS THE SHAPE THIS PROJECT USES. On FLAN-T5-XL, Adaptive-RAG runs at 3.60 s per query against 8.81 s for always-multi-step, averaging 2.17 retrieval steps, at 46.94 F1 against 48.85. On GPT-3.5 it matches multi-step F1 (50.91 vs 50.87) at 1.46 s against 3.33 s. So the headline is the same trade this project reports for ColQwen calls: comparable quality, materially less cost.\n\nWHAT IS MISSING IS WHAT THIS PROJECT ADDS. No random allocation at a matched budget, no tie-aware treatment of the routing outcome, and no statement of what fraction of the oracle advantage the classifier captures beyond the raw F1 gap. The router is also 770M parameters (T5-Large), with ablations down to 60M showing minimal degradation -- worth citing when justifying why this project's routers are small."
+    },
+    {
+      "key": "ask-in-any-modality",
+      "title": "Ask in Any Modality: A Comprehensive Survey on Multimodal Retrieval-Augmented Generation",
+      "authors": "not read",
+      "year": 2025,
+      "venue": "arXiv 2502.08826",
+      "url": "https://arxiv.org/abs/2502.08826",
+      "arxiv": "2502.08826",
+      "themes": [
+        "multimodal-doc-rag",
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "image",
+        "audio",
+        "video"
+      ],
+      "retrieval": [
+        "survey"
+      ],
+      "datasets": [
+        "survey"
+      ],
+      "metrics": [
+        "survey"
+      ],
+      "limitation": "The broader multimodal-RAG survey, complementing the document-specific one already in this registry. Not yet read; recorded so the coverage of the gap argument can be checked against a second independent taxonomy rather than one.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://arxiv.org/abs/2502.08826",
+        "date": "2026-08-31",
+        "note": "title and arXiv id from the arXiv listing only; no content claims are made about it"
+      }
+    },
+    {
+      "key": "bge-m3",
+      "title": "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
+      "authors": "Jianlv Chen, Shitao Xiao, Peitian Zhang, Kun Luo, Defu Lian, Zheng Liu",
+      "year": 2024,
+      "venue": "Findings of ACL 2024",
+      "url": "https://aclanthology.org/2024.findings-acl.137/",
+      "arxiv": "2402.03216",
+      "themes": [
+        "bm25-dense-hybrid",
+        "foundational"
+      ],
+      "stages": [],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "dense, multi-vector and sparse retrieval from one model"
+      ],
+      "datasets": [
+        "multilingual, cross-lingual and long-document retrieval benchmarks"
+      ],
+      "metrics": [
+        "not read"
+      ],
+      "limitation": "The BGE family MMDocRAG names as one of its text retrievers, and the reason this project can only ever call its own arm a BGE-family baseline: the paper is about M3, whereas the project runs bge-small-en-v1.5 and bge-large-en-v1.5, and MMDocRAG specifies no version at all. Notable for the project's cost framing: one M3 model performs dense, sparse and multi-vector retrieval simultaneously, which would collapse part of the retriever-choice decision E36 prices as two separate passes.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://aclanthology.org/2024.findings-acl.137/",
+        "date": "2026-08-31",
+        "note": "Findings of ACL 2024 venue, authors and the three simultaneous retrieval functionalities read off the ACL Anthology page and the arXiv PDF"
+      }
+    },
+    {
+      "key": "colbert",
+      "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT",
+      "authors": "Omar Khattab, Matei Zaharia",
+      "year": 2020,
+      "venue": "SIGIR 2020, pp. 39-48",
+      "url": "https://dblp.org/rec/conf/sigir/KhattabZ20.html",
+      "arxiv": "2004.12832",
+      "themes": [
+        "foundational",
+        "bm25-dense-hybrid"
+      ],
+      "stages": [],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "multi-vector late interaction (MaxSim) over token embeddings"
+      ],
+      "datasets": [
+        "MS MARCO",
+        "TREC CAR"
+      ],
+      "metrics": [
+        "not read"
+      ],
+      "limitation": "The late-interaction architecture that ColPali and ColQwen port to page images: per-token vectors scored by MaxSim rather than a single pooled embedding. Reading it is what makes the cost asymmetry in this project explicit -- a late-interaction pass is a structural compromise between a cross-encoder and a bi-encoder, not a free lunch, which is why E35 prices ColQwen passes in a separate currency from BM25 passes. MMDocRAG lists ColBERT among its text retrievers.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://dblp.org/rec/conf/sigir/KhattabZ20.html",
+        "date": "2026-08-31",
+        "note": "authors, venue and pagination from the dblp record; mechanism from the Semantic Scholar and ResearchGate listings of the abstract"
+      }
+    },
+    {
+      "key": "colpali",
+      "title": "ColPali: Efficient Document Retrieval with Vision Language Models",
+      "authors": "Manuel Faysse et al.",
+      "year": 2025,
+      "venue": "ICLR 2025",
+      "url": "https://openreview.net/forum?id=ogjBpZ8uSi",
+      "arxiv": "2407.01449",
+      "themes": [
+        "visual-retrieval"
+      ],
+      "stages": [],
+      "modalities": [
+        "page image"
+      ],
+      "retrieval": [
+        "PaliGemma-3B (SigLIP-So400m/14 + Gemma-2B); 1,024 patch vectors per page at D=128; MaxSim late interaction"
+      ],
+      "datasets": [
+        "ViDoRe: 5 academic tasks (DocVQA, InfoVQA, TAT-DQA, arXivQA, TabFQuAD, 500-1600 queries each) and 5 practical domain tasks (100 queries over 1,000 documents each), English and French"
+      ],
+      "metrics": [
+        "NDCG@5",
+        "storage per page",
+        "query encoding latency",
+        "indexing speed"
+      ],
+      "limitation": "Read in full 2026-08-31. Authors state: PDF focus; only high-resource languages (English and French) evaluated; unclear transfer to languages weak in the backbone; assumes a relevant document exists; many vector databases lack native multi-vector support; and queries were generated synthetically by a commercial LLM, which may bias the benchmark.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2407.01449",
+        "date": "2026-08-31",
+        "note": "ICLR 2025 venue confirmed via iclr.cc virtual poster page and ICLR proceedings listing; architecture detail (SigLIP-So400m, 1024 patches, MaxSim) from the search result summary of the abstract | 2026-08-31 full text read at arxiv.org/html/2407.01449v3; the captioning baseline and the 256 KB/page figure come from it."
+      },
+      "close_reading": "THE MOST IMPORTANT SINGLE FINDING FOR THIS PROJECT'S BOUNDARY STATEMENT. ColPali's baselines include a CAPTIONING pipeline in which visual elements are described by Claude-3 Sonnet and then retrieved as text. ColPali reaches 81.3 NDCG@5 averaged over ViDoRe against roughly 67 for the captioning approach -- about fourteen points in favour of reading pixels over reading VLM-written descriptions, at PAGE granularity on whole pages. This project measures no such advantage, and the difference is a setting difference, not a contradiction: E24 evaluates cropped quote regions inside a question-conditioned candidate pool with a median of about twenty image candidates per document, where recall at 20 is already near saturation. The project must therefore state its ColQwen result as bounded to that regime and must NOT generalise it to descriptions being as good as pixels.\n\nIT SUPPLIES THE COST NUMBERS THE TWO-CURRENCY ARGUMENT NEEDS. Storage is 256 KB per page in float16, which the paper itself calls an order of magnitude more than BGE-M3 at 8.6 KB; VisRAG's single-vector retriever is 4.5 KB by comparison. Query encoding is about 30 ms against 22 ms for BGE-M3. So the late-interaction cost is dominated by index size and by scoring, not by query encoding -- which is consistent with this project pricing a ColQwen pass as a distinct currency rather than as a multiple of a BM25 pass.\n\nTHE ARCHITECTURE IS THE ONE THIS PROJECT RUNS. PaliGemma-3B backbone, 1,024 patch vectors per page projected to 128 dimensions, scored by summing each query vector's maximum dot product against the page's vectors. Whole pages are the atomic retrieved unit throughout; no cropped figure regions are evaluated anywhere in the paper."
+    },
+    {
+      "key": "crag",
+      "title": "Corrective Retrieval Augmented Generation",
+      "authors": "Shi-Qi Yan et al.",
+      "year": 2024,
+      "venue": "arXiv 2401.15884; OpenReview JnWJbrnaUE (acceptance not confirmed)",
+      "url": "https://arxiv.org/abs/2401.15884",
+      "arxiv": "2401.15884",
+      "themes": [
+        "adaptive-rag",
+        "evidence-selection"
+      ],
+      "stages": [
+        "filter",
+        "depth"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "Contriever, matching Self-RAG for comparability; web search as the fallback corpus"
+      ],
+      "datasets": [
+        "PopQA (1,399 test; 12,601 used for evaluator fine-tuning)",
+        "Biography",
+        "PubHealth",
+        "Arc-Challenge"
+      ],
+      "metrics": [
+        "accuracy",
+        "FactScore",
+        "TFLOPs per token",
+        "execution time per instance"
+      ],
+      "limitation": "Read in full 2026-08-31. The authors name their own main weakness: fine-tuning an external retrieval evaluator is unavoidable in their design, and removing it is future work. Two further weaknesses matter here: the confidence thresholds are set EMPIRICALLY PER DATASET -- (0.59, -0.99) on PopQA, (0.5, -0.91) on PubHealth and Arc, (0.95, -0.91) on Biography -- so the escalation rate is tuned per corpus rather than held fixed, and the cost of the web-search fallback is never quantified.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2401.15884",
+        "date": "2026-08-31",
+        "note": "mechanism and the three confidence actions from the arXiv listing and the OpenReview PDF; VENUE DELIBERATELY NOT ASSERTED -- an OpenReview forum id is a submission, not an acceptance, and no proceedings entry was found | 2026-08-31 full text read at arxiv.org/html/2401.15884v3; venue still not asserted."
+      },
+      "close_reading": "IT IS THE CLOSEST PUBLISHED ANALOGUE TO E36'S CASCADE, AND IT PRICES ITSELF. A T5-large evaluator (0.77B) scores retrieved documents from -1 to 1 and triggers one of three actions: Correct, when at least one document is above the upper threshold, refines the documents by decompose-then-recompose; Incorrect, when all documents fall below the lower threshold, discards them and substitutes web search; Ambiguous combines both. The evaluator reaches 84.3% accuracy against 58-64.7% for ChatGPT. Overhead is reported as roughly +0.15 TFLOPs per token and 0.512 s per instance against 0.363 s for plain RAG -- a 41% time increase for the routing machinery itself, which is exactly the kind of accounting most routing papers omit and which this project's incremental cost model insists on.\n\nNO ORACLE AND NO MATCHED BUDGET. Ablations remove individual actions but there is no upper bound on how well the escalation decision could be made, and no comparison against spending the same escalation budget at random. The gains are real but modest against Self-RAG on the shared LLaMA2-7B setting: PopQA 59.8 against 54.9, Biography FactScore 86.2 against 81.2, PubHealth 74.8 against 72.4, Arc-Challenge 67.2 against 67.3 -- one of four essentially unchanged."
+    },
+    {
+      "key": "dense-sparse-selection",
+      "title": "Predicting Efficiency/Effectiveness Trade-offs for Dense vs. Sparse Retrieval Strategy Selection",
+      "authors": "Negar Arabzadeh, Xinyi Yan, Charles L. A. Clarke",
+      "year": 2021,
+      "venue": "arXiv 2109.10739 (cs.IR)",
+      "url": "https://arxiv.org/abs/2109.10739",
+      "arxiv": "2109.10739",
+      "themes": [
+        "adaptive-rag",
+        "bm25-dense-hybrid"
+      ],
+      "stages": [
+        "retriever"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "BM25 (sparse)",
+        "ANCE / RepBERT / ColBERT (dense)",
+        "hybrid"
+      ],
+      "datasets": [
+        "MS MARCO passage: 8.8M passages, 6,980 dev queries"
+      ],
+      "metrics": [
+        "recall at a given budget",
+        "query latency (BM25 55ms vs ANCE 103ms, cited)"
+      ],
+      "limitation": "Read in full 2026-08-31. The closest precedent for RQ2, and the full text makes both the precedence and the differences sharper. Its own weaknesses: over 90% of MS MARCO queries have exactly ONE relevant passage, so per-query recall is close to binary and the headroom behaves very differently from MMDocRAG, where a question has several gold quotes across two modalities; evaluation is on a single collection; and no oracle upper bound is reported, so there is no statement of how much of the achievable advantage the classifier captures.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2109.10739",
+        "date": "2026-08-31",
+        "note": "title, authors, year, the sparse/dense/hybrid selection target, the cost motivation and MS MARCO read off the arXiv abstract page; no peer-reviewed venue found yet, recorded as arXiv only | 2026-08-31 full text read via ar5iv mirror of 2109.10739."
+      },
+      "close_reading": "IT ALREADY USES THIS PROJECT'S CASCADE DESIGN. Two classifiers are trained: sparse versus dense, which sees only the query text, and sparse versus hybrid, which sees the query AND the top-ranked passage returned by an initial sparse retrieval. The second is structurally the cascade of E36 -- run the cheap pass, then decide from its output whether to pay for more. The project cannot present that design as new; what it can present as new is the two-currency budget and the multimodal action space.\n\nAND IT ALREADY USES THIS PROJECT'S PRIMARY CONTROL. Random assignment of queries to strategies at the same budget rate is the paper's main baseline. So matched-budget random allocation is not a novel protocol, and the review's earlier draft claim that it is not routine in retrieval routing is too strong and has been corrected in the gap statement.\n\nTHE EFFECT SIZE IS AN ORDER OF MAGNITUDE LARGER THAN THIS PROJECT'S. At a 50% dense budget the classifier reaches 0.95 recall against 0.91 for the random baseline. This project's router beats matched-budget random by 0.006 to 0.011. The gap is not necessarily a failure of the router here: with over 90% of their queries having a single relevant passage, choosing the right retriever flips a nearly all-or-nothing outcome, whereas an MMDocRAG question has several gold quotes and 47.9% of questions have every action tied. That contrast is worth stating explicitly in the report, because it explains why a result that works on passage retrieval need not transfer to multi-gold document retrieval.\n\nNO ORACLE, NO TIE ANALYSIS. Neither an oracle upper bound nor any treatment of tied outcomes appears. The ceiling framing E35 provides has no counterpart here."
+    },
+    {
+      "key": "dpr",
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "authors": "Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, Wen-tau Yih",
+      "year": 2020,
+      "venue": "EMNLP 2020, pp. 6769-6781",
+      "url": "https://aclanthology.org/2020.emnlp-main.550/",
+      "arxiv": "2004.04906",
+      "themes": [
+        "foundational",
+        "bm25-dense-hybrid"
+      ],
+      "stages": [],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "dense dual-encoder"
+      ],
+      "datasets": [
+        "Natural Questions and other open-domain QA sets"
+      ],
+      "metrics": [
+        "top-k passage retrieval accuracy"
+      ],
+      "limitation": "Establishes the dense-beats-BM25 result this project keeps having to qualify: dense outperforms Lucene-BM25 by 9-19 points absolute in top-20 accuracy on open-domain QA over text passages. MMDocRAG lists DPR as one of its six text retrievers. Text only, one granularity, no per-query choice -- the sign flip this project measures between dense and BM25 by GOLD MODALITY has no counterpart here, because there is only one modality.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://aclanthology.org/2020.emnlp-main.550/",
+        "date": "2026-08-31",
+        "note": "venue, pagination, authors and the 9-19 point margin read off the ACL Anthology page"
+      }
+    },
+    {
+      "key": "dse",
+      "title": "Unifying Multimodal Retrieval via Document Screenshot Embedding",
+      "authors": "Xueguang Ma et al.",
+      "year": 2024,
+      "venue": "EMNLP 2024",
+      "url": "https://aclanthology.org/2024.emnlp-main.373/",
+      "arxiv": "2406.11251",
+      "themes": [
+        "visual-retrieval",
+        "multimodal-doc-rag"
+      ],
+      "stages": [],
+      "modalities": [
+        "document screenshot (text + image + layout)"
+      ],
+      "retrieval": [
+        "single-vector dense encoding of a screenshot, Phi-3-vision 4B"
+      ],
+      "datasets": [
+        "Wiki-SS (1.3M Wikipedia screenshots)",
+        "Natural Questions",
+        "slide retrieval"
+      ],
+      "metrics": [
+        "top-1 accuracy",
+        "nDCG@10"
+      ],
+      "limitation": "One of the four visual retrievers MMDocRAG evaluates (listed there as DSE-wiki-ss and DSE-docmatix), so this is a direct input to the benchmark this project uses. Static and single-vector, unlike the late-interaction ColPali/ColQwen family. Beats BM25 by 17 points top-1 and OCR-text retrieval by over 15 nDCG@10 on slides -- a useful counterweight to this project's finding that on cropped figure regions in a small candidate pool, description-based retrieval matches pixels.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://aclanthology.org/2024.emnlp-main.373/",
+        "date": "2026-08-31",
+        "note": "EMNLP 2024 venue from the ACL Anthology page; model, corpus and margins from the arXiv HTML abstract"
+      }
+    },
+    {
+      "key": "llm-independent-adaptive-rag",
+      "title": "LLM-Independent Adaptive RAG: Let the Question Speak for Itself",
+      "authors": "not read",
+      "year": 2025,
+      "venue": "EMNLP 2025 Main Conference",
+      "url": "https://aclanthology.org/2025.emnlp-main.439/",
+      "arxiv": "2505.04253",
+      "themes": [
+        "adaptive-rag"
+      ],
+      "stages": [
+        "depth"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "not read"
+      ],
+      "datasets": [
+        "6 QA datasets"
+      ],
+      "metrics": [
+        "performance and efficiency vs LLM-based uncertainty methods"
+      ],
+      "limitation": "METHODOLOGICALLY THE CLOSEST PAPER TO THIS PROJECT'S FEATURE DISCIPLINE. It decides whether to retrieve using cheap external features rather than LLM uncertainty, and it evaluates 27 features in 7 GROUPS plus hybrid combinations across 6 QA datasets -- the same group-wise design E23 forced on this project after a 384-dimensional embedding buried a real low-dimensional signal. It routes only depth, and only over text. Worth a close read for how it reports group-wise results.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://aclanthology.org/2025.emnlp-main.439/",
+        "date": "2026-08-31",
+        "note": "EMNLP 2025 from the ACL Anthology listing; the 27-features-in-7-groups design and 6 datasets from the search summary of the abstract, ar5iv mirror of 2505.04253 also consulted"
+      }
+    },
+    {
+      "key": "m3docrag",
+      "title": "M3DocRAG: Multi-modal Retrieval is What You Need for Multi-page Multi-document Understanding",
+      "authors": "Jaemin Cho, Debanjan Mahata, Ozan Irsoy, Yujie He, Mohit Bansal",
+      "year": 2024,
+      "venue": "arXiv preprint (Nov 2024); companion M3DocVQA appears at ICCV 2025 Workshops",
+      "url": "https://arxiv.org/abs/2411.04952",
+      "arxiv": "2411.04952",
+      "themes": [
+        "multimodal-doc-rag",
+        "visual-retrieval"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "chart",
+        "figure",
+        "page image"
+      ],
+      "retrieval": [
+        "ColPali v1 (primary), ColQwen v0.1 (comparison); FlatIP / IVFFlat indexes"
+      ],
+      "datasets": [
+        "M3DocVQA (introduced): 2,441 questions over 3,368 PDFs / 41,005 pages",
+        "MMLongBench-Doc",
+        "MP-DocVQA"
+      ],
+      "metrics": [
+        "F1",
+        "ANLS",
+        "accuracy",
+        "seconds per query"
+      ],
+      "limitation": "Read in full 2026-08-31, confirming the abstract-level judgement: the pipeline is ENTIRELY FIXED. Embed pages, retrieve by MaxSim, generate -- every query takes the same path, with top-k set per task (1, 2 or 4) rather than per query. Authors state their retrieval models are trained on English-heavy data and may not transfer to other languages, and that outputs need human supervision.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2411.04952",
+        "date": "2026-08-31",
+        "note": "authors, retriever and datasets read off the arXiv abstract page; absence of per-query routing is an absence-of-evidence at abstract level and must be re-checked against the full paper before it is cited as a contrast | 2026-08-31 full text read at arxiv.org/html/2411.04952v1; the static-pipeline claim is confirmed."
+      },
+      "close_reading": "IT IS THE CONTROL CASE THE GAP ARGUMENT NEEDS, AND IT REPORTS THE COST NUMBERS MOST PAPERS OMIT. Page retrieval latency across 40,000 pages falls from 21.0 s per query with exact search to 1.8 s with IVFFlat and 0.2 s with IVFPQ. That is the approximate-index lever, and it is orthogonal to routing: it makes the expensive branch cheaper for every query rather than choosing who pays. Any budget claim this project makes should acknowledge that an ANN index is the cheaper first move.\n\nITS RETRIEVER IS THE ONE THIS PROJECT RUNS. ColPali v1 primary with ColQwen v0.1 as comparison, at PAGE granularity over open-domain corpora -- 3,368 PDFs and 41,005 pages in M3DocVQA. On that benchmark ColPali plus Qwen2-VL reaches 36.5 F1 with four pages against 23.7 for a ColBERTv2 text-RAG pipeline. Together with ViDoRAG and VisRAG this is the third full-text confirmation that late-interaction visual retrieval wins decisively at page granularity in open-domain settings, which is the setting this project does not test and must not claim to have contradicted."
+    },
+    {
+      "key": "mara",
+      "title": "MARA: A Multimodal Adaptive Retrieval-Augmented Framework for Document Question Answering",
+      "authors": "Hui Wu, Haoquan Zhai, Yuchen Li, Hengyi Cai, Peirong Zhang, Yidan Zhang, Lei Wang, Chunle Wang, Yingyan Hou, Shuaiqiang Wang, Dawei Yin",
+      "year": 2026,
+      "venue": "arXiv 2604.16313 (Apr 2026)",
+      "url": "https://arxiv.org/abs/2604.16313",
+      "arxiv": "2604.16313",
+      "themes": [
+        "multimodal-doc-rag",
+        "adaptive-rag",
+        "evidence-selection"
+      ],
+      "stages": [
+        "depth",
+        "generation"
+      ],
+      "modalities": [
+        "text",
+        "chart",
+        "table",
+        "infographic",
+        "slide"
+      ],
+      "retrieval": [
+        "not named in abstract"
+      ],
+      "datasets": [
+        "six multimodal QA benchmarks (not enumerated in abstract)"
+      ],
+      "metrics": [
+        "retrieval relevance",
+        "answer quality"
+      ],
+      "limitation": "THE CLOSEST NEAR-MISS TO THIS PROJECT'S THESIS, and it is a near-miss rather than a hit. Its stated target is the same one the proposal attacks -- query-agnostic document representations and STATIC top-k evidence selection. But what it makes query-adaptive is (i) the document REPRESENTATION, via a Query-Aligned Region Encoder that reweights multi-level representations, and (ii) how much evidence to pull in during generation, via a Self-Reflective Evidence Controller with a sliding window. Verified against the verbatim abstract: it claims NO modality routing, NO retriever routing and NO chunk-granularity routing. So the retrieval-side hierarchy this project routes over is still unoccupied by MARA -- but its existence means the proposal can no longer say static top-k is unquestioned.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://arxiv.org/abs/2604.16313",
+        "date": "2026-08-31",
+        "note": "CAUTION RECORDED DELIBERATELY. A first pass that summarised the PDF reported that MARA chooses modality, chooses among dense/sparse/hybrid retrievers, and adapts chunk granularity. Re-fetching the arXiv abstract and demanding verbatim quotes showed all three claims are absent from it -- the summariser had confabulated them. Stages here are taken only from sentences quoted verbatim out of the abstract. Full text still to be read."
+      }
+    },
+    {
+      "key": "mirage-eval",
+      "title": "Seeing Through the MiRAGE: Evaluating Multimodal Retrieval Augmented Generation",
+      "authors": "not read",
+      "year": 2026,
+      "venue": "arXiv 2510.24870",
+      "url": "https://arxiv.org/abs/2510.24870",
+      "arxiv": "2510.24870",
+      "themes": [
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "image",
+        "audio",
+        "video"
+      ],
+      "retrieval": [
+        "n/a -- evaluation framework"
+      ],
+      "datasets": [
+        "not read"
+      ],
+      "metrics": [
+        "InfoF1 (factuality and coverage)",
+        "CiteF1 (citation support and completeness)"
+      ],
+      "limitation": "The multimodal answer to RAGAS, and the closest published relative of the metric this project actually reports. It decomposes every modality into unimodal subclaims and scores citation support -- MMDocRAG's quote-selection F1 is a coarser, gold-anchored version of the same idea. Also supplies multimodal variants of ALCE, ARGUE and RAGAS, which is the natural place to look if the project ever needs a faithfulness metric beyond quote F1, a gap section 12 of the proposal explicitly leaves open.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://arxiv.org/abs/2510.24870",
+        "date": "2026-08-31",
+        "note": "title, the InfoF1/CiteF1 metric pair and the subclaim decomposition read off the arXiv HTML abstract; authors and any venue not established"
+      }
+    },
+    {
+      "key": "mix-of-granularity",
+      "title": "Mix-of-Granularity: Optimize the Chunking Granularity for Retrieval-Augmented Generation",
+      "authors": "Zijie Zhong, Hanwen Liu, Xiaoya Cui, Xiaofan Zhang, Zengchang Qin",
+      "year": 2025,
+      "venue": "COLING 2025, pp. 5756-5774",
+      "url": "https://aclanthology.org/2025.coling-main.384/",
+      "arxiv": "2406.00456",
+      "themes": [
+        "granularity",
+        "adaptive-rag"
+      ],
+      "stages": [
+        "granularity"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "BM25 for soft-label construction; MLP router over RoBERTa query embeddings"
+      ],
+      "datasets": [
+        "MedCorp 30.4M documents / 54.2M snippets (PubMed, StatPearls, Textbooks, Wikipedia)",
+        "five medical QA sets, ~7,000 questions (MMLU-Med 1,089, MedQA-US 1,273, MedMCQA 4,183, PubMedQA* 500, BioASQ-Y/N 618)"
+      ],
+      "metrics": [
+        "QA accuracy",
+        "storage overhead",
+        "inference time"
+      ],
+      "limitation": "Read in full 2026-08-31. The authors state their own limitations unusually frankly, and two of them are the same ones this project hit: granularity candidates are hand-chosen rather than derived, and THE ROUTER SEES ONLY QUERY EMBEDDINGS, which they flag as too little signal. They also omit length normalisation while calling it crucial in IR, note a security risk if the router is compromised, and report that 95% of degraded cases come from the LLM accepting wrong retrieved context rather than from the router.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://aclanthology.org/2025.coling-main.384/",
+        "date": "2026-08-31",
+        "note": "title, authors, venue and pagination read off the ACL Anthology page; datasets and metrics NOT available there and are recorded as unknown rather than guessed | 2026-08-31 full text read at arxiv.org/html/2406.00456v2 after the ACL Anthology PDF failed to extract."
+      },
+      "close_reading": "THE SUPERVISION IS A PROXY, AND A CAREFUL ONE. For each query the best snippet at each granularity is retrieved with BM25, scored against ground truth by RoBERTa similarity, TF-IDF or hit rate, and turned into SOFT labels -- 0.8 for the best granularity, 0.2 for the second, 0 otherwise -- to keep training differentiable. An MLP over RoBERTa query embeddings predicts a weight vector; selection is soft in training and hard at inference. Five granularities, each level pairing two adjacent chunks of the level below.\n\nTHE MISSING BASELINE IS THE SAME ONE THIS PROJECT INSISTS ON. It compares against chain-of-thought without retrieval and against MedRAG, a system with ONE granularity. There is no sweep over fixed granularities, so the reported gain cannot be separated into what comes from having several granularities available and what comes from choosing among them per query. E25/E26 in this project exist precisely because that separation changes the sign of the conclusion.\n\nNO ORACLE ANYWHERE. No upper bound on per-query granularity selection, no measurement of how often the router picks a suboptimal level, no ceiling. The ablation only removes the router and shows performance falling back to MedRAG.\n\nIT DOES PRICE THE ROUTER, WHICH IS RARE AND WORTH CITING. Storage is 2.7x the corpus to hold five granularities of embeddings. Average inference time goes from 8.12 s without the router to 13.16 s with it on a single granularity -- a 60% overhead for the routing decision itself -- and 17.93 s across five granularities. Gains are +1.47 points for GPT-3.5 and +7.48 for Llama3 on MedCorp, larger for weaker backbones."
+    },
+    {
+      "key": "mmdocrag",
+      "title": "Benchmarking Retrieval-Augmented Multimodal Generation for Document Question Answering",
+      "authors": "Kuicai Dong, Yujing Chang, Shijie Huang, Yasheng Wang, Ruiming Tang, Yong Liu",
+      "year": 2025,
+      "venue": "NeurIPS 2025 (poster)",
+      "url": "https://arxiv.org/abs/2505.16470",
+      "arxiv": "2505.16470",
+      "themes": [
+        "multimodal-doc-rag",
+        "evaluation",
+        "bm25-dense-hybrid"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "image",
+        "table",
+        "chart"
+      ],
+      "retrieval": [
+        "text: DPR, ColBERT, BGE, E5, Contriever, GTE",
+        "visual: DSE-wiki-ss, DSE-docmatix, ColPali, ColQwen",
+        "hybrid: ColPali+ColBERT, ColPali+BGE, ColQwen+ColBERT, ColQwen+BGE"
+      ],
+      "datasets": [
+        "MMDocRAG (introduced): 4,055 QA pairs over 222 documents, mean 67 pages, median 28, max 844"
+      ],
+      "metrics": [
+        "multimodal quote selection metrics",
+        "answer quality over 60 VLM/LLM models and 14 retrieval systems"
+      ],
+      "limitation": "The benchmark this project is built on, and a STATIC system: a fixed modality quota is applied to every query (top-10 = 7 text + 3 image, top-15 = 10 + 5, top-20 = 12 + 8). Verified independently here: the paper names 14 retrievers by FAMILY and gives no model version or HuggingFace id for any of them, which is why every comparison in this project is titled a local paper-style baseline rather than the paper's configuration. Its ColQwen image recall is 70.8 / 79.2 / 84.3 at k = 10 / 15 / 20.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/html/2505.16470v2",
+        "date": "2026-08-31",
+        "note": "document count, page statistics, the full 14-retriever list, the absence of any model version, the three modality quotas and the ColPali/ColQwen image recall rows were all read out of the arXiv HTML full text; the NeurIPS 2025 acceptance is confirmed by the neurips.cc virtual poster page"
+      },
+      "close_reading": "THE BENCHMARK THIS PROJECT IS BUILT ON, READ AS A SYSTEM RATHER THAN AS A DATASET. 4,055 expert-annotated QA pairs over 222 documents averaging 67 pages, median 28, maximum 844, with multi-page cross-modal evidence chains. 60 VLM/LLM models and 14 retrieval systems are evaluated.\n\nIT IS A STATIC SYSTEM, AND THAT IS WHAT MAKES IT THE RIGHT BASELINE. A fixed modality quota is applied to every query regardless of what that query needs: top-10 is 7 text plus 3 image, top-15 is 10 plus 5, top-20 is 12 plus 8. Nothing is conditioned on the question. The project's whole budget argument is an argument against that constant.\n\nTHE VERSION CLAIM, CONFIRMED FROM THE FULL TEXT. The 14 retrievers are named only by FAMILY -- text: DPR, ColBERT, BGE, E5, Contriever, GTE; visual: DSE-wiki-ss, DSE-docmatix, ColPali, ColQwen; hybrid: four ColPali/ColQwen crossings with ColBERT and BGE -- and NO model version or HuggingFace identifier is given for any of them anywhere. This independently confirms the correction the project made in E34 from inference alone, and it is why every comparison arm here is titled a local paper-style baseline rather than the paper's configuration.\n\nTHE NUMBERS THIS PROJECT COMPARES AGAINST. ColQwen image recall is 70.8 / 79.2 / 84.3 at k = 10 / 15 / 20, with ColPali at 68.2 / 77.5 / 81.2. The project measures 0.820 at k=10 on its own candidate pool, above the paper's 0.708, and predicts the gap closes as the image pool is filled out to the paper's scale -- a prediction still unverified because the full-pool index stands at 5 of 220 documents."
+    },
+    {
+      "key": "mmlongbench-doc",
+      "title": "MMLongBench-Doc: Benchmarking Long-context Document Understanding with Visualizations",
+      "authors": "Yubo Ma et al. (16 authors)",
+      "year": 2024,
+      "venue": "NeurIPS 2024 Datasets and Benchmarks Track (Spotlight)",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/ae0e43289bffea0c1fa34633fc608e92-Abstract-Datasets_and_Benchmarks_Track.html",
+      "arxiv": "2407.01523",
+      "themes": [
+        "multimodal-doc-rag",
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "image",
+        "chart",
+        "table",
+        "layout"
+      ],
+      "retrieval": [
+        "n/a -- long-context evaluation, not a retrieval system"
+      ],
+      "datasets": [
+        "MMLongBench-Doc (introduced): 135 PDFs, 1,082 expert-annotated questions, mean 47.5 pages; 33.7% cross-page, 20.6% unanswerable"
+      ],
+      "metrics": [
+        "F1"
+      ],
+      "limitation": "An evaluation benchmark, not a router. Named in the proposal as the secondary dataset for cross-dataset generalisation, which this project has NOT yet used. NOTE A VERSION DISCREPANCY: the published NeurIPS abstract says 135 documents / 1,082 questions / 47.5 pages, while the arXiv abstract page says 130 / 1,062 / 49.4. The proposal currently cites the arXiv figures; the published ones should be used.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/ae0e43289bffea0c1fa34633fc608e92-Abstract-Datasets_and_Benchmarks_Track.html",
+        "date": "2026-08-31",
+        "note": "counts read off the published NeurIPS proceedings abstract; the differing arXiv figures were fetched separately from arxiv.org/abs/2407.01523 on the same date and both are recorded rather than silently reconciled"
+      }
+    },
+    {
+      "key": "mmrag-docqa",
+      "title": "MMRAG-DocQA: A Multi-Modal Retrieval-Augmented Generation Method for Document Question-Answering with Hierarchical Index and Multi-Granularity Retrieval",
+      "authors": "not read",
+      "year": 2025,
+      "venue": "arXiv 2508.00579",
+      "url": "https://arxiv.org/abs/2508.00579",
+      "arxiv": "2508.00579",
+      "themes": [
+        "multimodal-doc-rag",
+        "granularity"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "table",
+        "chart",
+        "image",
+        "layout"
+      ],
+      "retrieval": [
+        "page-level parent page retrieval",
+        "document-level summary retrieval"
+      ],
+      "datasets": [
+        "MMLongBench-Doc: 135 documents, ~47.5 pages/doc, 1,082 questions",
+        "LongDocURL: 396 documents, ~85.6 pages/doc, 2,325 questions"
+      ],
+      "metrics": [
+        "accuracy",
+        "F1"
+      ],
+      "limitation": "Read in full 2026-08-31, RESOLVING the open question in the earlier record: granularity is NOT chosen per query. Every query retrieves in-page chunks, parent pages and document-level summaries, and the three are unioned into one context. It is multi-granularity INDEXING, not granularity routing, so it stays out of the granularity row of the coverage matrix. No limitations section; the only weakness acknowledged is that performance declines beyond ten pages because excessive content distracts, framed as parameter tuning.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2508.00579v1",
+        "date": "2026-08-31",
+        "note": "title, mechanism and the two evaluation datasets from the arXiv listing; authors and venue not yet read | 2026-08-31 full text read at arxiv.org/html/2508.00579v1; granularity confirmed NOT routed, stages stay empty."
+      },
+      "close_reading": "THE UNION IS EXPLICIT. Retrieval is defined as the union of the in-page index result and the cross-page index result for every query. Three levels all contribute to the final context: retrieved parent pages, visual content extracted from those pages by an LVLM, and hierarchical summaries built by clustering plus LLM aggregation. Nothing selects among them.\n\nIT IS THEREFORE A CONTROL CASE, NOT A COMPETITOR. Together with VisDoM, which runs visual and textual RAG concurrently and reconciles them, and ViDoRAG, which unions both pipelines, this is the third multimodal system in the registry that pays for everything and merges. That pattern is itself a finding: the multimodal document RAG literature overwhelmingly answers the cost question by not asking it.\n\nIT INDEPENDENTLY SETTLES THE MMLONGBENCH-DOC DISCREPANCY. It cites the benchmark as 135 documents, about 47.5 pages each, 1,082 questions -- the published NeurIPS figures, not the 130 / 1,062 / 49.4 of the arXiv abstract. The proposal currently cites the arXiv numbers and should be corrected.\n\nNUMBERS. MMLongBench-Doc at ten pages: 45.9% accuracy, 46.0 F1. LongDocURL: 57.2% accuracy. Reported as roughly 13 to 15 points over M3DocRAG on MMLongBench-Doc. No computational cost, inference time or latency is reported anywhere."
+    },
+    {
+      "key": "mmrag-survey",
+      "title": "Scaling Beyond Context: A Survey of Multimodal Retrieval-Augmented Generation for Document Understanding",
+      "authors": "Sensen Gao, Shanshan Zhao, Xu Jiang, Lunhao Duan, Yong Xien Chng, Qing-Guo Chen, Weihua Luo, Kaifu Zhang, Jia-Wang Bian, Mingming Gong",
+      "year": 2026,
+      "venue": "ACL 2026 Main Conference (arXiv 2510.15253, v3 Apr 2026)",
+      "url": "https://arxiv.org/abs/2510.15253",
+      "arxiv": "2510.15253",
+      "themes": [
+        "multimodal-doc-rag",
+        "visual-retrieval",
+        "granularity",
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "image",
+        "table",
+        "chart",
+        "layout"
+      ],
+      "retrieval": [
+        "survey -- covers text, visual and hybrid retrieval"
+      ],
+      "datasets": [
+        "survey: 48 multimodal RAG systems tabulated, 130+ references, 2020-2025"
+      ],
+      "metrics": [
+        "survey"
+      ],
+      "limitation": "Read in full 2026-08-31. Its taxonomy has four axes -- domain (open vs closed), retrieval modality (image-based vs image+text), retrieval granularity (page-level vs element-level), and hybrid enhancements (graph-based vs agent-based). Its stated open challenges are efficiency, fine-grained multimodal representation and robustness in deployment; it does not name adaptive routing as an open problem, and it discusses computational cost only minimally, including in its catalogue of evaluation metrics.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2510.15253",
+        "date": "2026-08-31",
+        "note": "title, full author list, ACL 2026 Main acceptance, the three-axis taxonomy and the three open challenges read off the arXiv abstract page; the absence of a named multi-stage router is an abstract-level observation and is flagged as such | 2026-08-31 full text read at arxiv.org/html/2510.15253v3."
+      },
+      "close_reading": "THIS IS THE SINGLE MOST IMPORTANT RECORD FOR THE GAP ARGUMENT, AND IT SUPPORTS THE PROPOSAL RATHER THAN REFUTING IT. Across 48 tabulated multimodal RAG systems, the survey identifies NO system that performs query-conditioned routing across two or more dimensions simultaneously. It explicitly characterises the systems that come closest as doing something else: VisDoMRAG, HM-RAG and ViDoRAG perform per-modality retrieval but combine by UNION OR FUSION rather than routing; MG-RAG and MMRAG-DocQA build hierarchical multi-granularity indexes but do NOT select granularity per query; ViDoRAG, HM-RAG and HEAR use agents for orchestration and iterative refinement rather than an upfront routing decision.\n\nHOW THIS SQUARES WITH UNIVERSALRAG. The survey covers 2020-2025 and is document-focused. UniversalRAG is ACL 2026, concurrent with the survey, and spans text, image and video corpora rather than documents specifically. So the two are consistent: within multimodal DOCUMENT RAG through 2025, an independent survey finds the multi-dimension router absent, and the one clear counterexample sits outside that scope and appeared alongside the survey itself. The gap statement should be scoped to multimodal document RAG and dated, not stated unconditionally.\n\nIT ALSO CONFIRMS THE PATTERN THIS REVIEW FOUND INDEPENDENTLY. Three of this registry's multimodal systems -- VisDoM, ViDoRAG, MMRAG-DocQA -- were each read in full and each turned out to pay for everything and merge. The survey generalises that to the field: union and fusion, not selection, is how multimodal document RAG currently handles several modalities and granularities. That is exactly the cost structure this project's budget framing attacks, and it means the static fusion baseline this project fails to beat is also the field's default."
+    },
+    {
+      "key": "modality-utility",
+      "title": "Modality Relevance is not Modality Utility: Post-hoc Selective Modality Escalation for Cost-Aware Multimodal RAG",
+      "authors": "Xue Li, Yiming Gai",
+      "year": 2026,
+      "venue": "arXiv 2607.05438 (cs.IR)",
+      "url": "https://arxiv.org/abs/2607.05438",
+      "arxiv": "2607.05438",
+      "themes": [
+        "adaptive-rag",
+        "multimodal-doc-rag",
+        "evidence-selection"
+      ],
+      "stages": [
+        "modality",
+        "generation"
+      ],
+      "modalities": [
+        "text",
+        "table",
+        "image"
+      ],
+      "retrieval": [
+        "cheap text+table pipeline, escalating to a VLM over images"
+      ],
+      "datasets": [
+        "MultiModalQA dev, n=2,441",
+        "WebQA balanced subset, n=1,500 (750 image-required / 750 text-answerable)"
+      ],
+      "metrics": [
+        "string-match accuracy",
+        "escalation rate",
+        "calls per question",
+        "per-seed std over 10 seeds"
+      ],
+      "limitation": "Concurrent work that reaches several of this project's conclusions on a different dataset. Read in full 2026-08-31. Its own stated limitations are unusually relevant here: the answer model consumes VLM-generated TEXTUAL SIDECARS rather than pixels, with the sidecars precomputed offline, so what it calls visual cost is offline indexing -- the same distinction this project enforces by calling description-based retrieval image-description retrieval and pricing ColQwen against a prebuilt index. It also concedes that every question pays for a draft plus a verifier call (2.45 calls per question at 45% escalation against a baseline of 1.0), and that its accuracy claim is conditional on substantial cross-modal redundancy. Routers are trained on offline counterfactual logs, so deployment needs those logs and calibration may drift.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2607.05438",
+        "date": "2026-08-31",
+        "note": "abstract fetched and quoted VERBATIM; every claim above is anchored to a quoted sentence. Full-text reading is the single highest priority in this registry. | 2026-08-31 full text read at arxiv.org/html/2607.05438v1; the earlier no-random-control claim was refuted and withdrawn."
+      },
+      "close_reading": "ORACLE STRUCTURE. On MultiModalQA dev, 61% of questions are modality saturated -- their gold support includes an image, yet text and tables alone answer them correctly. Two different oracles follow, and the gap between them is the paper's main point: an oracle that escalates on GOLD IMAGE SUPPORT reaches 0.430 at a 39% escalation rate, while a UTILITY oracle that escalates only where vision actually fixes a wrong answer reaches 0.469 at 12%. The utility oracle beats always-on VLM (0.446), so extra visual evidence can distract. Text+tables alone is 0.351.\n\nCORRECTION TO THIS REGISTRY'S EARLIER CLAIM. The abstract does not mention a random control, and this record previously said none was reported. THE FULL TEXT SHOWS OTHERWISE, and the earlier claim is withdrawn. Table 2 compares three routers -- random escalation, calibrated pre-retrieval, and post-hoc -- under identical 50/50 stratified splits, identical calibration machinery and identical thresholding, with ONLY the feature set differing, each thresholded to hit a target escalation budget on training data, evaluated once on held-out test, averaged over 10 seeds. That is a matched-budget random control, and it is stricter than what this project runs, because the budget is hit by calibration on training data rather than by taking the top-B fraction at evaluation time.\n\nWHAT STILL SEPARATES THIS PROJECT. No permutation control over the action marginals and no tie-aware oracle appear anywhere; significance is handled only as per-seed standard deviation (<=0.006 on the main comparison). Decisions are made POST-HOC on the tuple (query, draft answer, evidence), which costs a generation pass this project's pass-counting budget would charge and which this project's pre-generation cascade does not need. The measured quantity is answer accuracy on MultiModalQA, not evidence recall over document quotes on MMDocRAG.\n\nNUMERICAL PARALLEL WORTH REPORTING. Their utility oracle needs 12% escalation to beat always-on; this project's E36 router reaches always-ColQwen quality at B = 0.05 to 0.15. The two are measuring different things on different corpora and must not be pooled, but the agreement in ORDER OF MAGNITUDE is the strongest external support the project's cost claim currently has."
+    },
+    {
+      "key": "modaroute",
+      "title": "Smart Routing for Multimodal Video Retrieval: When to Search What",
+      "authors": "Dela Rosa et al.",
+      "year": 2025,
+      "venue": "ICCV 2025 Workshops (MRR)",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025W/MRR%202025/html/Dela_Rosa_Smart_Routing_for_Multimodal_Video_Retrieval_When_to_Search_What_ICCVW_2025_paper.html",
+      "arxiv": "2507.13374",
+      "themes": [
+        "adaptive-rag",
+        "visual-retrieval"
+      ],
+      "stages": [
+        "modality"
+      ],
+      "modalities": [
+        "ASR (speech)",
+        "OCR (on-screen text)",
+        "visual"
+      ],
+      "retrieval": [
+        "per-modality indices queried in parallel, combined by rank fusion"
+      ],
+      "datasets": [
+        "video retrieval (not read)"
+      ],
+      "metrics": [
+        "Recall@5",
+        "computational overhead",
+        "average modalities queried per query"
+      ],
+      "limitation": "A modality router in the video domain rather than documents, and further evidence that the modality stage is occupied. An LLM (GPT-4.1) reads the query and selects which of three modality indices to search, cutting average modalities queried from 3.0 to 1.78 for a 41% reduction in compute at 60.9% Recall@5. Two contrasts with this project: the routing signal is an LLM call, which is itself a cost this project's pass-counting would charge, and the results are combined by rank fusion, so it never has to choose a single modality.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://arxiv.org/abs/2507.13374",
+        "date": "2026-08-31",
+        "note": "ICCV 2025 Workshop venue confirmed by the CVF Open Access record; the 41% / 3.0-to-1.78 / Recall@5 figures come from a search summary of the paper and should be re-checked in the PDF before being quoted in the report"
+      }
+    },
+    {
+      "key": "molorag",
+      "title": "MoLoRAG: Bootstrapping Document Understanding via Multi-modal Logic-aware Retrieval",
+      "authors": "Xinxin Wu et al.",
+      "year": 2025,
+      "venue": "EMNLP 2025 Main Conference",
+      "url": "https://aclanthology.org/2025.emnlp-main.708.pdf",
+      "arxiv": "2509.07666",
+      "themes": [
+        "multimodal-doc-rag",
+        "visual-retrieval"
+      ],
+      "stages": [
+        "depth"
+      ],
+      "modalities": [
+        "page image",
+        "text",
+        "figure"
+      ],
+      "retrieval": [
+        "lightweight VLM traversing a page graph",
+        "MoLoRAG-3B fine-tuned from Qwen2.5-VL-3B"
+      ],
+      "datasets": [
+        "not read"
+      ],
+      "metrics": [
+        "not read"
+      ],
+      "limitation": "Retrieves pages by walking a page graph, so the number of retrieval hops is query-dependent -- a depth-stage adaptation rather than a modality or retriever choice. Its stated gap is that semantic-relevance retrieval ignores LOGICAL connections between pages, which is orthogonal to this project's budget framing. Page granularity throughout; no quote-level evidence. Stage assignment is abstract-level.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://arxiv.org/abs/2509.07666",
+        "date": "2026-08-31",
+        "note": "arXiv id and mechanism from the arXiv listing; EMNLP 2025 confirmed by the ACL Anthology PDF path 2025.emnlp-main.708 and the authors' GitHub"
+      }
+    },
+    {
+      "key": "rag-lewis",
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "authors": "Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Kuettler, Mike Lewis, Wen-tau Yih, Tim Rocktaeschel, Sebastian Riedel, Douwe Kiela",
+      "year": 2020,
+      "venue": "NeurIPS 2020",
+      "url": "https://proceedings.neurips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html",
+      "arxiv": "2005.11401",
+      "themes": [
+        "foundational"
+      ],
+      "stages": [],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "DPR bi-encoder over a Wikipedia index"
+      ],
+      "datasets": [
+        "open-domain QA, abstractive QA, question generation, fact verification"
+      ],
+      "metrics": [
+        "exact match",
+        "generation quality"
+      ],
+      "limitation": "The paper that named RAG. Everything is fixed: one retriever, one granularity, a fixed number of retrieved passages for every query. It is the static baseline the whole adaptive-RAG literature, including this project, defines itself against, and the authors already flag provenance and knowledge updating as open problems.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://proceedings.neurips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html",
+        "date": "2026-08-31",
+        "note": "venue, year and full author list read off the NeurIPS 2020 proceedings page; dblp record conf/nips/LewisPPPKGKLYR020 agrees"
+      }
+    },
+    {
+      "key": "ragas",
+      "title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation",
+      "authors": "Shahul Es, Jithin James, Luis Espinosa-Anke, Steven Schockaert",
+      "year": 2024,
+      "venue": "EACL 2024 System Demonstrations",
+      "url": "https://aclanthology.org/2024.eacl-demo.16/",
+      "arxiv": "2309.15217",
+      "themes": [
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "n/a -- evaluation framework"
+      ],
+      "datasets": [
+        "not read"
+      ],
+      "metrics": [
+        "faithfulness",
+        "answer relevance",
+        "context relevance"
+      ],
+      "limitation": "The reference-free RAG evaluation triad. Relevant to this project as the thing it deliberately does NOT rely on: proposal section 12 says an LLM judge may be an auxiliary metric but must not be the only faithfulness measure, and E1 anchors on gold quote F1 instead. Text-only; its faithfulness decomposition into atomic statements has no multimodal counterpart here.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://aclanthology.org/2024.eacl-demo.16.pdf",
+        "date": "2026-08-31",
+        "note": "EACL 2024 demo track from the ACL Anthology PDF path; the three metrics from the arXiv HTML abstract"
+      }
+    },
+    {
+      "key": "raptor",
+      "title": "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval",
+      "authors": "Parth Sarthi, Salman Abdullah, Aditi Tuli, Shubh Khanna, Anna Goldie, Christopher D. Manning",
+      "year": 2024,
+      "venue": "ICLR 2024",
+      "url": "https://openreview.net/forum?id=GN921JHCRw",
+      "arxiv": "2401.18059",
+      "themes": [
+        "granularity",
+        "foundational"
+      ],
+      "stages": [
+        "granularity"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "dense retrieval over a recursively summarised tree"
+      ],
+      "datasets": [
+        "QuALITY",
+        "other long-document QA"
+      ],
+      "metrics": [
+        "accuracy (QuALITY +20 absolute with GPT-4)"
+      ],
+      "limitation": "Builds a tree by recursively embedding, clustering and summarising chunks, then retrieves across levels of abstraction, so the effective granularity varies with the query. Recorded as a granularity-stage method with a caveat: the selection is relevance-driven retrieval over a multi-level index rather than an explicit router that first predicts a granularity, and that distinction should be checked in full text before the record is used in the gap argument. Text only.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://openreview.net/forum?id=GN921JHCRw",
+        "date": "2026-08-31",
+        "note": "ICLR 2024 confirmed by the ICLR proceedings page and dblp conf/iclr/SarthiATKGM24; authors and the QuALITY margin from the search summary of the abstract"
+      }
+    },
+    {
+      "key": "rear",
+      "title": "REAR: A Relevance-Aware Retrieval-Augmented Framework for Open-Domain Question Answering",
+      "authors": "Yuhao Wang et al. (RUC AI Box)",
+      "year": 2024,
+      "venue": "EMNLP 2024 Main Conference",
+      "url": "https://aclanthology.org/2024.emnlp-main.321/",
+      "arxiv": "2402.17497",
+      "themes": [
+        "evidence-selection",
+        "adaptive-rag"
+      ],
+      "stages": [
+        "filter"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "not named in abstract"
+      ],
+      "datasets": [
+        "four open-domain QA tasks (names not read)"
+      ],
+      "metrics": [
+        "not read"
+      ],
+      "limitation": "Adapts the USE of already-retrieved documents, not what is retrieved: an assessment module scores relevance so the LLM can discount unreliable passages. Text-only. Named by the proposal as a core paper; it is a filter-stage method and so does not occupy the retrieval-side stages this project routes over.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://aclanthology.org/2024.emnlp-main.321/",
+        "date": "2026-08-31",
+        "note": "venue and title from the ACL Anthology listing; mechanism from the search summary of the abstract -- stage assignment is abstract-level and should be re-checked in full text"
+      }
+    },
+    {
+      "key": "recomp",
+      "title": "RECOMP: Improving Retrieval-Augmented LMs with Context Compression and Selective Augmentation",
+      "authors": "Fangyuan Xu, Weijia Shi, Eunsol Choi",
+      "year": 2024,
+      "venue": "ICLR 2024",
+      "url": "https://openreview.net/forum?id=mlJLVigNHp",
+      "arxiv": "2310.04408",
+      "themes": [
+        "evidence-selection"
+      ],
+      "stages": [
+        "filter"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "not named in abstract"
+      ],
+      "datasets": [
+        "not read"
+      ],
+      "metrics": [
+        "not read"
+      ],
+      "limitation": "Compresses retrieved documents into extractive or abstractive summaries before they reach the LM, and performs SELECTIVE AUGMENTATION by emitting an empty summary when the retrieved documents are unhelpful. Filter-stage and text-only. Its cost argument is the same shape as this project's -- inference gets cheaper when less is fed forward -- but it prices context tokens, whereas this project prices retrieval passes.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://openreview.net/forum?id=mlJLVigNHp",
+        "date": "2026-08-31",
+        "note": "ICLR 2024 confirmed by the iclr.cc poster page and the OpenReview camera-ready header; mechanism from the arXiv HTML"
+      }
+    },
+    {
+      "key": "routellm",
+      "title": "RouteLLM: Learning to Route LLMs with Preference Data",
+      "authors": "Isaac Ong et al. (LMSYS)",
+      "year": 2024,
+      "venue": "arXiv 2406.18665",
+      "url": "https://arxiv.org/abs/2406.18665",
+      "arxiv": "2406.18665",
+      "themes": [
+        "adaptive-rag"
+      ],
+      "stages": [],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "n/a -- routes between GENERATORS, not retrievers"
+      ],
+      "datasets": [
+        "MT-Bench and other LLM benchmarks"
+      ],
+      "metrics": [
+        "cost reduction at matched quality",
+        "calls to the strong model"
+      ],
+      "limitation": "Not a retrieval router at all -- it picks which LLM answers -- but METHODOLOGICALLY IT IS THE CLOSEST PRECEDENT FOR HOW E36 IS EVALUATED. It reports cost reduction against a RANDOM baseline at matched budget, and calls-to-the-expensive-model at matched quality, which are exactly the two comparisons E36 makes for ColQwen escalation. Its headline shape (about 40% fewer strong-model calls for under 5% quality loss) is the shape this project claims for GPU passes. Citing it is what stops the project claiming that matched-budget random control is a novel protocol.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://arxiv.org/abs/2406.18665",
+        "date": "2026-08-31",
+        "note": "arXiv id and the cost-vs-random and calls-vs-always framings from the arXiv listing and the lm-sys/RouteLLM repository; no peer-reviewed venue asserted"
+      }
+    },
+    {
+      "key": "rrf-cormack",
+      "title": "Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods",
+      "authors": "Gordon V. Cormack, Charles L. A. Clarke, Stefan Buettcher",
+      "year": 2009,
+      "venue": "SIGIR 2009 (32nd ACM SIGIR), Boston MA",
+      "url": "https://dl.acm.org/doi/10.1145/1571941.1572114",
+      "arxiv": "",
+      "themes": [
+        "foundational",
+        "bm25-dense-hybrid"
+      ],
+      "stages": [],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "rank fusion over several retrieval systems"
+      ],
+      "datasets": [
+        "TREC experiments",
+        "LETOR 3"
+      ],
+      "metrics": [
+        "not read"
+      ],
+      "limitation": "THE SOURCE OF THE FUSION RULE THIS PROJECT USES. A document score is the sum of reciprocals of its ranks across systems, scaled by a constant k; the paper shows this beats every individual system and beats Condorcet Fuse, with no training and no score normalisation. That is precisely why RRF is the static baseline the project's router has to beat rather than a strawman -- it is a seventeen-year-old parameter-free method that is very hard to improve on, and E36 confirms a learned router does not.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://dl.acm.org/doi/10.1145/1571941.1572114",
+        "date": "2026-08-31",
+        "note": "authors, venue and the method description confirmed against the ACM DL record, the dblp entry conf/sigir/CormackCB09 and the authors hosted PDF at cormack.uwaterloo.ca"
+      }
+    },
+    {
+      "key": "sam-rag",
+      "title": "Self-adaptive Multimodal Retrieval-Augmented Generation (SAM-RAG)",
+      "authors": "Jiaqi Zhu et al.",
+      "year": 2024,
+      "venue": "arXiv 2410.11321; also IEEE conference publication 11227819",
+      "url": "https://arxiv.org/abs/2410.11321",
+      "arxiv": "2410.11321",
+      "themes": [
+        "multimodal-doc-rag",
+        "adaptive-rag",
+        "evidence-selection"
+      ],
+      "stages": [
+        "depth",
+        "filter"
+      ],
+      "modalities": [
+        "text",
+        "image (via captions)"
+      ],
+      "retrieval": [
+        "not named in abstract"
+      ],
+      "datasets": [
+        "MultimodalQA (text and image subsets; tables excluded)"
+      ],
+      "metrics": [
+        "F1",
+        "EM",
+        "average retrieval number (ARN) against the gold count"
+      ],
+      "limitation": "Read in full 2026-08-31, confirming the two-stage assignment made from the abstract: it adapts how many documents are consumed and which are kept, and it does NOT choose modality -- images are always converted to query-specific captions and then judged by the same relevance verifier. Evaluated on one dataset. The authors state limitations about training-data bias, privacy leakage, and the difficulty of guaranteeing that a multi-step retrieve-verify-generate pipeline stays aligned with the task.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2410.11321",
+        "date": "2026-08-31",
+        "note": "arXiv id, self-adaptive filtering loops, MultimodalQA and the fixed-retrieval-count motivation from the arXiv listing and search summary; the IEEE Xplore record 11227819 confirms a peer-reviewed venue exists but its name was not read | 2026-08-31 full text read at arxiv.org/html/2410.11321v1."
+      },
+      "close_reading": "THE MECHANISM IS EARLY STOPPING, NOT TOP-K PREDICTION. Retrieved documents are processed in batches; each is judged by an isRel verifier, and retrieval pauses once a batch yields relevant material. Two further verifiers, isUse and isSup, check that the answer addresses the query and is supported by the context. All three are distilled from GPT-4o into LLaVA-7B on instruction data where only reasoning traces whose answers matched the gold were kept, with negatives drawn from DPR-ranked top-50.\n\nITS COST NUMBER IS THE MOST DIRECTLY COMPARABLE IN THE REGISTRY. Average retrieval number is 1.77 for text against a gold reference of 1.55, and 1.24 for images against 1.00, where conventional RAG fixes k = 8. That is a large cost reduction expressed as closeness to the gold minimum -- a framing this project could borrow, since it is exactly the oracle-relative view E35 builds.\n\nNO CONTROLS AND NO COST ACCOUNTING. There is no random or matched-cost baseline, and no wall-clock or token cost is reported at all, despite the pipeline running three verifier calls per batch on top of retrieval. Comparisons also mix model scales, 7B LLaVA against GPT-4o. So the efficiency claim rests entirely on documents-retrieved, which ignores the verification calls that made the saving possible -- the sunk-cost error this project's incremental accounting is designed to avoid."
+    },
+    {
+      "key": "self-rag",
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "authors": "Akari Asai, Zeqiu Wu, Yizhong Wang, Avirup Sil, Hannaneh Hajishirzi",
+      "year": 2024,
+      "venue": "ICLR 2024 (Oral, top 1%)",
+      "url": "https://openreview.net/forum?id=hSyW5go0v8",
+      "arxiv": "2310.11511",
+      "themes": [
+        "adaptive-rag",
+        "evidence-selection"
+      ],
+      "stages": [
+        "depth",
+        "filter"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "retrieval": [
+        "not named in abstract"
+      ],
+      "datasets": [
+        "training: 150k instruction-output pairs",
+        "eval: PopQA (1,399), TriviaQA-unfiltered (11,313), PubHealth, ARC-Challenge, Biography, ALCE-ASQA"
+      ],
+      "metrics": [
+        "task accuracy",
+        "FactScore",
+        "citation precision and recall"
+      ],
+      "limitation": "Read in full 2026-08-31. No dedicated limitations section. More important for this project: it never reports HOW OFTEN retrieval is actually skipped, and it reports no inference cost or retrieval-call count at all -- so the efficiency benefit of its on-demand retrieval is asserted structurally rather than measured.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://openreview.net/forum?id=hSyW5go0v8",
+        "date": "2026-08-31",
+        "note": "ICLR 2024 Oral status and mechanism confirmed against the OpenReview forum page and the ICLR proceedings entry; authors from the official self-rag GitHub | 2026-08-31 full text read at arxiv.org/html/2310.11511v1."
+      },
+      "close_reading": "FOUR REFLECTION TOKENS, TWO OF THEM ROUTING DECISIONS. Retrieve controls whether to fetch passages at all and takes values yes, no or continue; IsRel judges passage relevance; IsSup judges whether the generation is supported; IsUse rates utility on a five-point scale. Decisions are made segment by segment, combining soft weighted scores with hard filtering. So the depth and filter stages are both routed, inside the generation loop rather than before retrieval.\n\nTHE EVALUATION GAP IS THE SAME ONE THIS REGISTRY KEEPS FINDING. No oracle, no upper bound, no matched-cost control, and no statistics on retrieval frequency. An ICLR Oral that routes retrieval on demand does not report how much retrieval it saved. Citation precision and recall on ASQA are 70.3 and 71.3.\n\nIT IS ALSO THE BASELINE CRAG BEATS, ON A SHARED RETRIEVER. CRAG holds Contriever fixed and improves on Self-RAG on three of four datasets, which makes the pair the cleanest controlled comparison of two routing designs available in this registry -- and neither of them controls for cost."
+    },
+    {
+      "key": "slidevqa",
+      "title": "SlideVQA: A Dataset for Document Visual Question Answering on Multiple Images",
+      "authors": "Ryota Tanaka, Kyosuke Nishida, Kuniko Saito, Tomoya Hasegawa, Itsumi Saito, Kosuke Nishida",
+      "year": 2023,
+      "venue": "AAAI 2023, 37(11), pp. 13636-13645",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/26598",
+      "arxiv": "2301.04883",
+      "themes": [
+        "multimodal-doc-rag",
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "slide image"
+      ],
+      "retrieval": [
+        "evidence image selection as part of an end-to-end seq2seq model"
+      ],
+      "datasets": [
+        "SlideVQA (introduced): 2.6k decks, 52k slide images, 14,484 QA pairs, 890,945 boxes"
+      ],
+      "metrics": [
+        "not read"
+      ],
+      "limitation": "An earlier multi-image document VQA benchmark that already unified EVIDENCE SELECTION and answering in one sequence-to-sequence model, rather than separating retrieval from generation. Useful as the pre-RAG framing of the same problem, and as a reminder that this project's separation of retrieval recall from answer F1 is a design choice rather than the only option.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://ojs.aaai.org/index.php/AAAI/article/view/26598",
+        "date": "2026-08-31",
+        "note": "AAAI 2023 volume, issue and pagination from the AAAI OJS record; dataset counts and the unified seq2seq framing from the search summary and the nttmdlab-nlp/SlideVQA repository"
+      }
+    },
+    {
+      "key": "universalrag",
+      "title": "UniversalRAG: Retrieval-Augmented Generation over Corpora of Diverse Modalities and Granularities",
+      "authors": "Woongyeong Yeo, Kangsan Kim, Soyeong Jeong, Jinheon Baek, Sung Ju Hwang",
+      "year": 2026,
+      "venue": "ACL 2026",
+      "url": "https://arxiv.org/abs/2504.20734",
+      "arxiv": "2504.20734",
+      "themes": [
+        "adaptive-rag",
+        "multimodal-doc-rag",
+        "granularity"
+      ],
+      "stages": [
+        "modality",
+        "granularity"
+      ],
+      "modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "retrieval": [
+        "one corpus per modality/granularity; a single classifier selects which one"
+      ],
+      "datasets": [
+        "8 in-domain benchmarks (MMLU 285, SQuAD 1,060, NQ 1,000, HotpotQA 1,492, WebQA 2,000, LVBench 1,376, VideoRAG-Wiki 374, VideoRAG-Synth 374)",
+        "5 out-of-domain (TruthfulQA 790, TriviaQA 661, LaRA 112, Visual-RAG 374, CinePile 1,440)"
+      ],
+      "metrics": [
+        "average benchmark score",
+        "router confusion matrices"
+      ],
+      "limitation": "Routes two retrieval-side stages and so refutes the proposal's gap claim as written -- but the full text narrows what it refutes. Read in full 2026-08-31. The authors state that trained routers UNDERPERFORM OUT OF DOMAIN and are overfitted to the training queries, which they attribute to insufficient query diversity, and they report a trade-off between in-domain and out-of-domain performance.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2504.20734",
+        "date": "2026-08-31",
+        "note": "the abstract was fetched and quoted VERBATIM, and the two routed stages are taken from sentences quoted out of it rather than paraphrase; ACL 2026 venue as reported on the arXiv listing | 2026-08-31 full text read at arxiv.org/html/2504.20734v1 for the router architecture, label construction, baselines and the absence of any cost metric."
+      },
+      "close_reading": "THE ROUTER IS FLAT, NOT HIERARCHICAL. It is a single six-way classifier over {None, Paragraph, Document, Image, Clip, Video} -- modality and granularity are decided in ONE joint prediction, not as a sequence of decisions. The proposal's word 'hierarchical' therefore still describes something this paper does not do.\n\nLABELS COME FROM DATASET IDENTITY, NOT MEASURED OUTCOMES. Training labels are constructed from benchmark inductive biases -- queries from a dataset meant to be answered parametrically are labelled None, single-hop RAG benchmarks are labelled Paragraph, and so on. That is a proxy label, and it is precisely the mistake this project corrected in E17: the original retriever router was trained on gold modality labels with a hardcoded mapping, and only re-training on the per-question recall difference showed what was really learnable. A router trained on which benchmark a query came from cannot be evidence about which corpus that query actually needs.\n\nNO COST IS REPORTED ANYWHERE. No latency, no compute, no retrieval-pass count. So despite being a modality router, it makes no efficiency claim at all -- the budget question this project asks is untouched by it.\n\nNO ALL-MODALITY FUSION BASELINE. Baselines are naive, single-modality variants, a Unified encoder over combined corpora, a random router and an oracle. Nothing retrieves from every modality corpus and fuses the results, which is the static strong baseline this project has to beat (RRF over both branches). The Unified baseline is a shared embedding space, which the paper itself argues suffers a modality gap -- a weaker comparator than rank fusion over separate indices.\n\nHEADLINE. 39.60 average with a DistilBERT router on InternVL2.5-8B, against 31.15 for Unified and 40.34 for the oracle -- an oracle gap of roughly 0.7 to 1.0 average score. Router errors concentrate on the clip-versus-video granularity boundary while the modality decision stays correct, which suggests granularity is the harder axis even here."
+    },
+    {
+      "key": "vidorag",
+      "title": "ViDoRAG: Visual Document Retrieval-Augmented Generation via Dynamic Iterative Reasoning Agents",
+      "authors": "Alibaba Tongyi Lab",
+      "year": 2025,
+      "venue": "EMNLP 2025 Main Conference",
+      "url": "https://aclanthology.org/2025.emnlp-main.464/",
+      "arxiv": "2502.18017",
+      "themes": [
+        "multimodal-doc-rag",
+        "visual-retrieval",
+        "adaptive-rag"
+      ],
+      "stages": [
+        "depth"
+      ],
+      "modalities": [
+        "page image",
+        "text"
+      ],
+      "retrieval": [
+        "GMM-based multi-modal hybrid retrieval"
+      ],
+      "datasets": [
+        "ViDoSeek (introduced): ~1,200 questions over ~6,000 images from 300 slide decks, 12 domains",
+        "SlideVQA-Refined: ~2,020 questions"
+      ],
+      "metrics": [
+        "accuracy",
+        "average pages retrieved per query"
+      ],
+      "limitation": "Read in full 2026-08-31, which RESOLVED the open question in the earlier record: the GMM does NOT choose between text and vision. Both pipelines run for every query and their results are unioned. What is query-dependent is how many items each pipeline returns. Authors state three limitations: possible bias from expert-constructed queries, multi-agent overhead limiting scalability under latency constraints, and hallucinations not fully grounded in retrieval.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://arxiv.org/abs/2502.18017",
+        "date": "2026-08-31",
+        "note": "EMNLP 2025 from the ACL Anthology entry 2025.emnlp-main.464 and the Alibaba-NLP GitHub; mechanism from the arXiv listing. The modality question is explicitly left open rather than guessed. | 2026-08-31 full text read at arxiv.org/html/2502.18017v2; the modality question raised in the earlier record is resolved as always-both."
+      },
+      "close_reading": "WHY THE STAGE ASSIGNMENT STAYS AT DEPTH ONLY. The paper states that for each query it retrieves through both the textual and visual pipelines and dynamically determines the optimal top-K with a Gaussian Mixture Model, then unions and re-sorts. So the modality mix is fixed at always-both; only K varies. The conservative assignment made from the abstract was correct, and the modality row of the coverage matrix is unaffected.\n\nTHE MECHANISM IS WORTH BORROWING. The GMM fits a bimodal distribution over query-document similarity scores, assumes relevant and irrelevant items come from two Gaussians, and sets K to the number of items assigned to the high-similarity component, with bounds to stop outliers distorting it. That is an unsupervised, label-free way to pick a per-query cutoff -- structurally different from this project's approach of learning a gain predictor from out-of-fold outcomes, and cheaper, because it needs no training signal at all. It is the natural comparator if RQ5 (dynamic top-k) is ever started.\n\nIT REPORTS A COST NUMBER, WHICH IS RARE HERE. Average pages retrieved drops from 10 to 6.76 with the GMM while accuracy is maintained. On ViDoSeek with GPT-4o: ViDoRAG 79.4%, VisualRAG (ColQwen2) 72.1%, TextRAG (NV-Embed-V2) 63.5%, oracle upper bound 87.7%.\n\nDIRECT RELEVANCE TO THIS PROJECT'S COLQWEN RESULT. Its visual-only baseline IS ColQwen2, run at page granularity on slide decks, where it beats text retrieval by 8.6 points. That is the setting in which ColQwen is strong, and it sharpens the boundary this project must state around E24: cropped quote regions inside a question-conditioned candidate pool is not the setting where ColQwen was shown to win."
+    },
+    {
+      "key": "vidore-v2",
+      "title": "ViDoRe Benchmark V2: Raising the Bar for Visual Retrieval",
+      "authors": "Quentin Mace et al.",
+      "year": 2025,
+      "venue": "arXiv 2505.17166",
+      "url": "https://arxiv.org/abs/2505.17166",
+      "arxiv": "2505.17166",
+      "themes": [
+        "visual-retrieval",
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "page image"
+      ],
+      "retrieval": [
+        "evaluates visual document retrievers including the ColVision family"
+      ],
+      "datasets": [
+        "ViDoRe V2 (four new multilingual datasets)"
+      ],
+      "metrics": [
+        "nDCG@5"
+      ],
+      "limitation": "The evaluation harness for the retriever family this project runs locally. Relevant because it is where ColQwen2 v1.0 is scored in its INTENDED setting -- whole pages, page-level retrieval -- which is the contrast that bounds this project's negative ColQwen result: E24 evaluates the same weights on cropped quote regions inside a question-conditioned candidate pool, a setting no ViDoRe number covers.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://arxiv.org/abs/2505.17166",
+        "date": "2026-08-31",
+        "note": "arXiv id and title from the arXiv PDF listing; the illuin-tech/vidore-benchmark repository confirms it is the ColPali evaluation code. A reported ColQwen2 v1.0 nDCG@5 of 0.583 appeared in a search summary but was NOT verified against the paper and is therefore not recorded as a number here."
+      }
+    },
+    {
+      "key": "visdom",
+      "title": "VisDoM: Multi-Document QA with Visually Rich Elements Using Multimodal Retrieval-Augmented Generation",
+      "authors": "Adobe Research et al.",
+      "year": 2025,
+      "venue": "NAACL 2025 (Long Papers)",
+      "url": "https://aclanthology.org/2025.naacl-long.310/",
+      "arxiv": "2412.10704",
+      "themes": [
+        "multimodal-doc-rag",
+        "evaluation"
+      ],
+      "stages": [],
+      "modalities": [
+        "text",
+        "table",
+        "chart",
+        "slide"
+      ],
+      "retrieval": [
+        "parallel visual RAG and textual RAG pipelines"
+      ],
+      "datasets": [
+        "VisDoMBench (introduced)"
+      ],
+      "metrics": [
+        "accuracy",
+        "answer verifiability via context attribution"
+      ],
+      "limitation": "The multimodal analogue of static fusion, and therefore a clean control for the gap claim: VisDoMRAG runs the visual and textual RAG pipelines CONCURRENTLY for every query and reconciles them with a consistency-constrained modality fusion step at inference. It never chooses a modality, it always pays for both -- which is precisely the cost structure this project's RQ1b asks whether a router can avoid.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "verified": {
+        "url": "https://aclanthology.org/2025.naacl-long.310/",
+        "date": "2026-08-31",
+        "note": "NAACL 2025 from the ACL Anthology entry and the Adobe Research publication page; the concurrent-pipelines and fusion mechanism from the arXiv HTML abstract"
+      }
+    },
+    {
+      "key": "visrag",
+      "title": "VisRAG: Vision-based Retrieval-augmented Generation on Multi-modality Documents",
+      "authors": "Shi Yu et al. (OpenBMB)",
+      "year": 2025,
+      "venue": "ICLR 2025",
+      "url": "https://openreview.net/forum?id=zG459X3Xge",
+      "arxiv": "2410.10594",
+      "themes": [
+        "multimodal-doc-rag",
+        "visual-retrieval"
+      ],
+      "stages": [],
+      "modalities": [
+        "page image",
+        "layout",
+        "text"
+      ],
+      "retrieval": [
+        "MiniCPM-V 2.0 with position-weighted mean pooling; SINGLE vector per page (2304-d, ~4.5 KB)"
+      ],
+      "datasets": [
+        "training: ArXivQA 25,856, ChartQA 4,224, MP-DocVQA 10,624, InfoVQA 17,664, PlotQA 56,192, SlideVQA 8,192, plus 239,358 synthetic pairs"
+      ],
+      "metrics": [
+        "retrieval and end-to-end accuracy; relative improvement over TextRAG"
+      ],
+      "limitation": "Read in full 2026-08-31. No explicit limitations section; the authors note only that reasoning over multiple images remains hard for current VLMs. Indexing cost is not reported, though the single 2304-dimension vector at about 4.5 KB per page is contrasted with ColPali's 256 KB.",
+      "relevance": "core",
+      "read": "full",
+      "verified": {
+        "url": "https://openreview.net/forum?id=zG459X3Xge",
+        "date": "2026-08-31",
+        "note": "ICLR 2025 confirmed by the iclr.cc poster page and the ICLR proceedings PDF; mechanism and the 20-40% figure from the arXiv HTML abstract | 2026-08-31 full text read at arxiv.org/html/2410.10594v1."
+      },
+      "close_reading": "ITS TEXT BASELINE IS OCR, NOT VLM DESCRIPTIONS -- WHICH LEAVES THIS PROJECT'S COMPARISON UNMADE. TextRAG here uses a MiniCPM retriever over text obtained by PPOCR or model-based parsing. The paper never compares against retrieval over VLM-TRANSCRIBED descriptions of the visual elements. So the specific contrast this project runs -- pixels versus VLM-written image descriptions, same pool, same quotas -- is not answered by VisRAG, and the project can legitimately present it as a comparison the visual-RAG literature has largely skipped. ColPali does make it, at page granularity, and finds strongly for pixels.\n\nTHE GAIN IS LARGE AND IS AGAINST PARSING, NOT AGAINST DESCRIPTION. 39% relative improvement over TextRAG with MiniCPM-V 2.6 and 25% with GPT-4o. Read carefully, this is an argument that PARSING loses information, which is the same argument E18 makes in this project when cropped-region OCR scores 0.369 against 0.791 for VLM descriptions. Both results point the same way: extraction is the weak link. Neither settles whether pixels beat a good description.\n\nSINGLE-VECTOR, NOT LATE INTERACTION. Position-weighted mean pooling over the last-layer VLM hidden states gives one embedding per page, so VisRAG is architecturally closer to DSE than to ColPali or ColQwen. For multi-page answering it either concatenates pages into one image or generates per document and selects by combined perplexity and retrieval score."
+    },
+    {
+      "key": "r1-router-more",
+      "title": "Learning to Route Queries Across Knowledge Bases for Step-wise Retrieval-Augmented Reasoning (v1, as R1-Router) / Mixture-of-Retrieval Experts for Reasoning-Guided Multimodal Knowledge Exploitation (v2, as MoRE)",
+      "year": 2025,
+      "venue": "arXiv 2505.22095 (v1 2025-05-28, v2 2026-04-06)",
+      "url": "https://arxiv.org/abs/2505.22095",
+      "themes": [
+        "adaptive-rag",
+        "multimodal-doc-rag"
+      ],
+      "stages": [
+        "retriever",
+        "depth"
+      ],
+      "modalities": [
+        "text",
+        "image",
+        "table"
+      ],
+      "retrieval": [
+        "multiple knowledge bases, one per modality; MLLM policy trained with Step-wise Group Relative Policy Optimization (Step-GRPO)"
+      ],
+      "datasets": [
+        "2WikiMultihopQA",
+        "InfoSeek",
+        "Dyn-VQA",
+        "WebQA",
+        "Open-WikiTable",
+        "TabFact"
+      ],
+      "metrics": [
+        "F1-Recall",
+        "average gain over baselines (>7%)"
+      ],
+      "limitation": "Abstract level only, both versions read 2026-09-01. THE TWO LEADS THIS REVIEW WAS CHASING SEPARATELY -- 'R1-Router' and 'Mixture-of-Retrieval Experts' -- ARE THE SAME arXiv PAPER, renamed between v1 and v2 by the same authors around the same Step-GRPO method. Recording them as two works would have double-counted one system in the coverage matrix, which is a caution worth keeping: a lead list built from titles can contain duplicates that only a version check reveals. Neither abstract reports latency, compute or a retrieval-call count; v1 claims it is 'reducing unnecessary retrievals and improving both efficiency and accuracy' and v2 drops that sentence entirely, so the efficiency claim is asserted in one version and absent in the other, and is unquantified in both.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "close_reading": "",
+      "verified": {
+        "url": "https://arxiv.org/abs/2505.22095",
+        "date": "2026-09-01",
+        "note": "v1 and v2 abstracts fetched separately and compared verbatim on 2026-09-01; the rename is confirmed from the arXiv version list (v1 Wed 28 May 2025, v2 Mon 6 Apr 2026). Full text not read."
+      }
+    },
+    {
+      "key": "cogplanner",
+      "title": "CogPlanner: Unveiling the Potential of Agentic Multimodal Retrieval Augmented Generation with Planning",
+      "year": 2025,
+      "venue": "SIGIR-AP 2025 (arXiv 2501.15470)",
+      "url": "https://arxiv.org/abs/2501.15470",
+      "themes": [
+        "adaptive-rag",
+        "multimodal-doc-rag"
+      ],
+      "stages": [
+        "depth"
+      ],
+      "modalities": [
+        "text",
+        "image"
+      ],
+      "retrieval": [
+        "plug-and-play planner over an existing MRAG system; parallel and sequential paradigms"
+      ],
+      "datasets": [
+        "CogBench (introduced)"
+      ],
+      "metrics": [
+        "accuracy",
+        "efficiency (unquantified in the abstract)"
+      ],
+      "limitation": "Abstract level only, read 2026-09-01. It iteratively decides QUERY REFORMULATION and retrieval strategy; the abstract does not say it selects a retriever or a modality per query, so it is not counted in the retriever or modality rows. It states the task 'aims at effective information seeking and integration while minimizing computational overhead' and claims 'improvements in both accuracy and efficiency with minimal additional computational costs', but gives NO figure for cost, latency or call count anywhere in the abstract -- the same unpriced-efficiency pattern this review keeps finding.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "close_reading": "",
+      "verified": {
+        "url": "https://arxiv.org/abs/2501.15470",
+        "date": "2026-09-01",
+        "note": "Abstract fetched verbatim 2026-09-01. Full text not read."
+      }
+    },
+    {
+      "key": "mage-rag",
+      "title": "MAGE-RAG: Multigranular Adaptive Graph Evidence for Agentic Multimodal RAG in Long-Document QA",
+      "year": 2026,
+      "venue": "arXiv 2606.15906",
+      "url": "https://arxiv.org/abs/2606.15906",
+      "themes": [
+        "multimodal-doc-rag",
+        "granularity",
+        "evidence-selection"
+      ],
+      "stages": [
+        "granularity",
+        "depth"
+      ],
+      "modalities": [
+        "text",
+        "image",
+        "table",
+        "chart",
+        "layout"
+      ],
+      "retrieval": [
+        "offline page-element evidence graph; query-time activate / open / search / prune under an explicit budget vector"
+      ],
+      "datasets": [
+        "LongDocURL (2,325 QA)",
+        "MMLongBench-Doc (1,091)"
+      ],
+      "metrics": [
+        "accuracy",
+        "F1",
+        "images sent to the reader",
+        "LLM calls per sample",
+        "score per input image",
+        "score per LLM call"
+      ],
+      "limitation": "Abstract and results section read 2026-09-01; full text not read. THE MOST IMPORTANT LEAD OF THE FOUR, because it forces this review's first gap statement to be narrowed. It reports cost concretely -- 20.99 images, 4.05 context pages, 21.05 context nodes and 49.02 content parts per sample, 3.23 LLM calls per sample, and efficiency as 0.025 score per input image and 0.162 score per LLM call -- and it carries a SEVEN-ELEMENT budget vector B=(Bp,Ba,BA,Bo,Bi,BT,Bc). So 'nobody reports cost in more than one dimension' is no longer defensible as written. What it does NOT do: it never chooses which retriever or which modality to run for a query -- it selects which evidence nodes to expand inside one graph -- and it reports no oracle upper bound, no matched-budget random control and no tie analysis, which leaves gap statement (4) intact. Its budget dimensions are quantities of evidence, not distinct retrieval currencies with no measured exchange rate, so the two-currency point survives in a narrower form.",
+      "relevance": "candidate",
+      "read": "abstract",
+      "close_reading": "",
+      "verified": {
+        "url": "https://arxiv.org/html/2606.15906",
+        "date": "2026-09-01",
+        "note": "HTML version fetched 2026-09-01; the per-sample cost figures and the budget vector are quoted from it. The characterisation of how the budget dimensions are ANALYSED came from a summariser and is NOT asserted here -- only the quoted figures are."
+      }
+    }
+  ]
+}

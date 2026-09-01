@@ -1,0 +1,207 @@
+{
+  "note": "Every search actually issued while building this registry, with the date. A claim that no prior work adapts stage X is only as strong as the queries that failed to find one, so the queries are part of the evidence and are recorded rather than summarised.",
+  "sources_searched": [
+    "ACL Anthology",
+    "NeurIPS Proceedings",
+    "ICLR Proceedings / OpenReview",
+    "ACM Digital Library",
+    "IEEE Xplore",
+    "AAAI OJS",
+    "dblp",
+    "arXiv"
+  ],
+  "excluded_source_types": [
+    "vendor documentation and product blogs (Qdrant, Weaviate, MongoDB, Atlan)",
+    "LLM-generated paper-summary aggregators (themoonlight.io, liner.com, emergentmind)",
+    "these appeared in results and were used only as pointers to a primary source, never cited"
+  ],
+  "queries": [
+    {
+      "date": "2026-08-31",
+      "q": "Adaptive-RAG learning to adapt retrieval-augmented large language models through question complexity NAACL 2024",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "M3DocRAG multi-modal retrieval augmented generation multi-page document understanding",
+      "theme": "multimodal-doc-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "MMDocRAG benchmark multimodal retrieval augmented generation document multimodal quotes",
+      "theme": "multimodal-doc-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "MMLongBench-Doc benchmarking long-context document understanding visualizations",
+      "theme": "evaluation"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "ColPali efficient document retrieval vision language models late interaction ICLR 2025",
+      "theme": "visual-retrieval"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "multi-granularity retrieval augmented generation chunk size adaptive chunking document",
+      "theme": "granularity"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "query routing retrieval sparse dense hybrid selection per query learned router information retrieval",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "reciprocal rank fusion hybrid sparse dense retrieval combination effectiveness",
+      "theme": "bm25-dense-hybrid"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "REAR relevance-aware retrieval-augmented framework open-domain question answering EMNLP",
+      "theme": "evidence-selection"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "MoLoRAG multimodal logic-aware retrieval document question answering",
+      "theme": "multimodal-doc-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "MMRAG-DocQA multimodal retrieval augmented generation document question answering multi-granularity",
+      "theme": "granularity"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "SAM-RAG multimodal retrieval augmented generation self-adaptive filtering documents",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "Lewis retrieval-augmented generation knowledge-intensive NLP tasks NeurIPS 2020",
+      "theme": "foundational"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "Karpukhin Dense Passage Retrieval open-domain question answering EMNLP 2020",
+      "theme": "foundational"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "Cormack reciprocal rank fusion outperforms condorcet individual rank learning methods SIGIR 2009",
+      "theme": "foundational"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "ColBERT efficient effective passage search contextualized late interaction BERT SIGIR 2020",
+      "theme": "foundational"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "Self-RAG learning to retrieve generate critique through self-reflection ICLR 2024",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "VisRAG vision-based retrieval-augmented generation multi-modality documents ICLR 2025",
+      "theme": "visual-retrieval"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "document screenshot embedding DSE unified retrieval visual document screenshots",
+      "theme": "visual-retrieval"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "RAPTOR recursive abstractive processing tree-organized retrieval ICLR 2024",
+      "theme": "granularity"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "corrective retrieval augmented generation CRAG retrieval evaluator",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "RAGAS automated evaluation retrieval augmented generation faithfulness answer relevance",
+      "theme": "evaluation"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "RECOMP compressing retrieved documents context compression retrieval augmented language models ICLR",
+      "theme": "evidence-selection"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "ViDoRAG visual document RAG multi-agent dynamic iterative reasoning agents",
+      "theme": "multimodal-doc-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "LLM-independent adaptive RAG lightweight features question complexity classifier retrieval",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "MiRAGE evaluating multimodal retrieval augmented generation metrics",
+      "theme": "evaluation"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "ColQwen2 ViDoRe benchmark v2 visual document retrieval leaderboard efficient multi-vector",
+      "theme": "visual-retrieval"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "VisDoM multi-document question answering visually rich elements multimodal retrieval augmented generation",
+      "theme": "multimodal-doc-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "BGE M3-Embedding multi-lingual multi-functionality multi-granularity text embeddings ACL 2024",
+      "theme": "bm25-dense-hybrid"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "RankGPT listwise passage reranking large language models permutation generation EMNLP 2023",
+      "theme": "evidence-selection"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "SlideVQA multi-image document visual question answering benchmark AAAI",
+      "theme": "multimodal-doc-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "routing large language model query router cost quality tradeoff RouteLLM benchmark",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "modality routing retrieval choose text or image retrieval per query multimodal RAG modality selection",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "modality-aware adaptive retrieval budget allocation text visual evidence multimodal question answering",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "query-adaptive modality selection retrieval router text image which modality to retrieve",
+      "theme": "adaptive-rag"
+    },
+    {
+      "date": "2026-08-31",
+      "q": "ModaRoute smart routing multimodal video retrieval when to search what LLM modality routing",
+      "theme": "adaptive-rag"
+    }
+  ],
+  "not_yet_searched": [
+    "RESOLVED 2026-08-31: the modality-routing gap in the query set was closed. Three targeted searches found UniversalRAG, the Modality-Utility paper and ModaRoute, and the modality row went from 0 to 3. The earlier zero was an artefact of not having searched for it, which is exactly the failure this file exists to make visible.",
+    "cross-dataset router generalisation",
+    "bandit / reinforcement-learning retrieval policies",
+    "layout-aware retrieval (LFRAG and similar appeared in results but were not pursued)",
+    "leads surfaced but not yet recorded: MAGE-RAG (2606.15906), R1-Router, CogPlanner, Mixture-of-Retrieval Experts (2505.22095), mRAG design space (2505.24073)"
+  ]
+}
