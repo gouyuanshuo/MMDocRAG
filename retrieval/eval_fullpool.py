@@ -60,6 +60,11 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DB = os.path.join(REPO_ROOT, "canonical", "mmdocrag.sqlite")
 DEFAULT_SCORES = os.path.join(REPO_ROOT, "retrieval",
                               "colqwen_scores_fullpool.sqlite")
+# The candidate-pool index over the SAME retriever. Used only for the paired
+# block below, which is what separates "restoring the pool costs this much"
+# from "these documents happen to be harder".
+DEFAULT_CANDIDATE = os.path.join(REPO_ROOT, "retrieval",
+                                 "colqwen_scores.sqlite")
 KS = (10, 15, 20)
 # Table 6, ColQwen row, image column. Text column deliberately absent: see above.
 PAPER_IMG_RECALL = {10: 0.708, 15: 0.792, 20: 0.843}
@@ -79,10 +84,34 @@ def cluster_ci(per_doc_num, per_doc_den, n_boot=BOOTSTRAP, seed=SEED):
     return tuple(np.percentile(boot, [2.5, 97.5]))
 
 
+def paired_cluster_ci(num_a, num_b, den, n_boot=BOOTSTRAP, seed=SEED):
+    """Document-cluster bootstrap of a PAIRED difference of two ratios.
+
+    Both arms are scored on the same questions with the same denominator, so
+    the difference is defined per document and the same resampled documents
+    enter both arms. Resampling the arms independently would throw away the
+    pairing and widen the interval for no reason.
+    """
+    rng = np.random.default_rng(seed)
+    a = np.asarray(num_a, dtype=float)
+    b = np.asarray(num_b, dtype=float)
+    d = np.asarray(den, dtype=float)
+    idx = rng.integers(0, len(d), size=(n_boot, len(d)))
+    dd = np.maximum(d[idx].sum(axis=1), 1e-9)
+    boot = a[idx].sum(axis=1) / dd - b[idx].sum(axis=1) / dd
+    lo, hi = np.percentile(boot, [2.5, 97.5])
+    point = a.sum() / max(d.sum(), 1e-9) - b.sum() / max(d.sum(), 1e-9)
+    tail = min((boot <= 0).mean(), (boot >= 0).mean())
+    return point, lo, hi, max(2.0 * tail, 1.0 / n_boot)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--db", default=DEFAULT_DB)
     ap.add_argument("--scores", default=DEFAULT_SCORES)
+    ap.add_argument("--candidate-scores", default=DEFAULT_CANDIDATE,
+                    help="candidate-pool index for the same retriever; the "
+                         "paired block is skipped if it is absent")
     add_output_args(ap)
     args = ap.parse_args()
 
@@ -200,6 +229,74 @@ def main():
         rows.append((k, rec, lo, hi, recq, paper))
     print("-" * 84)
 
+    # ---- paired against the candidate pool, on the SAME documents --------
+    # The table above sets a partial-sample full-pool number beside the
+    # paper's whole-corpus one. Read alone it confounds two effects: what
+    # restoring the pool costs, and which documents happened to be drawn.
+    # Scoring the candidate-pool index on exactly these questions, with the
+    # same gold denominator, removes the second. The result is the quantity
+    # the full-pool run actually exists to measure.
+    paired_rows = []
+    if os.path.exists(args.candidate_scores):
+        cc = sqlite3.connect(args.candidate_scores)
+        cand_rank = collections.defaultdict(dict)
+        for quid, eid, rank in cc.execute(
+                "SELECT question_uid, evidence_id, rank FROM ranking"):
+            cand_rank[quid][eid] = rank
+        cc.close()
+        # Every question in this sample must be present in both indexes or the
+        # pairing is not a pairing. Report the shortfall rather than dropping
+        # it silently -- a shrinking denominator is how recall inflates.
+        both = [q for q in scored if q in cand_rank]
+        missing = len(scored) - len(both)
+        print()
+        print("PAIRED AGAINST THE CANDIDATE POOL, SAME DOCUMENTS")
+        print(f"  questions in this document sample   {len(scored)}")
+        print(f"  also ranked by the candidate index  {len(both)}"
+              + (f"   ({missing} absent -- excluded from the paired block "
+                 f"only; the table above is unaffected)" if missing else
+                 "   (all)"))
+        if both:
+            pdocs = sorted({doc_of[q] for q in both})
+            pdi = {d: i for i, d in enumerate(pdocs)}
+            print(f"  documents                           {len(pdocs)}")
+            print()
+            print(f"{'k':>4}  {'full pool':>10}  {'cand. pool':>11}  "
+                  f"{'difference':>11}  {'95% CI':>20}  {'p':>7}")
+            print("-" * 84)
+            for k in KS:
+                nf = np.zeros(len(pdocs))
+                nc = np.zeros(len(pdocs))
+                dn = np.zeros(len(pdocs))
+                for q in both:
+                    i = pdi[doc_of[q]]
+                    g = gold[q]
+                    rf = rank_of.get(q, {})
+                    rc = cand_rank[q]
+                    nf[i] += sum(1 for e in g if rf.get(e, 10 ** 9) < k)
+                    nc[i] += sum(1 for e in g if rc.get(e, 10 ** 9) < k)
+                    dn[i] += len(g)
+                pt, lo, hi, pv_ = paired_cluster_ci(nf, nc, dn)
+                star = "*" if (lo > 0 or hi < 0) else " "
+                print(f"{k:>4}  {nf.sum()/dn.sum():>10.3f}  "
+                      f"{nc.sum()/dn.sum():>11.3f}  {pt:>+11.4f}  "
+                      f"[{lo:>+8.4f},{hi:>+8.4f}]{star}  {pv_:>7.4f}")
+                paired_rows.append((k, float(nf.sum() / dn.sum()),
+                                    float(nc.sum() / dn.sum()),
+                                    float(pt), float(lo), float(hi),
+                                    float(pv_)))
+            print("-" * 84)
+            print("  A negative difference means restoring the full image pool")
+            print("  costs recall, which is the predicted direction: the")
+            print("  candidate pool was itself selected per question, so most")
+            print("  of the document's images were never in the running.")
+            print("  These three k are one family; if any single k is to carry")
+            print("  a claim, correct across them (Holm over three tests).")
+    else:
+        print()
+        print(f"  (no candidate-pool index at {args.candidate_scores}; "
+              f"the paired block is skipped)")
+
     print()
     print("READING THIS")
     print("  The comparison column is the paper's ColQwen IMAGE recall. Its")
@@ -257,6 +354,14 @@ def main():
                         "contained; their presence is what makes this index "
                         "comparable to the paper and incomparable to the "
                         "description-side retrievers")
+        for k, pf, pc, pt, plo, phi, ppv in paired_rows:
+            res.metric(f"paired_full_minus_candidate_recall_at_{k}", pt,
+                       unit="recall", ci=[plo, phi], p=ppv,
+                       desc="same documents, same gold denominator, same "
+                            "retriever; only the ranked pool differs. This is "
+                            "the effect of pool size with the document sample "
+                            "held fixed, and it is the reason the full-pool "
+                            "index was built.")
         for k, rec, lo, hi, recq, paper in rows:
             res.metric(f"recall@{k}_colqwen_fullpool", rec, ci=(lo, hi),
                        unit="recall", bootstrap_unit="document",

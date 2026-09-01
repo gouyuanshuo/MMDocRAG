@@ -303,6 +303,45 @@ dict(id="E23", phase="1B", status="correct",
      note="L10 的来源：1,211 个训练样本 + 384 维句向量，把 R²=+0.11 的真实信号压成 −0.07。"
           "报负结果之前必须单独测一遍最小特征集。这条倒逼重查了 E9。"),
 
+dict(id="E38", phase="1B", status="neg",
+     title="RQ1b 的 R² 目标问错了：完美预测本身也只值 +0.023",
+     asks="proposal 给 RQ1b 设了一个 R² 目标，并点名三个未试的特征源"
+          "（视觉检索器分数、模型内部表示、LLM 证据充分性判断）。"
+          "E23 把 R² 从 −0.155 抬到 +0.136 就停住了，只说「分配收益仍是 0~2%」。"
+          "那么究竟是 R² 太低所以值得换特征源，还是 R² 到收益的映射本身就是平的？",
+     cmds=["{py} -m retrieval.r2_target --pool canonical",
+           "{py} -m retrieval.r2_target --pool selfbuilt"],
+     result="**是后者。**对一格目标 R² 造一个无偏合成预测器 "
+            "`p = v + N(0,σ²)`（σ 按裁剪后的**实测** R² 反解，"
+            "因为 visual_share 大量堆在 0 和 1，闭式解会把目标 0 算成实测 0.29），"
+            "收缩系数在**测试集**上选——两项都刻意取最乐观，所以每一行都是天花板。"
+            "结果：canonical 池上 R²=0 买到 +0.0071、**R²=1.0 也只买到 +0.0229**"
+            "（37% 空间）；selfbuilt 池 +0.0099 → **+0.0275**（45%）。"
+            "**E23 已经拿到的 0.136 处是 +0.0089 / +0.0124；"
+            "把 R² 一路推到完美，也只多 +0.014 recall。**",
+     result2="给决策用的刻度：**要拿到真值分配一半的收益需 R²≈0.30，两池一致**。"
+             "「区间不跨 0 所需的最低 R²」两池并不一致——canonical 是 0.20，selfbuilt 报 0.00，"
+             "但后者那一行的下界是 +0.0000（四位小数下贴零），"
+             "按本项目「CI 下界贴 0 不算显著」的纪律不能算作不跨 0。"
+             "脚本原先用 `lo > 0` 判星，已改为下界须超过报告精度 5e-5。"
+             "而从 0.136 推到 0.30 只值 +0.003（canonical）/ +0.002（selfbuilt）。"
+             "**因此三个未试特征源最多在争夺 +0.014 recall**，"
+             "其中「LLM 证据充分性判断」正是 CRAG 的机制，"
+             "而 CRAG 实测该机制自身要付 +0.15 TFLOPs/token、0.512s vs 0.363s，"
+             "即 41% 的时延开销。按这个量级对比，这条路不值得买。",
+     note="L-ceiling：当一个中间量（这里是 R²）被设成目标时，"
+          "先测「该中间量取到完美时下游收益是多少」，再决定要不要投入去提高它。"
+          "做法是造一个校准到目标精度的合成预测器，而不是去猜新特征能带来多少。"
+          "另两条实现纪律：(1) 合成预测器被裁剪到 [0,1] 后实测 R² 会显著偏离名义值，"
+          "必须报实测值并按实测值反解噪声；"
+          "(2) 各目标点要用**共同随机数**（同一批标准正态只按 σ 缩放），"
+          "否则每点 ±0.001 的蒙特卡洛噪声会让曲线非单调，诱使读出并不存在的次序。",
+     limits="exploratory：该切分自 E9 起被反复观察并用于挑方法。"
+            "合成预测器的误差与真值独立且无偏，真实 ridge 会向训练均值收缩、"
+            "误差与真值相关，因此在同一 R² 下**严格更差**——这条曲线是上界不是预报。"
+            "收缩系数在测试集上选，任何可部署系统都做不到，同样是为了取上界。"
+            "结论只覆盖 RQ1b 的配额分配决策，不能外推到 E36 的升级决策。"),
+
 dict(id="E24", phase="1B", status="neg",
      title="ColQwen2 在本项目的池规模下不值它的 GPU 成本",
      asks="视觉检索器能否胜过打在 VLM 描述上的文本检索器？",
@@ -471,6 +510,47 @@ dict(id="E35", phase="3", status="pos",
             "配额固定为 BALANCED_QUOTA，--include-quota 可展开为"
             "检索器 × 配额的联合空间，但配额是免费的，那只是空间上界而不是预算问题。"),
 
+dict(id="E37", phase="2", status="pos",
+     title="静态提升按题型切片：增益集中在纯视觉题，且只在 k=10",
+     asks="E27 的 +0.061 到底落在谁身上？"
+          "proposal Experiment 2 要求按题型分报，那五类在 MMDocRAG 上还剩几类可评？"
+          "「某一类显著、另一类不显著」能不能当成异质性证据？",
+     cmds=["{py} -m retrieval.slice_by_type --pool selfbuilt",
+           "{py} -m retrieval.slice_by_type --pool canonical"],
+     result="**主结论是稳健性：k=10 上八个切片全部存活 Holm**"
+            "（16 个切片检验一个家族）。增益不是某一类问题带来的，"
+            "cross-modal +0.0346、pure visual +0.1037、cross-page +0.0586、"
+            "single-page +0.0634，四个 question_type 全部在 +0.047 ~ +0.068。"
+            "唯一失手的一格是 k=20 的 Analytical（+0.0130，CI 跨 0，n=201/99 篇）。"
+            "**canonical 池独立复现**：k=10 八格同样全部存活，"
+            "cross-modal +0.0239、pure visual +0.1037、cross-page +0.0532、"
+            "single-page +0.0553；k=20 有两格不显著"
+            "（pure visual Holm p=0.084、Analytical CI 跨 0）。"
+            "纯视觉题的 +0.1037 在两个池上逐位相同，这是应当出现的一致性检查——"
+            "纯视觉题的 gold 全在图片侧，换文本池不改变它的召回。",
+     result2="**异质性只出现在一个轴上，而且必须用对照检验而不是「一个显著一个不显著」来判定**。"
+             "模态对照 cross-modal − pure visual 在 k=10 为 **−0.0691** "
+             "[−0.0967,−0.0420]，Holm p=0.0010：纯视觉题拿到的提升约为跨模态题的三倍。"
+             "机制自洽——选出的配额把视觉槽位从论文式的 3 提到 6，"
+             "gold 全在图片侧的题因此受益最大。"
+             "canonical 池上是 −0.0798 [−0.1077,−0.0534]，同样 Holm p=0.0010。"
+             "这个异质性到 k=20 就消失（selfbuilt +0.0078、canonical +0.0162，CI 均跨 0），与 E25/E26 的"
+             "预算量化损失一致：槽位一多，配额差异就不再是瓶颈。"
+             "**跨页轴在两个池、两个 k 上都查不出异质性**（四个对照 CI 全部跨 0），"
+             "所以这条提升与跨页推理无关。",
+     note="L-slice：切片必须在选择之后做。折外选择在全语料上按文档分组完成一次，"
+          "切片只是对已经算好的折外向量做划分——若让每个切片自己选配置，"
+          "得到的就不再是 E27 的数字，而是 16 个各自过拟合的新实验。"
+          "另：两个家族分开声明并各自 Holm（16 个切片检验、4 个对照检验），"
+          "对照检验才是异质性问题的答案。",
+     limits="exploratory：该切分自 E9 起被反复观察并用于挑方法。"
+            "**proposal Experiment 2 的五类里有两类在 MMDocRAG evaluation split 上无法评价**："
+            "pure text 只有 1 题（n=1，无区间可言），unanswerable 一题都没有"
+            "（每题都带 gold 证据）。这是 benchmark 的属性，不是分析的缺口，"
+            "写报告时必须照此说明而不能假装跑了五类。"
+            "question_type 里 Inferential/Procedural/Causal/Application-based "
+            "四类均低于 100 题或 20 篇的阈值，只描述不检验。"),
+
 dict(id="E36", phase="3", status="neg",
      title="逐题路由：GPU 决策可学，CPU 融合决策不可学",
      asks="静态 RRF 对每个 query 都付两个检索器。"
@@ -521,12 +601,19 @@ dict(id="E36", phase="3", status="neg",
           "用几百次抽样去估它会给唯一承载主张的对照引入蒙特卡洛噪声，"
           "本实验里那点噪声足以让 Holm 校正后的 p 跨过 0.05。",
      superseded=("CPU 级联点估计 −0.0004 ~ +0.0046、capture −1%~9%；"
-                 "oracle regret +0.034 ~ +0.070",
+                 "oracle regret +0.034 ~ +0.070。"
+                 "另：交接文档与记录簿曾把成本结论写作「同质量下 / 质量差异不显著的前提下，"
+                 "ColQwen 调用降到 5%~15%」",
                  "三个区间都把**两个口径各取一端**拼在了一起——下界来自折内选特征组、"
                  "上界来自事先固定。按口径拆开后：事先固定口径 CPU 级联 "
                  "+0.0005 ~ +0.0046、capture −0.9%~8.6%、regret +0.0337 ~ +0.0615；"
                  "折内选口径 CPU 级联 −0.0016 ~ +0.0043、capture −2.1%~7.1%、"
-                 "regret +0.0339 ~ +0.0701。结论未变：CPU 级联两个口径下都是零"),
+                 "regret +0.0339 ~ +0.0701。结论未变：CPU 级联两个口径下都是零。"
+                 "另（2026-09-01）：「同质量下」暗示做过一次等价性检验，**没有做过**。"
+                 "B=0.05~0.15 是路由器 recall 曲线追平静态系统的交点，"
+                 "是从曲线上读出来的描述量；被检验的是「相对同预算随机分配」。"
+                 "本条注册表的 limits 一直写对，**丢掉限定词的是转写进叙述文档的那一步**——"
+                 "所以核对不能只核对注册表，还要核对引用它的每一处"),
      limits="exploratory：该切分自 E9 起被反复观察并用于挑方法。"
             "oracle regret 仍然很大（事先固定口径 +0.0337 ~ +0.0615，"
             "折内选口径 +0.0339 ~ +0.0701），"
@@ -537,6 +624,33 @@ dict(id="E36", phase="3", status="neg",
             "属描述性数字，不是检验。"
             "端到端生成质量未测——本条全部指标是 evidence recall，"
             "要接到 F1 需要一次配对 API 运行，未做。"),
+
+dict(id="E39", phase="3", status="pending",
+     title="待执行：把 E36 的 GPU 级联接到端到端生成",
+     asks="「同质量下 ColQwen 调用从 100% 降到 5%~15%」这句话目前只在 evidence recall 上成立。"
+          "它在 quote-selection F1 上还成不成立？",
+     cmds=["{py} -m router.budget_router --pool canonical --k 10 --policy B "
+           "--features shape+firstpass --metrics-out artifacts/e39/router",
+           "# 然后照 E29 的两臂配对生成，唯一变量是候选块"],
+     result="**尚未执行。** 需要一次付费的配对 API 运行，预算参照 E29："
+            "600 题 × 2 臂 = 1,225 次调用、12.09 AUD。**未获批准前不跑。**",
+     result2="设计已定死，照 E29 的协议：同模型、同 prompt、同 gold，只有候选块不同。"
+             "静态臂 = `rrf text + colqwen visual`（每题都调 ColQwen）；"
+             "路由臂 = 同一配置，但只对路由器选中的题调 ColQwen，其余题走 RRF 描述分支。"
+             "**逐题的升级决策已经落盘**，不需要下游重新推导："
+             "`router/budget_router.py` 的 per_question.csv 现在带 "
+             "`escalate_at_B005` / `escalate_at_B015` / `escalate_at_B050` 三列布尔，"
+             "由与实验同一个 `escalation_mask` 生成（实测比例逐位等于 0.05/0.15/0.50）。"
+             "**判读事先说好**：若 F1 差值的 CI 包含 0 而 ColQwen 调用少了 85%~95%，"
+             "那就是本项目最干净的成本结论；若 F1 显著下降，则 E36 的成本表述必须撤回，"
+             "因为 recall 上的等价没有传导。",
+     note="L-dump：一个实验若要给下游消费逐题决策，就必须**把决策本身落盘**，"
+          "而不是只落盘推导决策所用的分数。只要两边的 tie-break 有一点不同，"
+          "被升级的题集就会悄悄换掉，而任何指标都不会暴露这件事。"
+          "另：开跑前先定死 thinking 开关（§5.3-12），配对比较中途改开关等于把已花的钱作废。",
+     limits="未执行。执行前需要：(1) 预算批准；(2) 冻结 thinking 开关；"
+            "(3) 确认用 canonical 池——它的检索单元就是官方 quote，F1 语义才与论文一致，"
+            "自建池上「quote」是本项目发明的 chunk，F1 会悄悄变成另一个量。"),
 
 dict(id="E31", phase="infra", status="fix",
      title="可复现运行系统：一条命令重算全部当前有效实验",
@@ -760,9 +874,30 @@ dict(id="E34", phase="2", status="pos",
              "并在检测到 unpooled: 条目时**直接拒绝运行**而不是加个脚注。"
              "论文的 ColQwen **文本** recall 不可复现——论文从未说明视觉检索器如何排文本 quote，"
              "其配额句（top10 = 3 图 + 7 文）只对 hybrid 检索给出——故不做任何文本侧对照。",
-     limits="**ColQwen 全池索引未完成：只索引了 5/220 篇文档**，"
+     result4="**2026-09-01 全池索引已完成（220/220 篇，1995 题）。**"
+            "论文值在三个 k 上全部落在区间之外——池规模不是唯一原因。"
+            "同文档配对下补全池的降幅是 -0.0374 [-0.0509,-0.0265]（k=10），"
+            "池规模解释了到论文值距离的 33%。"
+            "**同文档配对对照是本次新增的**：原脚本把部分样本的全池数与全语料候选池数并排，"
+            "两者相减同时混进池规模效应与文档抽样效应；现在用同一批问题、同一个 gold 分母把候选池也跑一遍，报配对区间。",
+     limits="**当前限制**：全池索引已完成，但它只让 ColQwen 的**图片** recall 与论文可比。"
+            "论文从未说明视觉检索器如何排文本 quote，其 text 列（28.5/33.7/36.0）不可复现，"
+            "任何数字都不应与之并列。**仍然不能写「优于论文配置」**——"
+            "可写的是「相对最接近论文的本地对照」，即配额、模态分工、检索器族名对齐，"
+            "而版本与解析流水线不可确定；本次结果恰恰把这条纪律从告诫变成了实测："
+            "池规模只解释了 33% 的差距，剩下的差异**无法从发表物里定位**。"
+            "描述分支上全池仍未做，需为 8,943 张图补 VLM 描述，属付费项，未批准。"
+            "\n\n**以下为已作废的历史记录，保留以说明这条结论是怎么来的，"
+            "其中每一句「未验证 / 受阻」都已不再成立**："
+            "**（历史）ColQwen 全池索引未完成：只索引了 5/220 篇文档**"
+            "（2026-08-31 复核仍是 5/220，39 题、124 图，其中 96 条 "
+            "unpooled；阻塞原因是 GPU 被用户自己的 Ollama 占用 "
+            "6832/8188 MiB 且不能停，ColQwen2 的 4.49 GB 放不下。"
+            "另发现 colqwen_scores_fullpool.ckpt 是空目录而非检查点文件，"
+            "续跑粒度只到文档级，文档内被打断需整篇重跑），"
             "因此 eval_fullpool.py 尚无可报告的结果，"
-            "「补齐池后 Recall@10 应从 0.820 降向论文的 0.708」这一预测**仍未验证**。"
+            "「补齐池后 Recall@10 应从 0.820 降向论文的 0.708」这一预测当时未验证"
+            "（**已于 2026-09-01 验证并证伪**：降了，但只降了三分之一）。"
             "受阻于资源而非正确性：ColQwen2 权重需 4.49 GB，"
             "而本机 8.19 GB 显存中 Ollama 的 llama-server.exe 持有 3.26 GB，"
             "余下的放不下大图激活；全量实测需 5–9 小时 GPU。"
@@ -1001,6 +1136,44 @@ META = {
                     "且该 benchmark 已被本项目用于挑选方法。"
                     "视觉因子同时换了表示（像素→VLM 文字）与检索器数量（单模型→双模型融合），"
                     "因此必须整条命名为 visual branch，不能简称为表示效应。"),
+ "E37": dict(suites=("retrieval", "full-local"), lifecycle="active",
+             deps=(CANON, QUOTES, BGE, BGEC, COLQ), estimated_runtime=240,
+             primary_metric="折外选择 − 论文式基线 E 的 Recall@k，按切片",
+             sample_unit="document",
+             expected_outputs=("metrics.json", "per_question.csv"),
+             how="复用 nested_cv 的折外选择（文档分组 5 折，全语料选一次），"
+                 "再把已算好的折外差值向量按三种划分切片："
+                 "证据模态、gold 跨页与否、语料自带的 question_type。"
+                 "每个切片按文档 cluster bootstrap 求区间；"
+                 "16 个切片检验为一个 Holm 家族，4 个对照检验为另一个。",
+             metric_meaning="切片检验回答「这一类里提升还在不在」；"
+                            "对照检验回答「提升是否依赖这一类」——"
+                            "后者才是异质性问题，前者两格的显著性差异不能替代它。",
+             limits="exploratory。pure text 在该 split 只有 1 题、"
+                    "unanswerable 为 0 题，proposal 的五类切片有两类无法评价。"),
+ "E38": dict(suites=("retrieval", "full-local"), lifecycle="active",
+             deps=(CANON, QUOTES), estimated_runtime=120,
+             primary_metric="给定 R² 下配额分配相对最优固定切分的 Recall@20 增益",
+             sample_unit="document",
+             expected_outputs=("metrics.json",),
+             how="复用 reflect_alloc 的两段式召回矩阵与真实 visual_share。"
+                 "对每个目标 R² 用二分法反解噪声标准差（按裁剪后的实测 R²），"
+                 "共同随机数生成 200 组预测，收缩系数在测试集上取最优，"
+                 "再按文档 cluster bootstrap 给区间。",
+             metric_meaning="每一行是「精度达到该 R² 的预测器最好能买到多少」，"
+                            "是上界不是预报：合成预测器无偏、误差与真值独立，"
+                            "且收缩系数在测试集上选。",
+             limits="exploratory。只覆盖配额分配决策，不外推到 E36 的升级决策。"),
+ "E39": dict(suites=(), lifecycle="blocked", requires_api=True, expensive=True,
+             deps=(CANON, QUOTES, COLQ), estimated_runtime=0,
+             primary_metric="quote-selection F1，配对差值",
+             sample_unit="document",
+             expected_outputs=(),
+             how="照 E29 的配对协议，两臂只有候选块不同；"
+                 "路由臂消费 budget_router 落盘的 escalate_at_B* 列。",
+             metric_meaning="主张是成本而不是质量：期望看到 F1 差值的 CI 包含 0 "
+                            "而 ColQwen 调用大幅下降。",
+             limits="未执行，等待预算批准。"),
  "E35": dict(suites=("retrieval", "full-local"), lifecycle="active",
              deps=(CANON, QUOTES, BGE, BGEC, COLQ), estimated_runtime=180,
              primary_metric="oracle / 最优固定 / 置换对照 的 Recall@k",
@@ -1278,8 +1451,17 @@ def cmd_show():
     if e.get("metric_meaning"):
         print(f"指标含义    : {e['metric_meaning']}")
     print(f"\n当前结论    : {e['result']}")
-    if e.get("result2"):
-        print(f"\n补充        : {e['result2']}")
+    # Every resultN beyond the first is printed. An earlier version stopped at
+    # result2, so E34's and E36's result3 -- both load-bearing paragraphs --
+    # sat in the registry and were never shown by `show`. A field that is
+    # written but never rendered is worse than a missing one: it reads as
+    # recorded while being invisible, which is how the status-key defect in
+    # section 5.5 of the handoff survived two whole experiments.
+    for _n in range(2, 10):
+        _k = f"result{_n}"
+        if e.get(_k):
+            _label = "补充" if _n == 2 else f"补充{_n - 1}"
+            print(f"\n{_label:<12}: {e[_k]}")
     if e.get("superseded"):
         old, new = e["superseded"]
         print(f"\n已取代的表述:\n  旧 · {old}\n  新 · {new}")

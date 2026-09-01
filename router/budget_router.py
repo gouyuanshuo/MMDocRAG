@@ -125,6 +125,12 @@ def curve_auc(pred, gain, base):
     return float(curve(pred, gain, base).mean())
 
 
+# Budgets whose per-question escalation decision is written to per_question.csv.
+# 0.05 and 0.15 are where the GPU cascade matches the static system's recall;
+# 0.50 is the budget the primary Holm family is declared at.
+ESCALATION_DUMP_BUDGETS = (0.05, 0.15, 0.50)
+
+
 def escalation_mask(pred, b, n):
     m = np.zeros(n, dtype=bool)
     m[np.argsort(-pred, kind="stable")[:int(round(b * n))]] = True
@@ -409,11 +415,23 @@ def main():
               f"{auc_rand:.4f}, oracle {auc_o:.4f}; router captures "
               f"{(auc_r - auc_rand) / max(auc_o - auc_rand, 1e-9):.1%} of the "
               f"oracle's advantage over random")
+        # The escalation decision itself is written out, not just the score it
+        # is derived from. A downstream run -- the paired generation experiment
+        # that has to check the cost claim on answer quality rather than on
+        # recall -- must consume exactly the decision this experiment measured.
+        # Re-deriving it from `predicted_gain` downstream would work only as
+        # long as both sides break ties the same way, and a silent divergence
+        # there would move which questions got the expensive pass without
+        # moving any number that would reveal it.
+        masks = {b: escalation_mask(pred, b, len(rows))
+                 for b in ESCALATION_DUMP_BUDGETS}
         per_q = [{"question_uid": r["quid"], "doc_name": r["doc"],
                   "recall_cheap": float(base_v[i]),
                   "recall_expensive": float(exp_v[i]),
                   "true_gain": float(gain[i]),
-                  "predicted_gain": float(pred[i])}
+                  "predicted_gain": float(pred[i]),
+                  **{f"escalate_at_B{int(b * 100):03d}": int(masks[b][i])
+                     for b in ESCALATION_DUMP_BUDGETS}}
                  for i, r in enumerate(rows)]
     else:
         acts = CHEAP_ACTIONS
