@@ -1,0 +1,541 @@
+{
+  "experiment": "E24",
+  "created_utc": "2026-08-31T15:50:11Z",
+  "status": "pass",
+  "counts": {
+    "pass": 68,
+    "fail": 0,
+    "skipped": 0
+  },
+  "notes": [],
+  "metrics_run_id": "20260831T140548Z_replay",
+  "metrics_paths": [
+    "artifacts/runs/20260831T140548Z_replay/experiments/E24/metrics.json"
+  ],
+  "measured": {
+    "A.image_evidence_rows_all": 6565,
+    "A.distinct_img_path_all": 6504,
+    "A.doc_names_all": 223,
+    "B.image_evidence_rows_eval": 6548,
+    "B.distinct_img_path_eval": 6487,
+    "B.evaluation_documents": 220,
+    "B.evaluation_questions": 2000,
+    "C.original_images_eval_docs": 13999,
+    "C.unique_images_in_pool": 6487,
+    "C.images_not_in_pool": 7512,
+    "C.unique_image_coverage": 0.4633902421601543,
+    "C.WRONG_evidence_row_ratio": 0.46774769626401885,
+    "D.pool_median_per_document": 20,
+    "D.pool_mean_per_document": 29.7636,
+    "D.pool_min_per_document": 1,
+    "D.pool_max_per_document": 262,
+    "D.pool_median_per_question": 29,
+    "D.pool_mean_per_question": 34.921,
+    "E.colqwen_questions_covered": 2000,
+    "E.colqwen_ranking_rows": 69842,
+    "E.colqwen_length_mismatches": 0,
+    "E.visual_gold_pairs_setting20": 3231,
+    "E.visual_gold_missing_from_ranking": 0,
+    "F.n_evaluation_questions": 2000.0,
+    "F.n_evaluation_questions_ranked": 2000.0,
+    "F.ranking_coverage_all_questions": 1.0,
+    "F.n_visual_gold_questions": 1995.0,
+    "F.n_visual_gold_questions_ranked": 1995.0,
+    "F.ranking_coverage_visual_gold_questions": 1.0,
+    "F.questions_scored_here": 1995.0,
+    "F.n_questions_without_visual_gold": 5.0,
+    "F.total_visual_gold": 3231.0,
+    "F.missing_visual_gold": 0.0
+  },
+  "checks": [
+    {
+      "key": "A.image_evidence_rows_all",
+      "expected": 6565,
+      "measured": 6565,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "A.distinct_img_path_all",
+      "expected": 6504,
+      "measured": 6504,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "A.doc_names_all",
+      "expected": 223,
+      "measured": 223,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.image_evidence_rows_eval",
+      "expected": 6548,
+      "measured": 6548,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.distinct_img_path_eval",
+      "expected": 6487,
+      "measured": 6487,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.evaluation_documents",
+      "expected": 220,
+      "measured": 220,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "B.evaluation_questions",
+      "expected": 2000,
+      "measured": 2000,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.original_images_eval_docs",
+      "expected": 13999,
+      "measured": 13999,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.unique_images_in_pool",
+      "expected": 6487,
+      "measured": 6487,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.images_not_in_pool",
+      "expected": 7512,
+      "measured": 7512,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_median_per_document",
+      "expected": 20,
+      "measured": 20,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_min_per_document",
+      "expected": 1,
+      "measured": 1,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_max_per_document",
+      "expected": 262,
+      "measured": 262,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_median_per_question",
+      "expected": 29,
+      "measured": 29,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.colqwen_questions_covered",
+      "expected": 2000,
+      "measured": 2000,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.colqwen_ranking_rows",
+      "expected": 69842,
+      "measured": 69842,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.colqwen_length_mismatches",
+      "expected": 0,
+      "measured": 0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.visual_gold_pairs_setting20",
+      "expected": 3231,
+      "measured": 3231,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "E.visual_gold_missing_from_ranking",
+      "expected": 0,
+      "measured": 0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "C.unique_image_coverage",
+      "expected": 0.46339,
+      "measured": 0.4633902421601543,
+      "ok": true,
+      "tolerance": 1e-05,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_mean_per_document",
+      "expected": 29.7636,
+      "measured": 29.7636,
+      "ok": true,
+      "tolerance": 0.001,
+      "status": "pass"
+    },
+    {
+      "key": "D.pool_mean_per_question",
+      "expected": 34.921,
+      "measured": 34.921,
+      "ok": true,
+      "tolerance": 0.001,
+      "status": "pass"
+    },
+    {
+      "key": "F.metrics_block_present",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.n_evaluation_questions",
+      "expected": 2000,
+      "measured": 2000.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.n_evaluation_questions_ranked",
+      "expected": 2000,
+      "measured": 2000.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.n_visual_gold_questions",
+      "expected": 1995,
+      "measured": 1995.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.n_visual_gold_questions_ranked",
+      "expected": 1995,
+      "measured": 1995.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.questions_scored_here",
+      "expected": 1995,
+      "measured": 1995.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.n_questions_without_visual_gold",
+      "expected": 5,
+      "measured": 5.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.total_visual_gold",
+      "expected": 3231,
+      "measured": 3231.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.missing_visual_gold",
+      "expected": 0,
+      "measured": 0.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.ranking_coverage_all_questions",
+      "expected": 1.0,
+      "measured": 1.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.ranking_coverage_visual_gold_questions",
+      "expected": 1.0,
+      "measured": 1.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "consistency[F.ranking_coverage_all_questions == F.n_evaluation_questions_ranked/F.n_evaluation_questions]",
+      "expected": "consistent",
+      "measured": "1.0 vs 2000.0/2000.0",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "consistency[F.ranking_coverage_visual_gold_questions == F.n_visual_gold_questions_ranked/F.n_visual_gold_questions]",
+      "expected": "consistent",
+      "measured": "1.0 vs 1995.0/1995.0",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "consistency[all - visual_gold == without_visual_gold]",
+      "expected": "consistent",
+      "measured": "consistent",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "consistency[scored == visual_gold_questions]",
+      "expected": 1995.0,
+      "measured": 1995.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "consistency[run total_visual_gold == DB gold pairs]",
+      "expected": 3231,
+      "measured": 3231.0,
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.ranking_coverage_all_questions.has_numerator_and_denominator",
+      "expected": "numerator+denominator",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "F.ranking_coverage_visual_gold_questions.has_numerator_and_denominator",
+      "expected": "numerator+denominator",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BM25]@10",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BM25]@10.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BM25]@10.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BM25]@20",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BM25]@20.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BM25]@20.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BGE]@10",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BGE]@10.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BGE]@10.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BGE]@20",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BGE]@20.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[ColQwen - BGE]@20.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@10",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@10.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@10.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@20",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@20.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[visual branch: BM25+BGE RRF over VLM descriptions - ColQwen over raw images]@20.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@10",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@10.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@10.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@20",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@20.doc_cluster_ci",
+      "expected": "ci present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "G.paired[fusion complementarity: RRF(BM25 descriptions, ColQwen) - ColQwen alone]@20.bootstrap_unit",
+      "expected": "document",
+      "measured": "document",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "wording[no 'isolates representation' claim]",
+      "expected": "absent",
+      "measured": "absent",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "wording[says 'complete visual-branch comparison']",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "wording[says 'not an isolated representation effect']",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    },
+    {
+      "key": "wording[visual-branch metric carries the correction]",
+      "expected": "present",
+      "measured": "present",
+      "ok": true,
+      "status": "pass"
+    }
+  ],
+  "correct_wording": {
+    "visual_branch_comparison": "visual branch comparison: ColQwen over raw images vs BM25+BGE RRF over VLM descriptions. This changes both representation and retrieval architecture. It is a complete visual-branch comparison, not an isolated representation effect.",
+    "deprecated_wording": "'isolates the two representations' -- the contrast moves two variables at once",
+    "supportable_claim": "in this incomplete image pool, at the tight k=10 budget, the complete description-RRF branch retrieves better than the ColQwen branch",
+    "unsupportable_claim": "VLM text representations beat pixel representations",
+    "unique_image_coverage": "6,487 / 13,999 = 46.34%",
+    "deprecated_figure": "46.8% (evidence rows / unique images -- unit mismatch)",
+    "pool_size": "per document median 20, mean 29.8; per question median 29, mean 34.9",
+    "colqwen": "ranks 100% of the in-pool image evidence and no visual gold is absent from the full ranking; being in the ranking is NOT the same as entering top-k -- ColQwen Recall@10 approx 0.820, Recall@20 approx 0.929"
+  }
+}

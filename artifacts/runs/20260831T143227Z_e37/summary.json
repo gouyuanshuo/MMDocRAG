@@ -1,0 +1,36 @@
+{
+  "run_id": "20260831T143227Z_e37",
+  "created_utc": "2026-08-31T14:35:08Z",
+  "suite": "single:E37",
+  "offline": true,
+  "counts": {
+    "ok": 1
+  },
+  "n_metrics": 44,
+  "experiments": [
+    {
+      "id": "E37",
+      "title": "静态提升按题型切片：增益集中在纯视觉题，且只在 k=10",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 41.495,
+      "n_commands": 2,
+      "logs": [
+        "artifacts/runs/20260831T143227Z_e37/experiments/E37/cmd0/stdout.log",
+        "artifacts/runs/20260831T143227Z_e37/experiments/E37/cmd1/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260831T143227Z_e37/experiments/E37/cmd0/metrics.json",
+        "artifacts/runs/20260831T143227Z_e37/experiments/E37/cmd1/metrics.json"
+      ],
+      "asks": "E27 的 +0.061 到底落在谁身上？proposal Experiment 2 要求按题型分报，那五类在 MMDocRAG 上还剩几类可评？「某一类显著、另一类不显著」能不能当成异质性证据？",
+      "how": "复用 nested_cv 的折外选择（文档分组 5 折，全语料选一次），再把已算好的折外差值向量按三种划分切片：证据模态、gold 跨页与否、语料自带的 question_type。每个切片按文档 cluster bootstrap 求区间；16 个切片检验为一个 Holm 家族，4 个对照检验为另一个。",
+      "metric_meaning": "切片检验回答「这一类里提升还在不在」；对照检验回答「提升是否依赖这一类」——后者才是异质性问题，前者两格的显著性差异不能替代它。",
+      "limits": "exploratory：该切分自 E9 起被反复观察并用于挑方法。**proposal Experiment 2 的五类里有两类在 MMDocRAG evaluation split 上无法评价**：pure text 只有 1 题（n=1，无区间可言），unanswerable 一题都没有（每题都带 gold 证据）。这是 benchmark 的属性，不是分析的缺口，写报告时必须照此说明而不能假装跑了五类。question_type 里 Inferential/Procedural/Causal/Application-based 四类均低于 100 题或 20 篇的阈值，只描述不检验。",
+      "primary_metric": "折外选择 − 论文式基线 E 的 Recall@k，按切片",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    }
+  ]
+}

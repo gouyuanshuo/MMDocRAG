@@ -1,0 +1,516 @@
+{
+  "run_id": "20260831T154055Z_retrieval",
+  "created_utc": "2026-08-31T15:54:28Z",
+  "suite": "retrieval",
+  "offline": true,
+  "counts": {
+    "stdout-only": 17,
+    "ok": 3,
+    "skipped": 3
+  },
+  "n_metrics": 215,
+  "experiments": [
+    {
+      "id": "E9",
+      "title": "模态路由不可学",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 8.738,
+      "n_commands": 3,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E9/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E9/cmd1/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E9/cmd2/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "能否只看问题就判断这题该用图片还是文字描述？",
+      "how": "19 个模型的成对结果上训练轻量分类器，检查 AUC、kappa 与跨模型迁移。",
+      "metric_meaning": "kappa≈0 表示不同模型对「这题该用哪种输入」几乎不一致。",
+      "limits": "不能写成「该属性不存在」或「所有 Router 都不可能」。",
+      "primary_metric": "test AUC / kappa",
+      "sample_unit": "question",
+      "lifecycle": "active",
+      "superseded": [
+        "13 维下 2/19 显著提升、4/19 显著下降",
+        "平均 +0.2 F1 / 2% 空间已复现；但显著性计数需要逐模型 bootstrap，当前脚本只输出原始胜负计数，故显著性数字仍撤下"
+      ]
+    },
+    {
+      "id": "E10",
+      "title": "模态选择的成本-质量表",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 0.876,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E10/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "多模态输入值不值它的 token？",
+      "how": "比较同一模型 pure-text/multimodal 的 F1、token 与 Pareto 前沿。",
+      "metric_meaning": "每换 1 分 F1 需要多付的输入 token，provider-neutral。",
+      "limits": "Gemini 图片 token 未计入；美元价格未核验，跨供应商成本不可直接比。",
+      "primary_metric": "tok / F1 点",
+      "sample_unit": "question",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E11",
+      "title": "泄漏探针的一个自查 bug",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 2.146,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E11/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "按 gold 模态路由（需要答案）能否胜过固定策略？",
+      "how": "修正 evidence 类型识别后重跑泄漏探针。",
+      "metric_meaning": "原探针只识别 table，修正后覆盖全部视觉类型。",
+      "limits": "这是 bug 修复，结论随之改变。",
+      "primary_metric": "探针一致性",
+      "sample_unit": "question",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E12",
+      "title": "我自己的 OCR 消解了我自己的立论",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 0.19,
+      "n_commands": 2,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E12/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E12/cmd1/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "有多少 gold 落在文本检索够不着的地方？",
+      "how": "在补 OCR 前后分别重算 gold 证据的文本可达性。",
+      "metric_meaning": "补 OCR 后从 12.1% 降到 0.7%，原「结构性不可见」论据被消解。",
+      "limits": "OCR 后文本可达不代表视觉关系已被正确理解。",
+      "primary_metric": "gold 不可达比例",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E13",
+      "title": "页粒度上文本检索对视觉证据没有劣势",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 2.599,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E13/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "页粒度上视觉 gold 是不是更难被文本检索找到？",
+      "how": "以整页为证据单元比较文本 gold 与视觉 gold 的召回。",
+      "metric_meaning": "页粒度上两类 gold 差距很小，因为图与周围文字捆在一起。",
+      "limits": "找到正确页不等于找到图中正确区域。",
+      "primary_metric": "页级 Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E14",
+      "title": "模态信号是粒度依赖的",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 2.185,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E14/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "模态差距为什么在页粒度上消失？",
+      "how": "以细粒度 quote/region 为证据单元重做同一比较。",
+      "metric_meaning": "模态效应是粒度依赖的：quote 级才显现交叉。",
+      "limits": "报告任何模态结论都必须同时说明证据粒度。",
+      "primary_metric": "quote 级 Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E15",
+      "title": "「图片 quote 更好检索」是池组成的产物",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 2.873,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E15/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "图片 quote 更容易被检索，是因为 VLM 描述与问题词汇对齐吗？",
+      "how": "控制 quote 长度并分解文字/图片池规模的贡献。",
+      "metric_meaning": "+0.080 的表观优势在长度匹配后翻转为 −0.014。",
+      "limits": "池级分解是描述性诊断，不替代完整对照语料实验。",
+      "primary_metric": "长度匹配后的覆盖率差",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E16",
+      "title": "检索器交叉：符号翻转，四个 k 全部一致",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 125.887,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E16/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "BM25 与 dense 的相对优劣是否随证据模态变化？",
+      "how": "同一候选池上按 gold 类型比较 BM25 与 BGE 的逐证据召回。",
+      "metric_meaning": "符号随证据类型翻转，说明存在值得融合的词法—语义互补性。",
+      "limits": "证据条目层 ±0.09 的效应聚合到整题会缩小。",
+      "primary_metric": "按 gold 类型的 Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E17",
+      "title": "二元检索器路由：结论已被正确的标签推翻一半",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 43.013,
+      "n_commands": 3,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E17/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E17/cmd1/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E17/cmd2/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "逐题在 BM25 与 dense 之间二选一，能否胜过固定策略？",
+      "how": "以逐题 recall(Dense)−recall(BM25) 为标签和权重重新训练路由器。",
+      "metric_meaning": "对固定 +0.016（CI 跨 0），对静态 RRF −0.0279（CI 不跨 0）。",
+      "limits": "旧 E17 用 gold 模态标签写死映射，只能否证那一条人工策略。",
+      "primary_metric": "Router recall vs 固定 vs RRF",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "路由 0.706 输给最优固定 0.711，二元路由被证伪；「61.9% 的题两种模态都有 gold」被用作结构性论据",
+        "原实验训练的是 gold 模态标签再写死映射，只否证了那一条人工策略。正确结论：路由达不到融合的质量，它买到的只是把两次检索省成一次"
+      ]
+    },
+    {
+      "id": "E18",
+      "title": "VLM 描述 vs 裁剪 OCR：+0.42 recall",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 250.451,
+      "n_commands": 2,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E18/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E18/cmd1/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "图表证据用 VLM 描述还是用裁剪 OCR 来检索？",
+      "how": "同一图片池、同一 BM25 下比较 VLM 描述与裁剪 OCR 两种文字表示。",
+      "metric_meaning": "0.791 对 0.369，差距在 OCR 成功提取的子集上仍为 +0.416。",
+      "limits": "OCR 有大量空/不完整结果；不能把全部差距断言为「视觉理解」。",
+      "primary_metric": "image gold Recall@20",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "差距来自视觉理解而非 OCR 提取失败（因为在 OCR 确实提取到文字的 3,031 条上差距仍有 +0.416）；该效应比任何路由效应大 60 倍",
+        "只能说：在当前问题条件化池、BM25 与 RapidOCR 表示下 VLM 描述显著更好。6,565 条中 1,270 条（19.3%）OCR 为空，非空也不代表提取完整准确。「60 倍」是把 recall 差值与 router 的 F1 差值相除，跨指标比较无效，已作废"
+      ]
+    },
+    {
+      "id": "E19",
+      "title": "自适应预算分配：上界远小于原报数字",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 30.727,
+      "n_commands": 3,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E19/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E19/cmd1/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E19/cmd2/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "逐题分配文本/图片配额，有多少可争取的空间？",
+      "how": "计算 21 种配额的逐题 Recall 曲线，审计并列最优，改用 oracle−best-fixed regret。",
+      "metric_meaning": "真实 regret 上界 0.069/0.074；约 79% 问题固定配额已最优。",
+      "limits": "原 +0.173~+0.179 受 argmax 恒取最小并列索引影响，已作废。",
+      "primary_metric": "tie-aware regret 上界",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "查询特异成分 +0.173 / +0.179",
+        "那是 oracle 减一个退化对照。自适应分配的上界是 regret +0.069 / +0.074，且近八成的题没有任何可改进空间"
+      ]
+    },
+    {
+      "id": "E20",
+      "title": "真实规模自建池上复现 E19",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 26.816,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E20/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "E19 的结论是不是池偏差造成的？",
+      "how": "重建更大的文本 chunk 池，保持同一 QA、gold 与图片侧重跑。",
+      "metric_meaning": "方向一致说明结论对文本池规模有一定稳健性。",
+      "limits": "不是独立复现；视觉池仍相同且不完整。",
+      "primary_metric": "配额结论方向一致性",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E21",
+      "title": "瓶颈收敛成一个可量化目标",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 28.125,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E21/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "外部报告提出的比例分配规则管用吗？",
+      "how": "以 gold 视觉占比为目标训练回归并评价实际 Recall 增益。",
+      "metric_meaning": "R² 提升不一定转化为检索收益。",
+      "limits": "visual share 是 gold 派生的诊断目标，不等同于最优行动。",
+      "primary_metric": "visual share 预测 R²",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E23",
+      "title": "高维特征一直在埋掉低维真信号",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 59.17,
+      "n_commands": 2,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E23/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E23/cmd1/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "二次反思能否预测该用多少视觉配额？",
+      "how": "用首轮检索结果反射式地重新分配配额，两个池分别跑。",
+      "metric_meaning": "预测目标改善不一定转化为检索收益。",
+      "limits": "输入信号弱、样本少且目标平坦。",
+      "primary_metric": "反射式配额的实际增益",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E24",
+      "title": "ColQwen2 在本项目的池规模下不值它的 GPU 成本",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 4.026,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E24/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E24/metrics.json"
+      ],
+      "asks": "视觉检索器能否胜过打在 VLM 描述上的文本检索器？",
+      "how": "在当前 evaluation 图片池上比较 ColQwen2 像素排序与 BM25/BGE/RRF 描述检索。第 0 条命令重建 GPU 索引（约 62 分钟），replay 只跑第 1 条评价命令。",
+      "metric_meaning": "视觉 gold 落入 top-k 的比例。注意「在完整 ranking 中」不等于「进入 top-k」。",
+      "limits": "池只覆盖 13,999 张原始图片中的 6,487 张（46.34% 唯一图片）；按文档中位仅 20 个候选，k=20 已接近饱和。这是公平的池内排序比较，不是完整文档图片池上的检索比较。",
+      "primary_metric": "image gold Recall@k（ColQwen vs 描述检索）",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "（审计初版曾称）E24 方向错误，ColQwen 在 k=15/20 显著有益 +0.0269 / +0.0220",
+        "那只在 396 题探索半区成立，全量重算 CI 跨 0，该主张已由作者撤回"
+      ]
+    },
+    {
+      "id": "E25",
+      "title": "粒度 × 预算：两个轴给出完全相反的排序",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 64.021,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E25/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "证据粒度能否改善质量与上下文成本的平衡？",
+      "how": "按 target-chars 建多档语料，分别在固定 top-k 与固定 word-like 预算下比较。",
+      "metric_meaning": "固定 top-k 会把粗 chunk 携带的额外上下文当成免费收益。",
+      "limits": "预算单位是正则 word-like token，不是 LLM BPE；仅覆盖文本 gold 与 BM25。",
+      "primary_metric": "固定 top-k vs 固定预算下的 Recall",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "固定 token 预算；RQ3 已完成",
+        "n_tok 是正则词元不是 BPE token，应称 word-like retrieval budget；且仅覆盖 text gold + BM25 + 字符切分，应称「RQ3 的文本-BM25 切片已完成」"
+      ]
+    },
+    {
+      "id": "E26",
+      "title": "small-to-big 被证伪；细粒度优势一半是预算量化损失",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 63.419,
+      "n_commands": 2,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E26/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E26/cmd1/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "用细 chunk 排序、返回其粗 parent，能否兼得两者？",
+      "how": "比较 prefix-stop 与 greedy-skip 两种预算装填规则。",
+      "metric_meaning": "早期正增益约一半来自「遇到塞不下就停止」的量化损失。",
+      "limits": "仅覆盖特定档位、BM25 与文本证据，不能封闭整个 RQ3。",
+      "primary_metric": "small-to-big vs 纯臂的 Recall",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E27",
+      "title": "静态检索配置的改进",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 40.195,
+      "n_commands": 6,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd1/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd2/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd3/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd4/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd5/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd0/metrics.json",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd1/metrics.json",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd2/metrics.json",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd3/metrics.json",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd4/metrics.json",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E27/cmd5/metrics.json"
+      ],
+      "asks": "模态内 RRF 融合 + 均衡配额，能比基线好多少？",
+      "how": "文本与图片描述分支内分别 RRF(BM25,BGE-small)，再采用较均衡配额，与本地论文式对照（dense 文本 + ColQwen 视觉 + 官方配额）比较。",
+      "metric_meaning": "每题被找回的 gold evidence 比例；未映射 gold 计为 miss。",
+      "limits": "单切分结果为 exploratory；泛化性只由 E28 的 nested CV 支持。",
+      "primary_metric": "Evidence Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": [
+        "比论文发布的检索配置高 +0.023 ~ +0.049，两个池 × 三个预算六格全显著",
+        "基线其实是本地 bge-small 同时跑文本与图片文字描述，既非论文的 bge-large 也不含 ColQwen 视觉检索器，不能称「优于论文配置」；且当时按题 bootstrap（396 题只来自 55 篇文档），并静默丢弃 62 条未映射 gold"
+      ]
+    },
+    {
+      "id": "E28",
+      "title": "复现性与结论边界审计",
+      "state": "stdout-only",
+      "reason": "",
+      "elapsed_sec": 4.656,
+      "n_commands": 2,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E28/cmd0/stdout.log",
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E28/cmd1/stdout.log"
+      ],
+      "metrics_files": [],
+      "asks": "已发布的结论有哪些超出了证据？",
+      "how": "document-grouped 外层 CV，内层在训练折上重选检索器与配额，每题由未参与其配置选择的折评分。",
+      "metric_meaning": "无脚本内选择泄漏的 Recall；仍是 internal OOF，不是外部确认。",
+      "limits": "并非严格双层 inner-CV；方法空间此前已用同一 2,000 题开发，k=20 时各折选择不稳定。",
+      "primary_metric": "OOF Evidence Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E30",
+      "title": "归因消融：+0.054 究竟来自哪个组件",
+      "state": "ok",
+      "reason": "",
+      "elapsed_sec": 20.768,
+      "n_commands": 1,
+      "logs": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E30/stdout.log"
+      ],
+      "metrics_files": [
+        "artifacts/runs/20260831T154055Z_retrieval/experiments/E30/metrics.json"
+      ],
+      "asks": "主结果同时改了文本检索器、图片检索方式和配额，三者各占多少？",
+      "how": "每格 2×2×2 因子设计，四格（两池 × 两预算）一次跑完，按文档 cluster bootstrap 求主效应，并对 4×3=12 个主效应做 Holm 校正。",
+      "metric_meaning": "每个主效应是该因子单独翻转、另两因子取遍所有水平的平均配对差。raw 95% CI 与 Holm 校正后的 p 同时给出，校正不隐藏任何东西。",
+      "limits": "这是**内部组件归因**，不是外部泛化验证：固定配置、单一 benchmark、且该 benchmark 已被本项目用于挑选方法。视觉因子同时换了表示（像素→VLM 文字）与检索器数量（单模型→双模型融合），因此必须整条命名为 visual branch，不能简称为表示效应。",
+      "primary_metric": "主效应（配额 / 图片描述检索 / RRF 文本融合）",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E35",
+      "title": "路由的天花板：tie-aware oracle 与匹配预算的置换对照",
+      "state": "skipped",
+      "reason": "本实验没有 replay 安全的命令（其命令会重建产物）",
+      "elapsed_sec": 0.0,
+      "n_commands": 0,
+      "logs": [],
+      "metrics_files": [],
+      "asks": "在训练任何路由器之前——逐题挑检索动作到底有没有可学的空间？表观上界里有多少只是 tie 和动作配比造成的假象？在只花一半 CPU 预算的动作集合里，完美选择能不能打过静态 RRF？",
+      "how": "router.actions 复用 eval_stack_v2.build（keep_scores=True）缓存逐题的 12 个动作 × recall × 成本；router.tie_audit 在每个预算子空间上报最优固定动作、tie-aware oracle、保配比的置换对照，并按文档 cluster bootstrap 给区间。",
+      "metric_meaning": "oracle 与最优固定动作之差是表观空间；与置换对照之差扣掉了动作配比带来的部分；约束下界取两者中更强的那个。预算是 (cpu pass, gpu pass) 一对上限，两种货币不相加。",
+      "limits": "exploratory：该切分自 E9 起被反复观察并用于挑方法。配额固定为 BALANCED_QUOTA，--include-quota 可展开为检索器 × 配额的联合空间，但配额是免费的，那只是空间上界而不是预算问题。",
+      "primary_metric": "oracle / 最优固定 / 置换对照 的 Recall@k",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E37",
+      "title": "静态提升按题型切片：增益集中在纯视觉题，且只在 k=10",
+      "state": "skipped",
+      "reason": "本实验没有 replay 安全的命令（其命令会重建产物）",
+      "elapsed_sec": 0.0,
+      "n_commands": 0,
+      "logs": [],
+      "metrics_files": [],
+      "asks": "E27 的 +0.061 到底落在谁身上？proposal Experiment 2 要求按题型分报，那五类在 MMDocRAG 上还剩几类可评？「某一类显著、另一类不显著」能不能当成异质性证据？",
+      "how": "复用 nested_cv 的折外选择（文档分组 5 折，全语料选一次），再把已算好的折外差值向量按三种划分切片：证据模态、gold 跨页与否、语料自带的 question_type。每个切片按文档 cluster bootstrap 求区间；16 个切片检验为一个 Holm 家族，4 个对照检验为另一个。",
+      "metric_meaning": "切片检验回答「这一类里提升还在不在」；对照检验回答「提升是否依赖这一类」——后者才是异质性问题，前者两格的显著性差异不能替代它。",
+      "limits": "exploratory：该切分自 E9 起被反复观察并用于挑方法。**proposal Experiment 2 的五类里有两类在 MMDocRAG evaluation split 上无法评价**：pure text 只有 1 题（n=1，无区间可言），unanswerable 一题都没有（每题都带 gold 证据）。这是 benchmark 的属性，不是分析的缺口，写报告时必须照此说明而不能假装跑了五类。question_type 里 Inferential/Procedural/Causal/Application-based 四类均低于 100 题或 20 篇的阈值，只描述不检验。",
+      "primary_metric": "折外选择 − 论文式基线 E 的 Recall@k，按切片",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    },
+    {
+      "id": "E38",
+      "title": "RQ1b 的 R² 目标问错了：完美预测本身也只值 +0.023",
+      "state": "skipped",
+      "reason": "本实验没有 replay 安全的命令（其命令会重建产物）",
+      "elapsed_sec": 0.0,
+      "n_commands": 0,
+      "logs": [],
+      "metrics_files": [],
+      "asks": "proposal 给 RQ1b 设了一个 R² 目标，并点名三个未试的特征源（视觉检索器分数、模型内部表示、LLM 证据充分性判断）。E23 把 R² 从 −0.155 抬到 +0.136 就停住了，只说「分配收益仍是 0~2%」。那么究竟是 R² 太低所以值得换特征源，还是 R² 到收益的映射本身就是平的？",
+      "how": "复用 reflect_alloc 的两段式召回矩阵与真实 visual_share。对每个目标 R² 用二分法反解噪声标准差（按裁剪后的实测 R²），共同随机数生成 200 组预测，收缩系数在测试集上取最优，再按文档 cluster bootstrap 给区间。",
+      "metric_meaning": "每一行是「精度达到该 R² 的预测器最好能买到多少」，是上界不是预报：合成预测器无偏、误差与真值独立，且收缩系数在测试集上选。",
+      "limits": "exploratory：该切分自 E9 起被反复观察并用于挑方法。合成预测器的误差与真值独立且无偏，真实 ridge 会向训练均值收缩、误差与真值相关，因此在同一 R² 下**严格更差**——这条曲线是上界不是预报。收缩系数在测试集上选，任何可部署系统都做不到，同样是为了取上界。结论只覆盖 RQ1b 的配额分配决策，不能外推到 E36 的升级决策。",
+      "primary_metric": "给定 R² 下配额分配相对最优固定切分的 Recall@20 增益",
+      "sample_unit": "document",
+      "lifecycle": "active",
+      "superseded": null
+    }
+  ]
+}

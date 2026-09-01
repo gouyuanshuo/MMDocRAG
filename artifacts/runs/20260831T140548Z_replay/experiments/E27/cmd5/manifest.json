@@ -1,0 +1,112 @@
+{
+  "name": "E27",
+  "created_utc": "2026-08-31T14:08:11Z",
+  "git": {
+    "commit": "fae74579f5e455ec6a321cb552df3664cd58f282",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/logs/",
+      "artifacts/runs/20260831T140548Z_replay/",
+      "docs/literature-review.html",
+      "docs/literature/",
+      "experiments.py",
+      "literature.py",
+      "manifests/e27_canonical_k20_test.json",
+      "manifests/e27_selfbuilt_k10_test.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140644Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140700Z.json",
+      "ocs/HANDOFF.md",
+      "retrieval/colqwen_scores_fullpool.ckpt/",
+      "retrieval/eval_fullpool.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    },
+    {
+      "path": "retrieval\\quotes.sqlite",
+      "sha256": "efbb2602397f23a623ba0e4ae74f201cf234106509767bb1b223fd84d82570bc",
+      "bytes": 58863616
+    },
+    {
+      "path": "retrieval\\colqwen_scores.sqlite",
+      "sha256": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+      "bytes": 8933376
+    }
+  ],
+  "config": {
+    "experiment": "E27",
+    "run_id": "20260831T140548Z_replay",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\nested_cv.py",
+      "--pool",
+      "canonical",
+      "--k",
+      "20"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "analysis": "nested_cv",
+    "grouping": "document",
+    "oof": true,
+    "unmapped_gold": "counted as miss",
+    "pool": "canonical",
+    "k": 20,
+    "seed": 20260825,
+    "bootstrap": 4000,
+    "folds": 5,
+    "sample_unit": "document",
+    "quota_paper": "12/8",
+    "n_questions": 2000,
+    "n_documents": 220,
+    "selection_stable_across_folds": false,
+    "protocol": "grouped outer-CV with training-fold selection (not a strict two-level inner CV)"
+  },
+  "results": {
+    "recall_surrogate_A": 0.8157400793650794,
+    "recall_paper_style_E": 0.8196331168831169,
+    "recall_nested_cv_oof": 0.846496645021645,
+    "delta: nested-CV - paper-style (E)": 0.02686352813852814,
+    "delta: nested-CV - surrogate (A)": 0.03075656565656566,
+    "delta: paper-style (E) - surrogate (A)": 0.0038930375180375168,
+    "fold0_selected_quota_text": 11.0,
+    "fold1_selected_quota_text": 10.0,
+    "fold2_selected_quota_text": 11.0,
+    "fold3_selected_quota_text": 11.0,
+    "fold4_selected_quota_text": 10.0
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\nested_cv.py",
+    "--pool",
+    "canonical",
+    "--k",
+    "20"
+  ]
+}

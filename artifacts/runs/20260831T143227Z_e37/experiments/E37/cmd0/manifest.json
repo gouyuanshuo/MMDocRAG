@@ -1,0 +1,113 @@
+{
+  "name": "E37",
+  "created_utc": "2026-08-31T14:32:50Z",
+  "git": {
+    "commit": "fae74579f5e455ec6a321cb552df3664cd58f282",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/logs/",
+      "artifacts/runs/20260831T140548Z_replay/",
+      "artifacts/runs/20260831T142910Z_e38/",
+      "artifacts/runs/20260831T143227Z_e37/",
+      "artifacts/verify/E24_20260831T141259Z.json",
+      "artifacts/verify/E24_latest.json",
+      "artifacts/verify/E27_20260831T141259Z.json",
+      "artifacts/verify/E27_latest.json",
+      "docs/HANDOFF.md",
+      "docs/lab-notebook.html",
+      "docs/literature-review.html",
+      "docs/literature/",
+      "experiments.py",
+      "literature.py",
+      "manifests/e27_canonical_k20_test.json",
+      "manifests/e27_selfbuilt_k10_test.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140644Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140700Z.json",
+      "retrieval/colqwen_scores_fullpool.ckpt/",
+      "retrieval/eval_fullpool.py",
+      "retrieval/r2_target.py",
+      "retrieval/slice_by_type.py",
+      "rtifacts/runs/latest.json",
+      "tests/test_statistics.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [],
+  "config": {
+    "experiment": "E37",
+    "run_id": "20260831T143227Z_e37",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\slice_by_type.py",
+      "--pool",
+      "selfbuilt"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pool": "selfbuilt",
+    "ks": [
+      10,
+      20
+    ],
+    "folds": 5,
+    "comparison": "out-of-fold nested-CV selection - paper-style E",
+    "sample_unit": "document",
+    "bootstrap": 4000,
+    "family_size": 16,
+    "contrast_family_size": 4,
+    "correction": "Holm-Bonferroni, two separate families",
+    "status": "exploratory",
+    "unevaluable_classes": "pure text (n=1), unanswerable (n=0)"
+  },
+  "results": {
+    "n_questions": 2000.0,
+    "n_documents": 220.0,
+    "delta_k10_evidence_modality_cross-modal": 0.034637615943014816,
+    "delta_k10_evidence_modality_pure_visual": 0.10374261841939941,
+    "delta_k10_gold_page_span_cross-page": 0.05857744331257342,
+    "delta_k10_gold_page_span_single-page": 0.06341218305504019,
+    "delta_k10_question_type_Comparative": 0.05360282909578685,
+    "delta_k10_question_type_Descriptive": 0.06800834202294057,
+    "delta_k10_question_type_Interpretative": 0.04691832429174201,
+    "delta_k10_question_type_Analytical": 0.0674518820041208,
+    "delta_k20_evidence_modality_cross-modal": 0.03340591944540373,
+    "delta_k20_evidence_modality_pure_visual": 0.02562036688026134,
+    "delta_k20_gold_page_span_cross-page": 0.03211040302118369,
+    "delta_k20_gold_page_span_single-page": 0.028491548134405277,
+    "delta_k20_question_type_Comparative": 0.021869042538056625,
+    "delta_k20_question_type_Descriptive": 0.032799791449426484,
+    "delta_k20_question_type_Interpretative": 0.049898282097649176,
+    "delta_k20_question_type_Analytical": 0.012950937950937954,
+    "contrast_k10_evidence_modality": -0.0691050024763846,
+    "contrast_k10_gold_page_span": -0.004834739742466766,
+    "contrast_k20_evidence_modality": 0.007785552565142392,
+    "contrast_k20_gold_page_span": 0.0036188548867784123
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\slice_by_type.py",
+    "--pool",
+    "selfbuilt"
+  ]
+}

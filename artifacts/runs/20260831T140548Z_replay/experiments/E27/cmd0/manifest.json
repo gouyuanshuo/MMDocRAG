@@ -1,0 +1,137 @@
+{
+  "name": "E27",
+  "created_utc": "2026-08-31T14:07:12Z",
+  "git": {
+    "commit": "fae74579f5e455ec6a321cb552df3664cd58f282",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/logs/",
+      "artifacts/runs/20260831T140548Z_replay/",
+      "docs/literature-review.html",
+      "docs/literature/",
+      "experiments.py",
+      "literature.py",
+      "manifests/e27_selfbuilt_k10_test.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140644Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140700Z.json",
+      "ocs/HANDOFF.md",
+      "retrieval/colqwen_scores_fullpool.ckpt/",
+      "retrieval/eval_fullpool.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    },
+    {
+      "path": "retrieval\\quotes.sqlite",
+      "sha256": "efbb2602397f23a623ba0e4ae74f201cf234106509767bb1b223fd84d82570bc",
+      "bytes": 58863616
+    },
+    {
+      "path": "retrieval\\colqwen_scores.sqlite",
+      "sha256": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+      "bytes": 8933376
+    },
+    {
+      "path": "manifests\\split_doc_disjoint.json",
+      "sha256": "fb191cc28da7f6fac881e952924840aa19caaa06b37e05fc3535d0616b0723d2",
+      "bytes": 51014
+    }
+  ],
+  "config": {
+    "experiment": "E27",
+    "run_id": "20260831T140548Z_replay",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\eval_stack_v2.py",
+      "--k",
+      "10",
+      "--pool",
+      "selfbuilt",
+      "--dump"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "analysis": "single_split",
+    "grouping": "document",
+    "oof": false,
+    "unmapped_gold": "counted as miss",
+    "pool": "selfbuilt",
+    "k": 10,
+    "seed": 20260825,
+    "bootstrap": 4000,
+    "rrf_c": 60,
+    "eval_split": "test",
+    "sample_unit": "document",
+    "quota_paper": "7/3",
+    "quota_balanced": "5/5",
+    "n_questions": 396,
+    "n_documents": 55,
+    "n_gold": 1110,
+    "n_unmapped_gold_counted_as_miss": 13,
+    "dense_model": "BAAI/bge-small-en-v1.5",
+    "visual_retriever": "vidore/colqwen2-v1.0 (local copy; the paper names no version for any retriever)",
+    "status": "EXPLORATORY"
+  },
+  "results": {
+    "recall_uncond[A]": 0.6736938286180709,
+    "recall_cond[A]": 0.6866116977859402,
+    "recall_uncond[B]": 0.6951003541912634,
+    "recall_cond[B]": 0.708643523984433,
+    "recall_uncond[C]": 0.6995956134213711,
+    "recall_cond[C]": 0.7130395768653345,
+    "recall_uncond[D]": 0.7197815091754485,
+    "recall_cond[D]": 0.7348428367367761,
+    "recall_uncond[E]": 0.6826344250586676,
+    "recall_cond[E]": 0.6960573447315871,
+    "recall_uncond[E2]": 0.7219562143804568,
+    "recall_cond[E2]": 0.7370385857128281,
+    "recall_uncond[F]": 0.645166127363097,
+    "recall_cond[F]": 0.6575969835439531,
+    "recall_uncond[G]": 0.7298865276138004,
+    "recall_cond[G]": 0.7448456425729153,
+    "delta: D - A   full stack vs dense-only baseline": 0.046087680557377525,
+    "delta: D - E   full stack vs closest paper-style": 0.03714708411678109,
+    "delta: G - E   best local hybrid vs paper-style": 0.04725210255513286,
+    "delta: B - A   quota alone": 0.021406525573192243,
+    "delta: C - A   fusion alone": 0.02590178480329995,
+    "delta: D - C   quota on top of fusion": 0.02018589575407757,
+    "delta: D - B   fusion on top of quota": 0.02468115498418529,
+    "delta: E - A   ColQwen visual vs image-description": 0.008940596440596436,
+    "delta: E2 - E  quota on paper-style hybrid": 0.03932178932178933
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\eval_stack_v2.py",
+    "--k",
+    "10",
+    "--pool",
+    "selfbuilt",
+    "--dump"
+  ]
+}

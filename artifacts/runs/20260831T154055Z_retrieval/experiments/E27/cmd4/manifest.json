@@ -1,0 +1,137 @@
+{
+  "name": "E27",
+  "created_utc": "2026-08-31T15:53:27Z",
+  "git": {
+    "commit": "fae74579f5e455ec6a321cb552df3664cd58f282",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/e34-fullpool/",
+      "artifacts/logs/",
+      "artifacts/runs/20260831T140548Z_replay/",
+      "artifacts/runs/20260831T142910Z_e38/",
+      "artifacts/runs/20260831T143227Z_e37/",
+      "artifacts/runs/20260831T153912Z_e38/",
+      "artifacts/runs/20260831T154055Z_retrieval/",
+      "artifacts/runs/latest.json",
+      "artifacts/verify/E24_20260831T141259Z.json",
+      "artifacts/verify/E24_20260831T154945Z.json",
+      "artifacts/verify/E24_20260831T155011Z.json",
+      "artifacts/verify/E24_latest.json",
+      "artifacts/verify/E27_20260831T141259Z.json",
+      "artifacts/verify/E27_20260831T154946Z.json",
+      "artifacts/verify/E27_20260831T154954Z.json",
+      "artifacts/verify/E27_20260831T155011Z.json",
+      "artifacts/verify/E27_20260831T155047Z.json",
+      "artifacts/verify/E27_latest.json",
+      "docs/HANDOFF.md",
+      "docs/artifacts-git-policy.md",
+      "docs/lab-notebook.html",
+      "docs/literature-review.html",
+      "docs/literature/",
+      "docs/paper-baseline-audit.md",
+      "experiments.py",
+      "expkit/source.py",
+      "expkit/verify.py",
+      "gitattributes",
+      "literature.py",
+      "manifests/e27_canonical_k20_test.json",
+      "manifests/e27_selfbuilt_k10_test.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140644Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260831T140700Z.json",
+      "retrieval/eval_fullpool.py",
+      "retrieval/r2_target.py",
+      "retrieval/slice_by_type.py",
+      "router/budget_router.py",
+      "tests/test_statistics.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "canonical\\mmdocrag.sqlite",
+      "sha256": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+      "bytes": 49606656
+    },
+    {
+      "path": "retrieval\\quotes.sqlite",
+      "sha256": "efbb2602397f23a623ba0e4ae74f201cf234106509767bb1b223fd84d82570bc",
+      "bytes": 58863616
+    },
+    {
+      "path": "retrieval\\colqwen_scores.sqlite",
+      "sha256": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+      "bytes": 8933376
+    }
+  ],
+  "config": {
+    "experiment": "E27",
+    "run_id": "20260831T154055Z_retrieval",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\nested_cv.py",
+      "--pool",
+      "canonical",
+      "--k",
+      "10"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "analysis": "nested_cv",
+    "grouping": "document",
+    "oof": true,
+    "unmapped_gold": "counted as miss",
+    "pool": "canonical",
+    "k": 10,
+    "seed": 20260825,
+    "bootstrap": 4000,
+    "folds": 5,
+    "sample_unit": "document",
+    "quota_paper": "7/3",
+    "n_questions": 2000,
+    "n_documents": 220,
+    "selection_stable_across_folds": true,
+    "protocol": "grouped outer-CV with training-fold selection (not a strict two-level inner CV)"
+  },
+  "results": {
+    "recall_surrogate_A": 0.6711595598845599,
+    "recall_paper_style_E": 0.6786349567099567,
+    "recall_nested_cv_oof": 0.732782196969697,
+    "delta: nested-CV - paper-style (E)": 0.054147240259740256,
+    "delta: nested-CV - surrogate (A)": 0.06162263708513708,
+    "delta: paper-style (E) - surrogate (A)": 0.007475396825396824,
+    "fold0_selected_quota_text": 4.0,
+    "fold1_selected_quota_text": 4.0,
+    "fold2_selected_quota_text": 4.0,
+    "fold3_selected_quota_text": 4.0,
+    "fold4_selected_quota_text": 4.0
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\nested_cv.py",
+    "--pool",
+    "canonical",
+    "--k",
+    "10"
+  ]
+}

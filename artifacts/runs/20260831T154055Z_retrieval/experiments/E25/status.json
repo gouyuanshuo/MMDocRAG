@@ -1,0 +1,48 @@
+{
+  "experiment": "E25",
+  "title": "粒度 × 预算：两个轴给出完全相反的排序",
+  "run_id": "20260831T154055Z_retrieval",
+  "lifecycle": "active",
+  "primary_metric": "固定 top-k vs 固定预算下的 Recall",
+  "sample_unit": "document",
+  "started_utc": "2026-08-31T15:50:45Z",
+  "commands": [
+    {
+      "label": "E25#0",
+      "argv": [
+        "D:\\Python313\\python.exe",
+        "-m",
+        "retrieval.eval_granularity"
+      ],
+      "cwd": "D:\\Playground\\MMDocRAG",
+      "python": "D:\\Python313\\python.exe",
+      "stdout_log": "artifacts/runs/20260831T154055Z_retrieval/experiments/E25/stdout.log",
+      "stderr_log": "artifacts/runs/20260831T154055Z_retrieval/experiments/E25/stderr.log",
+      "started_utc": "2026-08-31T15:50:45Z",
+      "env_overlay": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_DATASETS_OFFLINE": "1",
+        "HF_HOME": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache",
+        "HUGGINGFACE_HUB_CACHE": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache\\hub",
+        "TRANSFORMERS_CACHE": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache\\transformers",
+        "SENTENCE_TRANSFORMERS_HOME": "D:\\Playground\\MMDocRAG\\artifacts\\model_cache\\sentence-transformers",
+        "TOKENIZERS_PARALLELISM": "false",
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      },
+      "returncode": 0,
+      "elapsed_sec": 64.021,
+      "ended_utc": "2026-08-31T15:51:49Z",
+      "timed_out": false,
+      "status": "ok",
+      "outdir": "artifacts/runs/20260831T154055Z_retrieval/experiments/E25"
+    }
+  ],
+  "dry_run": false,
+  "status": "ok",
+  "ended_utc": "2026-08-31T15:51:49Z",
+  "elapsed_sec": 64.021,
+  "metrics_files": [],
+  "instrumented": false
+}

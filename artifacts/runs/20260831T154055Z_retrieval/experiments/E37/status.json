@@ -1,0 +1,14 @@
+{
+  "experiment": "E37",
+  "title": "静态提升按题型切片：增益集中在纯视觉题，且只在 k=10",
+  "run_id": "20260831T154055Z_retrieval",
+  "lifecycle": "active",
+  "status": "skipped",
+  "reason": "本实验没有 replay 安全的命令（其命令会重建产物）",
+  "commands": [],
+  "metrics_files": [],
+  "instrumented": false,
+  "started_utc": "2026-08-31T15:53:58Z",
+  "ended_utc": "2026-08-31T15:53:58Z",
+  "elapsed_sec": 0.0
+}
