@@ -129,3 +129,47 @@ git commit -m "release run <run_id>: full evidence"
 git status --porcelain artifacts/ | head -50
 git check-ignore -v artifacts/runs/<run_id>/experiments/E30/stdout.log
 ```
+
+## 行尾：为什么 `.gitattributes` 必须先 pin 它自己（2026-09-01 补）
+
+本项目的可复现性建立在一件事上：每次 run 都为每个源文件记一条 SHA-256，
+`expkit/source.py` 重建一棵树、重算这些哈希来证明该 run 的源码可还原。
+这要求**字节精确**，而这台机器上 `core.autocrlf` 为 true，checkout 会把 LF 改写成 CRLF。
+`.gitattributes` 里的一串 `-text` 规则就是为了挡住这件事。
+
+发现的缺陷是：**那份 `.gitattributes` 没有覆盖它自己。**
+
+Git 逐行解析 `.gitattributes`。如果这个文件本身被 checkout 成 CRLF，
+每一行最后一个 token 就变成 `-text\r`——那不是合法属性名，于是
+**整份规则被静默忽略**，一条错误信息都不会打印。
+本机工作区碰巧是 LF，所以本地看不出问题；但 `git archive` 出来的版本是 CRLF
+（1,441 字节 / 35 处 CRLF，工作区是 1,406 字节 / 0 处），
+也就是说**任何新克隆都会拿到规则失效的版本**，届时每个源文件的哈希都对不上，
+而现象看起来像仓库被篡改。
+
+修法三条，都已落地。**第二条在初版里写错过，改正如下**：
+
+1. `.gitattributes` 第一条规则现在是 `.gitattributes  -text`，它先钉住自己。
+   这解决的是未来的 checkout；已有提交里的那份仍然是旧的，所以还需要第 2 条。
+2. **`git archive` 这一步：把 `.gitattributes` 从 blob 写回重建树。**
+   初版在这里写的是「一律关掉行尾转换，因为重建要的是字节」——**那是错的**。
+   清单记录的是**工作区**，而这台机器的工作区对未钉住的上游文件
+   （`data_utils.py`、`eval_all.py`、`inference_*.py`、`prompt_bank/*`）
+   本来就是 CRLF。强制成 blob 字节会让这七个文件全部对不上。
+   正确做法是让 git 自己的属性机制工作——它对钉住的路径给 LF、
+   对其余路径给工作区表示——而它唯一需要的前提就是那份 `.gitattributes` 能被解析。
+3. **`git apply` 这一步：显式 `-c core.autocrlf=false -c core.eol=lf`。**
+   这一步与第 2 条相反，原因很具体：`git apply` 运行在重建树里，
+   且 `GIT_CEILING_DIRECTORIES` 让它找不到仓库；**属性是仓库概念，
+   树里那份 `.gitattributes` 根本不会被读**，`core.autocrlf` 于是作用到
+   每个被补丁写过的文件。所依赖的前提是「补丁碰到的指纹文件全是本项目自己钉住的」，
+   而这个前提由 `tests/test_source_bundle.py` 守着。
+
+修复轨迹是逐次量出来的，不是一次猜对的：
+0/20 hunk（补丁被整体拒绝）→ 12/20 → 16/20 → **19/20，
+剩下 1 个 MISSING 正是尚未跟踪的新文件**，与 `n_source_files_tracked_by_git = 19` 吻合。
+
+这条缺陷是**被 `fae7457` 提交源码之后才暴露的**，不是那次提交写坏的：
+在此之前 25 个指纹文件里 18 个未跟踪、一律记为 MISSING，
+commit+patch 这条路径根本没被走到过。归因时横跨多个历史 run 比对才看清楚
+（三个 08-30 的 run 全绿，`fae7457` 之后每一个 run 都在同一个文件上失败）。

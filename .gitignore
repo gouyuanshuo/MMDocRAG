@@ -78,3 +78,4 @@ router/*.npz
 # This session's scratch logs. Never evidence -- the authoritative record of
 # every number is the run's metrics.json under artifacts/runs/.
 tmp/
+artifacts/logs/

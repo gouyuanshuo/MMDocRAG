@@ -293,6 +293,28 @@ def restore(manifest, dest, bundle_path=None, patch_path=None, repo=None,
                 for i in take:
                     z.extract(i, dest)
             os.remove(zpath)
+            # `git archive` writes .gitattributes in the working-tree
+            # representation, which on a machine with core.autocrlf=true means
+            # CRLF -- 1,441 bytes against a 1,406-byte blob here. Git parses
+            # that file line by line, so a trailing carriage return turns every
+            # rule into `-text\r`, which is not an attribute name, and EVERY
+            # pin in it is then silently ignored for the rest of this tree.
+            # The visible symptom is a restored source file that differs from
+            # its fingerprint by exactly one byte per line, which reads as
+            # tampering rather than as a settings problem. Writing this one
+            # file back from its blob restores the rules, and git's own
+            # attribute machinery then gives each remaining file the
+            # representation the manifest actually recorded: LF for the paths
+            # this project pins, the working-tree form for the upstream files
+            # it does not.
+            ga = os.path.join(dest, ".gitattributes")
+            if os.path.exists(ga):
+                blob = subprocess.run(
+                    ["git", "cat-file", "blob", f"{commit}:.gitattributes"],
+                    cwd=repo, capture_output=True)
+                if blob.returncode == 0:
+                    with open(ga, "wb") as fh:
+                        fh.write(blob.stdout)
             steps.append({"step": "git archive <commit>", "ok": True,
                           "files": len(take), "files_in_commit": len(infos),
                           "skipped_not_source": len(infos) - len(take),
@@ -320,7 +342,13 @@ def restore(manifest, dest, bundle_path=None, patch_path=None, repo=None,
         env["GIT_CEILING_DIRECTORIES"] = os.path.dirname(os.path.abspath(dest))
         env.pop("GIT_DIR", None)
         env.pop("GIT_WORK_TREE", None)
-        r = subprocess.run(["git", "apply", "--verbose", patch_path], cwd=dest,
+        # No repository here means no attributes, so the `-text` pins in the
+        # restored tree's .gitattributes cannot take effect and core.autocrlf
+        # would rewrite every patched file. See the module note above: the
+        # patch only ever touches files this project owns and pins to LF.
+        r = subprocess.run(["git", "-c", "core.autocrlf=false",
+                            "-c", "core.eol=lf",
+                            "apply", "--verbose", patch_path], cwd=dest,
                            capture_output=True, env=env)
         out = (r.stdout.decode("utf-8", "replace")
                + r.stderr.decode("utf-8", "replace"))

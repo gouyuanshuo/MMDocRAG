@@ -13,6 +13,15 @@
 # dataset and response files whose blobs are already normalised -- rewriting
 # history that this project neither produced nor needs to guarantee. Only the
 # paths added by this project are pinned.
+# This file must pin ITSELF first. Git parses .gitattributes line by line, and
+# a trailing carriage return makes the last token on every line read as
+# `-text\r`, which is not an attribute -- so a .gitattributes checked out with
+# CRLF silently disables every rule it contains, including all of the byte
+# pins below. The working copy on the machine this was written on happened to
+# be LF, so the failure only appears on a fresh clone, where it looks like the
+# recorded SHA-256 of every source file is wrong. Pinning this file keeps the
+# rules alive wherever the repository is checked out.
+.gitattributes  -text
 canonical/**    -text
 expkit/**       -text
 retrieval/**    -text

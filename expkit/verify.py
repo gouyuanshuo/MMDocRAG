@@ -491,6 +491,16 @@ def check_e27(measured):
                      "ok": bool(ok),
                      "status": status or ("pass" if ok else "FAIL")})
 
+    # A run that never ran E27 is not evidence that E27 moved. Without this the
+    # default `--run latest` turns any unrelated run into 29 FAIL lines that
+    # look identical to the headline result collapsing, and the reader has no
+    # way to tell the two apart from the output. This says which it is, and
+    # what to pass instead.
+    if not cells:
+        add("matrix.run_contains_E27", False,
+            "a run that measured E27",
+            f"run {measured.get('run_id')} has no E27 nested_cv block -- "
+            f"pass --run <a replay run> to verify the published cells")
     add("matrix.n_cells", len(cells) >= 4, 4, len(cells))
     for pool, k in E27_CELLS:
         tag = f"{pool}/k={k}"
