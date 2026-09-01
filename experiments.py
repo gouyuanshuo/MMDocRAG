@@ -1198,7 +1198,12 @@ META = {
  # five candidate groups inside every one of 40 folds. Per-cell results
  # are checkpointed, so a rerun resumes; a suite that carried it would
  # still pay the full cost the first time. Run it directly.
- "E36": dict(suites=(), lifecycle="active",
+ # E36 was reachable only by typing its four commands out of `show E36`, which
+ # made a published negative result the one thing `run-suite` could not recheck.
+ # It is local CPU work with the same deps as E37, so it belongs in full-local;
+ # `expensive` keeps a 40-minute job behind --include-expensive rather than in
+ # the default path.
+ "E36": dict(suites=("full-local",), lifecycle="active", expensive=True,
              deps=(CANON, QUOTES, BGE, BGEC, COLQ), estimated_runtime=2400,
              primary_metric="同预算下 路由器 − 随机分配 的 Recall@k",
              sample_unit="document",

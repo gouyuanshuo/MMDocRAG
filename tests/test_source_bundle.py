@@ -112,8 +112,15 @@ def test_bundle_present_and_intact(run_id, man):
 
 
 def test_patch_alone_is_insufficient(run_id, man, root):
-    """The finding that motivated the bundle, re-measured rather than recited."""
-    print("\n2. commit + patch alone does NOT restore the run (the original bug)")
+    """How far commit + patch gets on its own, re-measured not recited.
+
+    The name is historical. When this was written the answer was 7 of 25,
+    which is the reason the bundle exists at all. Committing the source
+    moved it to 25 of 25. The test keeps measuring instead of asserting the
+    old number, because either answer is informative and only one of them
+    can be true at a time.
+    """
+    print("\n2. how far commit + patch gets without the bundle")
     tree = os.path.join(root, "patch-only", "tree")
     steps = source.restore(man, tree, bundle_path=os.path.join(root, "no-such.zip"))
     arch = next((s for s in steps if s["step"].startswith("git archive")), {})
@@ -130,13 +137,30 @@ def test_patch_alone_is_insufficient(run_id, man, root):
     n_ok = sum(1 for r in rows if r["status"] == "pass")
     n_missing = sum(1 for r in rows if r["status"] == "MISSING")
     tracked = man.get("n_source_files_tracked_by_git")
-    check(f"patch route restores only the tracked files "
+    # This once asserted `n_missing > 0`, on the measurement that motivated the
+    # bundle: 18 of 25 fingerprinted files had never been committed, so the
+    # patch route restored 7/25. That assertion started failing the moment the
+    # source was committed, which is the repository getting BETTER, not a
+    # regression -- so the check now measures the regime instead of demanding
+    # the worse one. What must hold either way is that the patch route covers
+    # exactly the files git tracks: no more (it cannot invent an untracked
+    # file) and no fewer (a shortfall means the patch or the archive is
+    # dropping something it should have carried).
+    if n_missing:
+        print(f"      patch route is INSUFFICIENT on its own: {n_ok}/{len(rows)}"
+              f" restored, {n_missing} missing -- the bundle is load-bearing")
+    else:
+        print(f"      every fingerprinted file is now tracked: {n_ok}/{len(rows)}"
+              f" restored without the bundle -- the bundle is redundancy, and"
+              f" still the only route for a run made before its source landed")
+    check(f"patch route covers exactly the tracked files "
           f"({n_ok}/{len(rows)}, {n_missing} missing)",
-          n_missing > 0, "if this passes, every file is tracked and the "
-                         "bundle is belt-and-braces rather than load-bearing")
-    if tracked is not None:
-        check("restored count equals the recorded tracked-file count",
-              n_ok == tracked, f"{n_ok} vs {tracked}")
+          tracked is None or n_ok == tracked,
+          f"{n_ok} restored vs {tracked} recorded as tracked by git")
+    check("no fingerprinted file is corrupt on the patch route",
+          not [r for r in rows if r["status"] not in ("pass", "MISSING")],
+          str([r["path"] for r in rows
+               if r["status"] not in ("pass", "MISSING")])[:120])
 
 
 def test_full_reconstruction(run_id, man, root):
