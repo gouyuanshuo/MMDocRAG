@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BarChart3, Braces, FileSearch, Layers3, MessageSquareText, Plus, SearchCheck, ShieldCheck } from 'lucide-react';
 import { api } from './api';
-import type { Health, RecentRun, Turn } from './types';
+import type { Health, LiveAnswer, RecentRun, Turn } from './types';
 import { Button, cx } from './components/ui';
 import { ChatView } from './views/Chat';
 import { AnalysisView } from './views/Analysis';
@@ -9,7 +9,7 @@ import { ExperimentsView } from './views/Experiments';
 import { ProvenanceView } from './views/Provenance';
 
 const ROUTES = [
-  { id: 'chat', label: 'RAG Replay', icon: MessageSquareText, blurb: 'Ask a benchmark question and see the recorded run' },
+  { id: 'chat', label: 'RAG Console', icon: MessageSquareText, blurb: 'Replay a recorded run, or run one live' },
   { id: 'analysis', label: 'Query Analysis', icon: SearchCheck, blurb: 'Both arms, every retriever, and the routing decision' },
   { id: 'experiments', label: 'Experiments', icon: BarChart3, blurb: 'What each experiment measured, with its interval' },
   { id: 'provenance', label: 'Provenance', icon: ShieldCheck, blurb: 'Which artifact every number on this page came from' },
@@ -17,9 +17,12 @@ const ROUTES = [
 
 type RouteId = (typeof ROUTES)[number]['id'];
 
+/** The transcript holds both kinds of turn; only replayed ones feed Analysis. */
+export type Entry = { kind: 'replay'; turn: Turn } | { kind: 'live'; live: LiveAnswer };
+
 export default function App() {
   const [active, setActive] = useState<RouteId>('chat');
-  const [turns, setTurns] = useState<Turn[]>([]);
+  const [entries, setEntries] = useState<Entry[]>([]);
   const [current, setCurrent] = useState<Turn | null>(null);
   const [runs, setRuns] = useState<RecentRun[]>([]);
   const [health, setHealth] = useState<Health | null>(null);
@@ -36,10 +39,18 @@ export default function App() {
     }
   }, []);
 
+  const refreshHealth = useCallback(async () => {
+    try {
+      setHealth(await api.health());
+    } catch {
+      setHealth(null);
+    }
+  }, []);
+
   useEffect(() => {
     void refreshRuns();
-    api.health().then(setHealth).catch(() => setHealth(null));
-  }, [refreshRuns]);
+    void refreshHealth();
+  }, [refreshRuns, refreshHealth]);
 
   const ask = useCallback(
     async (question: string, questionUid?: string) => {
@@ -50,7 +61,7 @@ export default function App() {
       try {
         const turn = await api.ask(question.trim(), current?.queryId, questionUid);
         setCurrent(turn);
-        setTurns((previous) => [...previous, turn]);
+        setEntries((previous) => [...previous, { kind: 'replay', turn }]);
         void refreshRuns();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Request failed');
@@ -62,6 +73,26 @@ export default function App() {
     [current?.queryId, refreshRuns],
   );
 
+  const askLive = useCallback(
+    async (question: string, docName?: string) => {
+      if (busy.current || !question.trim()) return;
+      busy.current = true;
+      setLoading(true);
+      setError('');
+      try {
+        const live = await api.live(question.trim(), docName);
+        setEntries((previous) => [...previous, { kind: 'live', live }]);
+        void refreshHealth();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'The live request failed');
+      } finally {
+        busy.current = false;
+        setLoading(false);
+      }
+    },
+    [refreshHealth],
+  );
+
   const openRun = useCallback(async (queryId: string) => {
     if (busy.current) return;
     busy.current = true;
@@ -69,7 +100,7 @@ export default function App() {
     setError('');
     try {
       const conversation = await api.conversation(queryId);
-      setTurns(conversation.turns);
+      setEntries(conversation.turns.map((turn) => ({ kind: 'replay' as const, turn })));
       setCurrent(conversation.turns[conversation.turns.length - 1] ?? null);
       setActive('chat');
     } catch (err) {
@@ -101,7 +132,7 @@ export default function App() {
           disabled={loading}
           onClick={() => {
             setActive('chat');
-            setTurns([]);
+            setEntries([]);
             setCurrent(null);
             setError('');
           }}
@@ -139,7 +170,7 @@ export default function App() {
           {runs.length === 0 ? (
             <p className="px-3 py-2 text-xs text-slate-400">No replays yet. Ask your first question.</p>
           ) : null}
-          <div className="mt-3 max-h-[32vh] space-y-1 overflow-y-auto">
+          <div className="mt-3 max-h-[30vh] space-y-1 overflow-y-auto">
             {runs.map((run, index) => (
               <button
                 key={run.queryId}
@@ -169,6 +200,12 @@ export default function App() {
             <span className={cx('size-1.5 rounded-full', health?.status === 'ok' ? 'bg-emerald-400' : 'bg-amber-400')} />
             {health ? `replay · ${health.replayable} recorded questions` : 'connecting…'}
           </div>
+          {health?.live?.enabled ? (
+            <div className="mt-1 flex items-center gap-2 text-[11px] text-amber-300">
+              <span className="size-1.5 rounded-full bg-amber-400" />
+              live · {health.live.callsLeft} of {health.live.budget} calls left
+            </div>
+          ) : null}
           {health?.metricsRun ? (
             <p className="mt-1 font-mono text-[10px] break-all text-slate-500">{health.metricsRun}</p>
           ) : null}
@@ -194,7 +231,14 @@ export default function App() {
         ) : null}
 
         {active === 'chat' ? (
-          <ChatView turns={turns} current={current} loading={loading} onAsk={ask} />
+          <ChatView
+            entries={entries}
+            current={current}
+            loading={loading}
+            live={health?.live ?? null}
+            onAsk={ask}
+            onAskLive={askLive}
+          />
         ) : active === 'analysis' ? (
           <AnalysisView turn={current} />
         ) : active === 'experiments' ? (

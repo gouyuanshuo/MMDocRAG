@@ -73,13 +73,20 @@ python experiments.py verify E27 --run <replay_run_id>
 
 ```bash
 python -m demo.server                                        # the console, http://127.0.0.1:8000
+python -m demo.server --live                                 # also allow live, paid answers
 ```
 
-The console only ever *reads* recorded artifacts: it calls no model, re-runs no
-retrieval and recomputes no metric. If you add a number to it, that number must
-already exist in a run's `metrics.jsonl` — `tests/test_demo.py` asserts every
-cell traces back to one, and that assertion is the only thing keeping a demo
-from becoming a second, unaudited source of numbers.
+By default the console only *reads* recorded artifacts: it calls no model,
+re-runs no retrieval and recomputes no metric. If you add a number to it, that
+number must already exist in a run's `metrics.jsonl` — `tests/test_demo.py`
+asserts every cell traces back to one, and that assertion is the only thing
+keeping a demo from becoming a second, unaudited source of numbers.
+
+`--live` adds the one exception: a typed question is retrieved for real and sent
+to the API, so it produces an answer no run recorded. Live answers are labelled
+as such everywhere they appear, are never scored as an experiment, cost money
+per question, and are capped by a per-process budget. **A live answer is not a
+result and may not be quoted as one.**
 
 `verify` defaults to the newest run, which is usually one experiment. Against
 the wrong run it prints FAILs that mean *"this run never measured that"*, not

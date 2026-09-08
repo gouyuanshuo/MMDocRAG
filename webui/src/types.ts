@@ -247,13 +247,97 @@ export type Provenance = {
   errors: string[];
 };
 
+export type LiveStatus = {
+  enabled: boolean;
+  note: string;
+  model?: string;
+  encoder?: string;
+  k?: number;
+  quotaText?: number;
+  quotaVisual?: number;
+  pool?: string;
+  budget?: number;
+  callsMade?: number;
+  callsLeft?: number;
+  apiKeyPresent?: boolean;
+  mode?: string;
+  sendsImages?: boolean;
+};
+
 export type Health = {
   status: string;
   mode: string;
   questions: number;
   replayable: number;
   metricsRun: string;
+  live: LiveStatus;
   errors: string[];
+};
+
+/**
+ * A live answer: real retrieval and one real API call, made just now.
+ *
+ * `recorded` is always false and the UI keeps saying so. The scoring block
+ * exists only when the typed question is exactly a benchmark question, because
+ * that is the only case where gold evidence exists to score against -- and even
+ * then it is a diagnostic computed over a retrieval no run performed.
+ */
+export type LiveQuote = Quote & {
+  denseScore: number;
+  bm25Rank: number;
+  denseRank: number;
+};
+
+export type LiveAnswer = {
+  mode: 'live';
+  turnId: string;
+  question: string;
+  document: {
+    name: string;
+    method: string;
+    candidates: { docName: string; score: number }[];
+    poolText: number;
+    poolVisual: number;
+  };
+  benchmarkMatch: {
+    questionUid: string;
+    qId: number;
+    docName: string;
+    goldCount: number;
+    recordedInE29: boolean;
+  } | null;
+  quotes: LiveQuote[];
+  answer: string;
+  usage: { input_tokens: number; output_tokens: number; total_tokens: number };
+  timings: { retrievalSec: number; generationSec: number; perStage: Record<string, number> };
+  scoring:
+    | { scored: false; reason: string }
+    | {
+        scored: true;
+        precision: number;
+        recall: number;
+        f1: number;
+        goldTotal: number;
+        goldRetrieved: number;
+        metric: string;
+        warning: string;
+      };
+  config: {
+    textRetriever: string;
+    visualRetriever: string;
+    quotaText: number;
+    quotaVisual: number;
+    k: number;
+    pool: string;
+    denseModel: string;
+    model: string;
+    mode: string;
+    sendsImages: boolean;
+    promptTemplate: string;
+  };
+  budget: { callsMade: number; callsLeft: number; budget: number };
+  recorded: false;
+  provenance: { retrieval: string; generation: string; logged: string; warning: string; tokens: string };
 };
 
 export type RetrieverBranch = {

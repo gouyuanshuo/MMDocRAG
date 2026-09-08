@@ -17,7 +17,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { DataTable } from '../src/components/DataTable';
 import { AnswerBody } from '../src/components/Answer';
 import { EvidenceList } from '../src/components/EvidenceList';
-import type { Group, Turn } from '../src/types';
+import { LiveTurn } from '../src/components/LiveTurn';
+import type { Group, LiveAnswer, Turn } from '../src/types';
 
 const BASE = process.env.MMDOCRAG_API ?? 'http://127.0.0.1:8000';
 const failures: string[] = [];
@@ -89,6 +90,29 @@ async function main() {
     'evidence: gold flags survive',
     turn.citations.every((c) => !c.isGold) || evidenceHtml.includes('>gold<'),
   );
+
+  // Live mode is opt-in because rendering its component means making a paid API
+  // call. MMDOCRAG_RENDER_CHECK_LIVE=1 turns it on; the server must have been
+  // started with --live.
+  if (process.env.MMDOCRAG_RENDER_CHECK_LIVE === '1') {
+    const live = (await (
+      await fetch(`${BASE}/api/live`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: 'What does the report say about venture capital deal sizes in Europe?' }),
+      })
+    ).json()) as LiveAnswer;
+    check('live: answered', Boolean(live.answer), JSON.stringify(live).slice(0, 160));
+    check('live: retrieved a full candidate block', live.quotes.length === live.config.quotaText + live.config.quotaVisual);
+    check('live: reports measured tokens', (live.usage?.total_tokens ?? 0) > 0);
+    const liveHtml = renderToStaticMarkup(<LiveTurn live={live} />);
+    check('live: renders', liveHtml.includes('Live answer'), `${liveHtml.length} chars`);
+    check('live: says it is not recorded', liveHtml.includes('not part of any recorded run'));
+    check('live: shows the document it chose', liveHtml.includes(live.document.name));
+    check('live: no literal undefined', !liveHtml.includes('>undefined<'));
+  } else {
+    console.log('render-check: live section skipped (MMDOCRAG_RENDER_CHECK_LIVE=1 to include; it spends)');
+  }
 
   console.log(`render-check: ${checks - failures.length}/${checks} passed`);
   for (const failure of failures) console.error(`  FAIL ${failure}`);

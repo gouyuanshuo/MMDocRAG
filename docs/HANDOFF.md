@@ -29,6 +29,15 @@
   否则界面无权标页码与 gold。原界面的 fixture 分组有两项在本项目没有对应实验，已换成真正跑过的
   五组比较；静态检索配置与 E36 逐题升级决策分开陈述。**没有做视觉验收**（本机浏览器不可用）。
   用法与输入清单见 `demo/README.md`。
+  **2026-09-08 增补实时模式**：`python -m demo.server --live` 后，界面上的 Live 开关可以对
+  任意问题真跑一次检索并真调一次 Gemini。检索用的是嵌套 CV 选出的同一配置（canonical 池、
+  rrf/rrf、4/6、k=10），编码器是 bge-large（E40 的头条编码器，与 E29 两臂的 bge-small 不同）；
+  生成走 `inference_wrapper.Gemini_Inference` 和同一份 prompt。新增的一段是**文档检索**：
+  自由提问没有标注文档，先用 BM25 在 223 篇文档上选一篇，实测 top1 80%、top5 91%
+  （`python -m demo.live --check-document-selection`，200 题、seed 7）。
+  **实时回答不属于任何已记录运行，没有实验给它打过分，不能当结果引用**；只有当提问恰好是
+  benchmark 原题时才有 gold，可算一个标注清楚的诊断性 F1。每进程默认预算 25 次调用，
+  每次尝试先写 `artifacts/api/demo-live/requests.jsonl`，token 实测、价格不断言。
 - 一键入口：`python reproduce.py --dry-run`，随后 `python reproduce.py`。默认四组测试加 37 项缓存实验（新增 E42 的 `tests.test_demo`），API 调用为 0；包含 E29 保存响应、E34 保存排名、新增 E41。结果、源码和输入检查点落盘，失败返回非零；`--resume` 仅接受相同源码、输入与参数。
 - 收尾发现并修复了 Windows 行尾导致的 Git 补丁还原失败：补丁目标先恢复 Git blob，应用后只接受完整 SHA-256 匹配的 LF/CRLF 表示；历史运行与 ZIP 不改写。
 - 四组代码测试最终通过 67 / 25 / 30 / 35 项（157 项，0 失败）。此前收尾日志实际为 runner 66/1、source bundle 18/3，不能沿用早先的“150 项全绿”；完整运行与修复验证记录见通俗说明末尾。

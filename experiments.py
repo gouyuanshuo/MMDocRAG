@@ -1393,9 +1393,29 @@ E.append(dict(id="E42", phase="infra", status="pass",
          "因此界面把静态检索配置与 E36 的逐题升级决策分开陈述，"
          "把 citation F1 写成 quote-selection F1 并注明不是答案正确性，"
          "并且缺产物时显示缺失而不是回落到替代值。",
+    result3="2026-09-08 增补实时模式（`--live`，默认关闭）。它是本包唯一做新工作的路径："
+            "对任意提问真跑一次检索并真调一次 Gemini。检索用嵌套 CV 选出的同一配置"
+            "（canonical 池、rrf/rrf、4/6、k=10），编码器为 bge-large；生成走 "
+            "`inference_wrapper.Gemini_Inference` 与同一份 prompt。多出的一段是文档检索："
+            "自由提问没有标注文档，先用 BM25 在 223 篇文档上选一篇，"
+            "实测 top1 80.0% / top3 89.2% / top5 90.8%（200 题、seed 7，"
+            "`python -m demo.live --check-document-selection`）。"
+            "**实时回答不属于任何已记录运行，没有实验给它打过分，不能当结果引用**；"
+            "只有当提问恰好是 benchmark 原题时才有 gold，可算一个明确标注的诊断性 F1。"
+            "成本三重约束：默认关闭、每进程预算 25 次、每次尝试先写 "
+            "`artifacts/api/demo-live/requests.jsonl`；token 实测，价格不断言。"
+            "测试增至 60 项（实时部分不花钱：跑真实检索路径、校验配额与文档命中率、"
+            "断言无密钥或无预算时拒绝调用）。"
+            "`--live-mode` 可选 pure-text（默认，与已记录两臂一致，送 VLM 图片描述）"
+            "或 multimodal（送图片本身，走 multimodal_infer.txt）。本机各测一题："
+            "pure-text 输入 2,131 / 输出 348 token，multimodal 输入 7,204 / 输出 220 token，"
+            "六张图约合三倍输入；两者都取自 provider 的 usage 字段，不折算价格。"
+            "multimodal 遇到缺图直接拒答，而不是少送一张——那会在无人察觉时改变 4/6 配额。",
     limits="本环境没有可用浏览器，没有做视觉验收；render-check 只能证明"
            "每个组件用真实 payload 渲染成功、表格不丢行、HTML 中的数值等于产物中的数值。"
-           "控制台不做任何新的评测，它的可信度完全等于它读取的那次运行。"))
+           "控制台不做任何新的评测，它的可信度完全等于它读取的那次运行。"
+           "实时模式与 E29 两臂有两处结构性差异（多一段文档检索、编码器为 bge-large 而非 "
+           "bge-small），因此实时候选块可能与已记录的不同，两者不可互相引用。"))
 # The registered command is the offline test, which the cached suite picks up
 # below like any other replay. The two commands that are NOT registered are
 # `python -m demo.server` (long-lived) and the npm build (needs Node); a suite
@@ -1407,10 +1427,13 @@ META["E42"] = dict(suites=(), lifecycle="active", replay=(0,),
                                      "webui/dist/"),
                    how="demo/store.py 读取 arm 文件、response 文件、动作表、"
                        "路由决策 CSV 与某次运行的 metrics.jsonl；"
-                       "demo/dashboard.py 只挑选与命名，不计算。",
-                   metric_meaning="48 项断言覆盖重建精确性、指标可溯源、分母守恒、"
-                                  "命名纪律、缺产物时的可见降级与图片路径越界防护。",
-                   limits="没有视觉验收；控制台不产生任何新数字。")
+                       "demo/dashboard.py 只挑选与命名，不计算；"
+                       "demo/live.py 是唯一做新工作的路径，默认不启用。",
+                   metric_meaning="60 项断言覆盖重建精确性、指标可溯源、分母守恒、"
+                                  "命名纪律、缺产物时的可见降级、图片路径越界防护，"
+                                  "以及实时模式在无密钥或无预算时拒绝调用。",
+                   limits="没有视觉验收；replay 路径不产生任何新数字，"
+                          "实时路径产生的回答不属于任何已记录运行。")
 
 # Offline replay of every completed empirical experiment, including paid
 # generations that are ALREADY on disk. Generation commands keep their API gate.

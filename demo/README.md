@@ -5,13 +5,18 @@ recorded artifacts, `webui/` renders them. The UI is adapted from a group-mate's
 interface, [kosuzu123/Multimodal-rag-UI](https://github.com/kosuzu123/Multimodal-rag-UI);
 the design is theirs, the data underneath is this repository's.
 
-**Nothing here generates anything.** No model is called, no retrieval is re-run,
-no metric is recomputed at serve time. Every answer is replayed from
+**By default nothing here generates anything.** No model is called, no retrieval
+is re-run, no metric is recomputed at serve time. Every answer is replayed from
 `response/`, every ranking comes from the cached action table E27's builder
 wrote, and every number on the dashboard is a row in a recorded run's
 `metrics.jsonl`. That is the property the console is built around: if an
 artifact is missing, the affected panel says so instead of falling back to a
 plausible value.
+
+There is exactly one exception, and it is opt-in: `--live` lets you type your own
+question, retrieves for it over the corpus, and calls the API. See
+[Live mode](#live-mode-real-retrieval-a-real-api-call) below. A live answer is
+new work, is labelled that way everywhere it appears, and is never a result.
 
 ## Run it
 
@@ -40,9 +45,9 @@ Useful flags: `--port`, `--metrics-run <run_id>`, `--image-root <dir>`,
 
 | View | What it is |
 |---|---|
-| RAG Replay | Ask one of the 600 questions the recorded end-to-end run covered. Free text is matched to the closest benchmark question by BM25 and the match is stated in the transcript. The answer is replayed with its images and citations resolved against the candidate block the model was actually given. |
+| RAG Console | **Replay:** ask one of the 600 questions the recorded end-to-end run covered. Free text is matched to the closest benchmark question by BM25 and the match is stated in the transcript. The answer is replayed with its images and citations resolved against the candidate block the model was actually given. **Live** (with `--live`): ask anything, and retrieval and generation happen now. |
 | Query Analysis | The same question under both retrieval configurations, side by side — same model, same prompt, same gold, different candidate block. Plus what each retriever would have surfaced, and the per-question escalation decision. |
-| Experiments | Five groups of recorded comparisons (E29, E27/E40/E41, E24/E34, E37, E35/E36), each row with its interval, its n, and the unit that was resampled. Then the full 41-experiment registry. |
+| Experiments | Five groups of recorded comparisons (E29, E27/E40/E41, E24/E34, E37, E35/E36), each row with its interval, its n, and the unit that was resampled. Then the full 42-experiment registry. |
 | Provenance | Which artifact every panel reads, which run the metrics come from, and the standing caveats — including the ones this project has already had to correct once. |
 
 ## A three-minute walk-through
@@ -66,6 +71,72 @@ Step 1 is an anecdote and the UI says so: one question proves nothing, and the
 interval in step 3 is the claim. Showing them in that order is the point —
 `evaluation:1428` ("the price of the keyboard in Figure 111") is a second
 single-question case if a second is wanted.
+
+## Live mode: real retrieval, a real API call
+
+```bash
+python -m demo.server --live                          # adds the Live switch to the UI
+python -m demo.server --live --live-mode multimodal   # send the images, not their descriptions
+python -m demo.server --live --live-budget 50 --live-model gemini-3.6-flash
+```
+
+Everything above replays. Live mode is the one thing that does new work: type
+any question, and the console retrieves over the corpus now and asks the model
+now. It is off by default because each answer costs money.
+
+What it runs is this project's own configuration, not an approximation:
+canonical pool, RRF text + RRF image-description, quota 4/6 at k=10 — the
+configuration nested CV selected — with `models/bge-large-en-v1.5`, the encoder
+E40 re-checked the headline on. Generation goes through
+`inference_wrapper.Gemini_Inference` with `prompt_bank/pure_text_infer.txt`, the
+same class and prompt the recorded runs used.
+
+One stage exists only here. A benchmark question arrives with the document it is
+about; a typed question does not, so live mode retrieves the document first with
+BM25 over each document's own text. Measured on 200 benchmark questions against
+their annotated document:
+
+```
+python -m demo.live --check-document-selection      # top1 80.0%  top3 89.2%  top5 90.8%
+```
+
+The UI shows which document was picked and offers the runners-up, because a
+wrong document produces a confidently wrong answer and that should be visible
+rather than mysterious.
+
+`--live-mode` picks what the model is given for an image. `pure-text` (the
+default, and the recorded arms' mode) sends the VLM-written description;
+`multimodal` opens the JPEG and sends the image itself, so the model reads the
+chart rather than someone's summary of it. Measured on this machine, one
+question through each: pure-text 2,131 input / 348 output tokens, multimodal
+7,204 input / 220 output — six images cost roughly three times the input. Both
+numbers come from the provider's own usage field; no price is asserted. If an
+image file is missing, multimodal refuses the question rather than dropping the
+image, because a silently shortened candidate block is a changed quota that
+nothing on screen would report.
+
+**A live answer is not a result.** No run recorded it, no experiment scored it,
+and it must not be quoted as one — the UI says so on every live turn. Two
+differences from the E29 arms are structural: the document stage above, and the
+encoder (live uses bge-large; the recorded arms were built on bge-small), so a
+live candidate block can differ from the recorded one for the same question.
+
+When the typed question *is* exactly a benchmark question, its gold is known, so
+retrieved gold is flagged and a citation F1 is computed with `eval_all`'s own
+scorer. That number is a diagnostic for the person watching: computed now, over
+a retrieval no run performed, and written nowhere.
+
+Cost control, in three parts: live mode is off unless asked for; a per-process
+budget (default 25 calls) refuses the request rather than spending quietly; and
+every attempt — including failures — is written to
+`artifacts/api/demo-live/requests.jsonl` before the answer is returned. Tokens
+are reported as measured, verbatim from the provider. No dollar figure is
+asserted anywhere in the console.
+
+Startup with `--live` takes ~25 seconds: the corpus index, the passage vectors
+and the encoder are all loaded before the first question rather than in front of
+an audience. After that a query encodes in milliseconds and retrieval is well
+under a second; the wait you see is the model.
 
 ## Inputs it reads
 
@@ -95,9 +166,14 @@ flags in the UI would be a guess.
 ## Tests
 
 ```bash
-python -m tests.test_demo             # 48 assertions, no server needed
+python -m tests.test_demo             # 60 assertions, no server and no API calls
 cd webui && npm run check:render      # renders every component against the live API
 ```
+
+`test_demo` covers live mode without spending: it runs the real retrieval path,
+checks the quota and the document stage, and asserts that the engine refuses to
+call anything without a key or a budget. The render check has an opt-in live
+section (`MMDOCRAG_RENDER_CHECK_LIVE=1`) that does make one paid call.
 
 `check:render` needs `python -m demo.server` running. There is no browser in
 this environment, so the console has not had a visual pass; what the render

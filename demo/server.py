@@ -3,6 +3,7 @@
     python -m demo.server                 # http://127.0.0.1:8000
     python -m demo.server --port 8001
     python -m demo.server --no-static     # API only, for `npm run dev` on :3000
+    python -m demo.server --live          # also allow live, paid answers
 
 Standard library only, because the research environment already carries enough
 version-pinned weight and a demo that cannot start is worse than no demo. It
@@ -10,8 +11,15 @@ binds to the loopback interface and allows browser origins on localhost only:
 the payloads carry a research corpus and per-question model output, and none of
 that should become reachable from the network by accident.
 
-Every route reads recorded artifacts through `demo.store`. There is no route
-that generates text, calls a model, or writes anything.
+Every route reads recorded artifacts through `demo.store`, with exactly one
+exception: `POST /api/live`, which exists only when the server was started with
+`--live`. That route runs retrieval for real and makes one paid API call per
+question, and it is the only place in this package that produces something no
+run recorded. Its answers are labelled that way in the payload and in the UI,
+they are never scored as an experiment, and every attempt is written to
+`artifacts/api/demo-live/requests.jsonl` before the answer is returned.
+
+Without `--live` the server is what it was: a reader.
 """
 
 import argparse
@@ -41,8 +49,10 @@ MAX_CONVERSATIONS = 200
 MAX_TURNS = 50
 
 STORE = None
+LIVE = None                 # a LiveEngine only when --live was passed
 CONVERSATIONS = {}
 LOCK = threading.Lock()
+LIVE_LOCK = threading.Lock()
 
 
 # -- payload shaping ---------------------------------------------------------
@@ -196,7 +206,20 @@ class Handler(BaseHTTPRequestHandler):
                 questions=len(STORE.questions),
                 replayable=len(STORE.replayable),
                 metricsRun=STORE.metrics_meta.get("run_id"),
+                live=LIVE.status() if LIVE else dict(
+                    enabled=False,
+                    note="Live mode is off. Start the server with --live to run "
+                         "retrieval and call the API for a typed question; every "
+                         "live answer is a paid request."),
                 errors=STORE.errors))
+
+        if path == "/api/documents":
+            term = query.get("search", [""])[0].strip().lower()
+            items = [dict(docName=doc, questions=n)
+                     for doc, n in sorted(STORE.documents.items())
+                     if not term or term in doc.lower()]
+            limit = _clamp(query.get("limit", ["30"])[0], 1, 240, 30)
+            return self.reply(200, dict(items=items[:limit], total=len(items)))
 
         if path == "/api/provenance":
             return self.reply(200, STORE.provenance())
@@ -279,6 +302,8 @@ class Handler(BaseHTTPRequestHandler):
         self.do_GET()
 
     def do_POST(self):
+        if self.path == "/api/live":
+            return self.do_live()
         if self.path != "/api/chat":
             return self.reply(404, {"detail": "Route not found"})
         try:
@@ -337,6 +362,49 @@ class Handler(BaseHTTPRequestHandler):
                 turns=[*previous, turn])
         return self.reply(200, turn)
 
+    # -- live
+
+    def do_live(self):
+        """One real retrieval and one real API call. Serialised on purpose.
+
+        Two people clicking at once would be two paid requests and two encoder
+        loads competing for the same weights, so the lock makes the budget in
+        LiveEngine mean what it says.
+        """
+        if LIVE is None:
+            return self.reply(503, {
+                "detail": "Live mode is off on this server. Restart it with "
+                          "--live to run retrieval and call the API; every live "
+                          "answer is a paid request."})
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            return self.reply(400, {"detail": "Invalid Content-Length"})
+        if not 0 < length <= MAX_BODY:
+            return self.reply(413, {"detail": f"Request must be 1-{MAX_BODY} bytes"})
+        try:
+            payload = json.loads(self.rfile.read(length))
+        except (ValueError, UnicodeError):
+            return self.reply(400, {"detail": "Invalid JSON body"})
+        question = (payload or {}).get("question") if isinstance(payload, dict) else None
+        if not isinstance(question, str) or not question.strip() or len(question) > 2000:
+            return self.reply(400, {
+                "detail": "question must be a non-empty string of at most 2000 characters"})
+        doc_name = payload.get("docName")
+        if doc_name is not None and not isinstance(doc_name, str):
+            return self.reply(400, {"detail": "docName must be a string"})
+
+        from demo.live import LiveUnavailable
+        with LIVE_LOCK:
+            try:
+                result = LIVE.answer(question.strip(), doc_name or None)
+            except LiveUnavailable as exc:
+                return self.reply(409, {"detail": str(exc)})
+            except Exception as exc:                          # noqa: BLE001
+                return self.reply(500, {"detail": f"{exc.__class__.__name__}: {exc}"})
+        result["turnId"] = "l_" + uuid.uuid4().hex[:12]
+        return self.reply(200, result)
+
     # -- static
 
     def serve_static(self, path):
@@ -358,6 +426,20 @@ class Handler(BaseHTTPRequestHandler):
         return self.send_file(full, cache=cache)
 
 
+class QuietServer(ThreadingHTTPServer):
+    """Refuse to start on a port that is already serving.
+
+    ThreadingHTTPServer sets allow_reuse_address, which on Windows lets a second
+    process bind a port another process is already listening on. Both then
+    "run", connections go to whichever the OS picks, and a restart appears to
+    have changed nothing -- which cost half an hour here: an old server kept
+    answering while the new one printed its banner beside it. Failing to bind is
+    the more useful outcome.
+    """
+
+    allow_reuse_address = False
+
+
 def _clamp(raw, low, high, default):
     try:
         return max(low, min(high, int(raw)))
@@ -366,10 +448,24 @@ def _clamp(raw, low, high, default):
 
 
 def main():
-    global STORE
+    global STORE, LIVE
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--host", default="127.0.0.1")
+    ap.add_argument("--live", action="store_true",
+                    help="allow live answers: real retrieval plus a real, paid "
+                         "API call per question. Off by default.")
+    ap.add_argument("--live-budget", type=int, default=None,
+                    help="how many live calls this process may make (default 25)")
+    ap.add_argument("--live-model", default=None,
+                    help="generation model for live mode (default gemini-3.6-flash)")
+    ap.add_argument("--live-encoder", default=None,
+                    help="query encoder for live mode (default models/bge-large-en-v1.5)")
+    ap.add_argument("--live-mode", default=None,
+                    choices=("pure-text", "multimodal"),
+                    help="what the model is given for an image: its VLM-written "
+                         "description (pure-text, the recorded arms' mode) or "
+                         "the image itself (multimodal)")
     ap.add_argument("--metrics-run", default=None,
                     help=f"run id under artifacts/runs (default {C.METRICS_RUN})")
     ap.add_argument("--image-root", default=None,
@@ -386,9 +482,23 @@ def main():
     if args.no_static:
         globals()["STATIC_ROOT"] = os.path.join(C.REPO_ROOT, "webui", "does-not-exist")
 
+    warmup_seconds = None
+    if args.live:
+        from demo.live import DEFAULT_BUDGET, DENSE_MODEL, MODE, MODEL, LiveEngine
+        LIVE = LiveEngine(
+            STORE,
+            dense_model=args.live_encoder or DENSE_MODEL,
+            model=args.live_model or MODEL,
+            mode=args.live_mode or MODE,
+            budget=args.live_budget if args.live_budget is not None else DEFAULT_BUDGET)
+        print("[live] warming up the corpus index, vectors and encoder", flush=True)
+        warmup_seconds = LIVE.warmup()
+
     provenance = STORE.provenance()
     print("=" * 78)
-    print("MMDocRAG demo console -- replay of recorded runs, no model calls")
+    print("MMDocRAG demo console -- recorded runs replayed"
+          + ("; live answers ENABLED (each one is a paid API call)"
+             if LIVE else "; live mode off"))
     print("=" * 78)
     print(f"  questions        {len(STORE.questions)} in {len(STORE.documents)} documents")
     print(f"  replayable       {len(STORE.replayable)} (the recorded end-to-end run)")
@@ -399,13 +509,24 @@ def main():
           f"({'found' if provenance['imageRoot']['available'] else 'MISSING'})")
     print(f"  static UI        {STATIC_ROOT if not args.no_static else 'disabled'}")
     print(f"  loaded in        {time.time() - t0:.1f}s")
+    if LIVE:
+        live = LIVE.status()
+        print(f"  live mode        {live['model']} + {live['encoder']}, "
+              f"quota {live['quotaText']}/{live['quotaVisual']} at k={live['k']}, "
+              f"{live['mode']}"
+              + (" (the images themselves are sent)" if live.get("sendsImages") else ""))
+        print(f"                   budget {live['budget']} calls, API key "
+              f"{'present' if live['apiKeyPresent'] else 'MISSING'}; "
+              f"every attempt logged to artifacts/api/demo-live/")
+        print(f"                   warmed up in {warmup_seconds}s; "
+              f"a query encodes in milliseconds after this")
     for error in STORE.errors:
         print(f"  [missing] {error}")
     # serve_forever blocks from here on, so a redirected log would otherwise
     # sit empty in its buffer until the process is killed.
     print(f"\n  http://{args.host}:{args.port}\n", flush=True)
 
-    server = ThreadingHTTPServer((args.host, args.port), Handler)
+    server = QuietServer((args.host, args.port), Handler)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

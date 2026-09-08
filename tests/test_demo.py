@@ -30,6 +30,10 @@ What is checked:
 
     the image route cannot be walked out of the dataset directory
 
+    live mode is off unless asked for, refuses to spend without a key or a
+    budget, and its retrieval produces the same shape as the recorded arms --
+    checked without making a single API call
+
 Run:
     python -m tests.test_demo
 """
@@ -298,6 +302,57 @@ def test_image_route_cannot_escape_the_dataset():
               "image root absent; the route reports it rather than guessing")
 
 
+def test_live_mode_is_off_and_costs_nothing_until_asked():
+    """Everything here runs the real retrieval path and calls no API."""
+    print("\nlive mode")
+    from demo.live import LiveEngine, LiveUnavailable
+    s = store()
+
+    check("the server has no live engine unless --live was passed",
+          SRV.LIVE is None)
+
+    engine = LiveEngine(s, budget=0, verbose=False)
+    try:
+        engine.require_ready()
+        refused = False
+    except LiveUnavailable as exc:
+        refused = "budget" in str(exc) or "GEMINI_API_KEY" in str(exc)
+    check("a zero budget refuses before any call is made", refused)
+    check("the engine reports what it would use, not what it did",
+          engine.status()["callsMade"] == 0 and engine.status()["k"] == 10)
+
+    # Retrieval only: no key is read and no request is made on this path.
+    uid = s.replayable[0]
+    question = s.questions[uid]["question"]
+    doc = s.questions[uid]["docName"]
+    ranked, timings, pools = engine.retrieve(question, doc)
+    check("live retrieval fills the selected quota",
+          len(ranked["text"]) == 4 and len(ranked["visual"]) == 6,
+          f"{len(ranked['text'])}/{len(ranked['visual'])}")
+    check("live retrieval reports both pool sizes",
+          pools["text"] > 0 and pools["visual"] > 0, str(pools))
+    check("every branch was timed", len(timings) >= 4, str(sorted(timings)))
+    ids = [q["evidenceId"] for branch in ranked.values() for q in branch]
+    check("no quote is retrieved twice", len(ids) == len(set(ids)))
+    resolved = s.evidence(ids)
+    check("every live quote resolves to an evidence row", len(resolved) == len(ids))
+    check("live quotes come from the chosen document",
+          all(resolved[e]["docName"] == doc for e in ids))
+
+    # The document stage is the one thing live mode adds to the pipeline, and a
+    # wrong document produces a confidently wrong answer, so its rate is pinned
+    # loosely -- enough to catch a regression, not so tight that it fails on
+    # bootstrap noise.
+    result = engine.check_document_selection(n=60, seed=7)
+    check("the document stage finds the annotated document most of the time",
+          result["top1"] >= 0.6, f"top1 {result['top1']:.1%} on {result['n']} questions")
+    check("its top-5 is better than its top-1", result["top5"] >= result["top1"])
+
+    scored = engine._score(None, {"text1"}, [], set())
+    check("a question outside the benchmark is never scored",
+          scored["scored"] is False and "no gold" in scored["reason"])
+
+
 def main():
     print("=" * 78)
     print("DEMO CONSOLE")
@@ -311,6 +366,7 @@ def main():
     test_turn_payload_has_what_the_ui_reads()
     test_missing_artifacts_degrade_visibly()
     test_image_route_cannot_escape_the_dataset()
+    test_live_mode_is_off_and_costs_nothing_until_asked()
     print()
     print("=" * 78)
     print(f"{len(PASS)} passed, {len(FAIL)} failed")

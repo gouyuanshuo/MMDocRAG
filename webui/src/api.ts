@@ -1,5 +1,6 @@
 import type {
   Conversation,
+  LiveAnswer,
   Group,
   Health,
   Provenance,
@@ -47,6 +48,18 @@ export const api = {
   analysis: (queryId: string) =>
     request<Turn>(`/api/queries/${encodeURIComponent(queryId)}/analysis`),
   replay: (uid: string) => request<Replay>(`/api/replay/${encodeURIComponent(uid)}`),
+  documents: (search: string, limit = 30) =>
+    request<{ items: { docName: string; questions: number }[]; total: number }>(
+      `/api/documents?search=${encodeURIComponent(search)}&limit=${limit}`,
+    ),
+  // A live answer runs retrieval and calls the API, so it is slower than every
+  // other route here and gets its own timeout.
+  live: (question: string, docName?: string) =>
+    request<LiveAnswer>('/api/live', {
+      method: 'POST',
+      body: JSON.stringify({ question, docName }),
+      signal: AbortSignal.timeout(180000),
+    }),
   retrievers: (uid: string, k = 10) =>
     request<RetrieverComparison>(`/api/retrievers/${encodeURIComponent(uid)}?k=${k}`),
   experiments: () =>
