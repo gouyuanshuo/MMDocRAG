@@ -20,6 +20,7 @@ artifacts/model_cache/
 artifacts/derived/embeddings/
 artifacts/derived/indexes/
 artifacts/derived/corpora/
+artifacts/derived/rebuild-backups/
 artifacts/test-runs/
 artifacts/runs/*/summary.csv
 artifacts/runs/*/source.patch
@@ -79,3 +80,10 @@ router/*.npz
 # every number is the run's metrics.json under artifacts/runs/.
 tmp/
 artifacts/logs/
+artifacts/e39/
+
+# Demo console front end. `webui/src` and `webui/tools` are the source; these
+# three are what `npm install` and `npm run build` produce from it.
+webui/node_modules/
+webui/dist/
+webui/.render-check/

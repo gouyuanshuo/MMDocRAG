@@ -1,0 +1,32 @@
+{
+  "name": "mmdocrag-webui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Research console for the MMDocRAG phase-3 fork. UI adapted from kosuzu123/Multimodal-rag-UI; wired to demo/server.py, which replays this project's recorded runs.",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "check:render": "vite build --ssr tools/render-check.tsx --outDir .render-check --logLevel warn && node .render-check/render-check.js"
+  },
+  "dependencies": {
+    "lucide-react": "^1.42.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.9.3",
+    "vite": "^8.2.2"
+  }
+}

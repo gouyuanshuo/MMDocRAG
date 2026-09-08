@@ -31,6 +31,8 @@ docs/**         -text
 manifests/**    -text
 artifacts/**    -text
 experiments.py  -text
+demo/**         -text
+webui/**        -text
 manifest.py     -text
 cost_estimate.py -text
 eval_e29_paired.py -text
