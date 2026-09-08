@@ -16,6 +16,7 @@ anything** — this file is the short list of rules; that one is the map.
 | What is the state of every experiment? | `python experiments.py list` |
 | How do I run anything from a fresh clone? | `REPRODUCE.md` |
 | Why is this artifact in / out of Git? | `docs/artifacts-git-policy.md` |
+| How do I show this project to someone? | `demo/README.md` — `python -m demo.server` |
 
 ## Claims discipline — the rules that produce wrong papers when broken
 
@@ -37,16 +38,20 @@ Every one of these was broken here at least once and cost real work.
 4. **Select first, slice second.** Slicing must never re-run selection; see
    `retrieval/slice_by_type.py`, which consumes `nested_cv`'s out-of-fold
    predictions rather than reselecting inside each slice.
-5. **A split you have observed repeatedly is exploratory.** Only E27's
-   out-of-fold, document-grouped result is confirmatory. Everything else is
-   labelled exploratory, and must stay labelled that way.
+5. **A split you have observed repeatedly is exploratory.** E27/E40 provide
+   document-grouped out-of-fold internal validation, but their method space was
+   developed on these same data. They are not an untouched confirmation set.
+   E41 is a post-hoc multiplicity audit; do not call it preregistered.
 
 ## Naming discipline — two errors that read as fraud
 
 - The comparator is a **local paper-style baseline**, never "the paper's
   configuration". The published system uses a larger text retriever plus a
-  *visual* retriever (ColPali/ColQwen); the paper names no version, so it
-  cannot be reproduced from the publication. E34 measured the consequence:
+  *visual* retriever (ColPali/ColQwen). Appendix C.3 Table 14 specifies
+  BGE-large-en-v1.5 and ColQwen2-v0.1; this fork uses ColQwen2-v1.0 and a
+  different corpus/pool pipeline. The previous "paper names no version" rule
+  was factually wrong; see `docs/2026-09-05-paper-appendix-correction.md`.
+  E34 measured the pool consequence:
   restoring the full image pool moves recall@10 from 0.820 to 0.782, but the
   paper's 0.708 stays outside the interval at every k. Improvement over this
   baseline is improvement over *this baseline*.
@@ -58,11 +63,23 @@ Every one of these was broken here at least once and cost real work.
 
 ```bash
 python experiments.py list                                   # the registry
+python reproduce.py --dry-run                                # current cached plan
+python reproduce.py                                          # tests + 37 cached experiments
 python experiments.py run-suite replay --offline             # 7 experiments, metrics only
 python experiments.py run-suite retrieval --offline          # 23
 python experiments.py run-suite full-local --offline --include-expensive   # 29, hours
 python experiments.py verify E27 --run <replay_run_id>
 ```
+
+```bash
+python -m demo.server                                        # the console, http://127.0.0.1:8000
+```
+
+The console only ever *reads* recorded artifacts: it calls no model, re-runs no
+retrieval and recomputes no metric. If you add a number to it, that number must
+already exist in a run's `metrics.jsonl` — `tests/test_demo.py` asserts every
+cell traces back to one, and that assertion is the only thing keeping a demo
+from becoming a second, unaudited source of numbers.
 
 `verify` defaults to the newest run, which is usually one experiment. Against
 the wrong run it prints FAILs that mean *"this run never measured that"*, not
@@ -107,14 +124,18 @@ result (E36) went unrunnable for two phases.
 
 ## Definition of done
 
-A change is not finished until all four suites pass:
+A change is not finished until the suites pass:
 
 ```bash
-python -m tests.test_runner --scratch-root artifacts/test-runs   # 64
-python -m tests.test_source_bundle --scratch-root artifacts/test-runs  # 19
-python -m tests.test_statistics                                  # 25
-python -m tests.test_phase3                                      # 33
+python -m tests.test_runner --scratch-root artifacts/test-runs   # 67
+python -m tests.test_source_bundle --scratch-root artifacts/test-runs  # 25
+python -m tests.test_statistics                                  # 30
+python -m tests.test_phase3                                      # 35
+python -m tests.test_demo                                        # 48, if demo/ or webui/ changed
 ```
+
+`test_demo` is also what the `cached` suite runs for E42, so `reproduce.py`
+covers it; run it directly when you touch the console.
 
 …and the advance is written into `docs/lab-notebook.html` and, if it changes
 the map, `docs/HANDOFF.md`. **A result reported only in a chat transcript did

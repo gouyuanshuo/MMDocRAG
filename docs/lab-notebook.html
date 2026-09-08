@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MMDocRAG 实验记录簿</title>
 <style>
   :root {
@@ -154,13 +157,26 @@
     .gutter { border-right: none; border-bottom: 1px solid var(--rule); padding: 0 0 10px; display: flex; align-items: center; gap: 10px; }
     .eid { margin-bottom: 0; }
   }
+
+  .status.pos, .status.fix { color: var(--pass); }
+  .status.pending { color: var(--live); }
+  .current-label { font-family:var(--mono); font-size:11px !important; color:var(--pass); letter-spacing:.04em; }
+  details.historical, details.registry-index { border:1px solid var(--rule); border-radius:5px; margin:16px 0 4px; padding:10px 13px; }
+  details.historical { background:var(--surface-2); }
+  summary { cursor:pointer; color:var(--ink-2); font-size:13px; line-height:1.6; }
+  summary:focus-visible { outline:2px solid var(--live); outline-offset:3px; }
+  .history-body { border-top:1px dashed var(--rule); padding-top:15px; margin-top:12px; }
+  .entry:target { outline:2px solid var(--live); outline-offset:3px; }
+  #current-conclusions { scroll-margin-top:16px; }
+  .entry, section { scroll-margin-top:18px; }
+  @media print { details.historical:not([open]) { display:none; } }
 </style>
 
 <div class="wrap">
 
 <header>
   <p class="kicker">32933 Research Project · Spring 2026 · 实验记录簿</p>
-  <h1>分层查询条件路由：从复现到 Phase 1B</h1>
+  <h1>MMDocRAG：检索改进、路由与研究复核</h1>
   <p class="standfirst">
     按时间顺序记录每一次尝试、每一个结果、每一处更正。
     包含七个负结果和七处对我自己先前判断的推翻——这些和正面结果一样是产出。
@@ -168,28 +184,87 @@
   <p class="meta">
     <span>代码库 D:\Playground\MMDocRAG</span>
     <span>数据 D:\Dataset\MMDocRAG</span>
-    <span>最后更新 2026-09-01 · E40 头条换 bge-large 后四格全部存活 · E37 提升按题型稳健但集中在纯视觉题 · E38 RQ1b 的 R² 目标问错了 · 新增统计机器测试 25 项</span>
+    <span>最后更新 2026-09-08 · 依据2026-09-05实验记录全文对齐 · 42项状态索引</span>
   </p>
 </header>
+
+<section id="current-conclusions">
+<h2>当前结论与证据边界 · 实验记录截至2026-09-05</h2>
+<p><b>2026-09-06 新增阅读入口：</b><a href="project-guide.html">项目实现与实验路线详解</a>（<a href="PROJECT_GUIDE.md">Markdown</a>）。按原论文、本地代码、研究转向、E1–E41、指标参数和下一步 roadmap 解释项目，含 4 张架构与路线图。E40 表由已保存 metrics 生成，本次没有新增 API 或实验结果。</p>
+<p>说明文档收尾核验：四组测试 67/25/30/35，合计 157 通过、0 失败；41 项注册状态、132 个指南本地链接及锚点、Markdown 与 HTML 正文及表格一致性均通过，40 段实验历史正文仍完整保留。<a href="../artifacts/verify/project_guide_20260906.json">查看核验记录</a>。浏览器本地 URL 策略阻止预览，未进行浏览器视觉验收。</p>
+<div class="callout"><p><b>主要离线研究已完成；静态检索与引用选择有正向证据。逐题路由的生成质量、实际端到端效率，以及新增系统的答案正确性和忠实度仍未验证。</b></p>
+<p>此前只更新了页首摘要，历史条目仍可能被单独误读。本次已为每个实验补上当前结论，将原始正文及旧综合判断保留在明确标注的历史折叠区。新增 E39、E41 独立条目，并逐项对应注册表的41个编号。</p>
+<p><a href="#exp-E40">E40 检索主表</a> · <a href="#exp-E29">E29 引用 F1</a> · <a href="#exp-E36">E36 路由边界</a> · <a href="#exp-E39">E39 待运行</a> · <a href="#exp-E41">E41 多重比较</a> · <a href="research-status.html">通俗总结</a></p></div>
+<h3>严谨性判断：能支持什么，还缺什么</h3>
+<div class="scroll"><table><thead><tr><th>方面</th><th>已落实的约束</th><th>仍需限制的主张</th></tr></thead><tbody>
+<tr><td>统计单位与分母</td><td>主检索/配对分析按文档 bootstrap；未映射 gold 计 miss</td><td>不能把早期按题区间当当前证据；报告题数、文档数、映射与丢弃数</td></tr>
+<tr><td>选择与泛化</td><td>文档分组 OOF，切片只消费已选预测</td><td>方法空间已在这批数据上开发，仍属探索性；两个池不是独立复制</td></tr>
+<tr><td>多重比较</td><td>E30/E36/E37 按声明家族校正；E41 汇总8项复核</td><td>E41 是事后复核，不能追溯注册；显著性不等于外部可推广性</td></tr>
+<tr><td>生成评价</td><td>E29 同题、同模型、同 prompt 配对比较引用 F1</td><td>单一生成器、pure-text 模式；引用选对不等于答案正确或有事实依据</td></tr>
+<tr><td>路由与效率</td><td>同预算随机对照；CPU/GPU 遍历分开；升级计增量成本</td><td>CI 跨零不证明同质量；调用计数不是总时延或 API 费用；E39 未生成</td></tr>
+<tr><td>机制与负结果</td><td>保留纠错、并列最优对照、特征选择两种口径</td><td>E38 仅覆盖一种误差假设；已试方法的负结果不能排除所有未来方案</td></tr>
+<tr><td>工程复现</td><td>36项缓存实验成功复算；源码可还原；最近四组测试157项通过</td><td>22项旧脚本仍只保留完整日志；当前缓存复算不是全新环境冷启动；测试通过不证明研究假设成立</td></tr>
+</tbody></table></div>
+<p>这些结果可支撑范围明确的课程报告，但不能标记“全部研究假设均已严格验证”。本页是对现有证据与已知问题的对齐，不是对全部算法和原始数据重新做独立审计。</p>
+<p><b>2026-09-06 对齐收尾：</b>四组必需测试重新通过67/25/30/35项，共157项、0失败；41项状态与注册表一致，40段原始实验正文完整保留。<a href="../artifacts/verify/notebook_alignment_20260905.json">本次对齐核验记录</a>包含日志哈希与网页结构检查。浏览器安全策略拦截了本地HTML预览，实际视觉显示未验证；结构、链接和当前表述检查已完成。无新增生成API调用。</p>
+<p>主要检索口径：2,000题 / 220文档 / 5,813条gold。自建池62条未映射仍计miss，canonical全部映射；丢弃数均为0。E29/E39子集为600题 / 220文档 / 1,552条gold。完整图片池评价只包含1,995道有视觉gold的题，其余5题不属于该视觉指标分母。</p>
+<p>证据入口：<a href="../artifacts/runs/20260905T073315Z_cached/summary.html">36项缓存运行</a> · <a href="../artifacts/runs/20260905T130816Z_cached/summary.html">E29最近复算</a> · <a href="../artifacts/verify/reconstruction_20260905T130816Z_cached.json">157项检查与源码核验</a>。本次网页对齐不新增API调用。</p>
+<details class="registry-index"><summary>查看全部 42 条登记状态：14 正向 / 7 负结果 / 7 通过 / 6 修复 / 7 已修正 / 1 待运行</summary><div class="scroll"><table><thead><tr><th>编号</th><th>登记状态</th><th>生命周期</th><th>当前主题</th></tr></thead><tbody><tr data-index-experiment="E1" data-status="pass"><td><a href="#exp-E1">E1</a></td><td>通过</td><td>有效</td><td>保存输出的官方评测复现锚点</td></tr><tr data-index-experiment="E2" data-status="fix"><td><a href="#exp-E2">E2</a></td><td>修复</td><td>有效</td><td>评测脚本的静默截断缺陷</td></tr><tr data-index-experiment="E3" data-status="fix"><td><a href="#exp-E3">E3</a></td><td>修复</td><td>有效</td><td>工程可复现性</td></tr><tr data-index-experiment="E4" data-status="correct"><td><a href="#exp-E4">E4</a></td><td>已修正</td><td>有效</td><td>局部 quote 标签不是身份，q_id 也不是主键</td></tr><tr data-index-experiment="E5" data-status="pass"><td><a href="#exp-E5">E5</a></td><td>通过</td><td>有效</td><td>Gate 1 — gold 全部可映射</td></tr><tr data-index-experiment="E6" data-status="pass"><td><a href="#exp-E6">E6</a></td><td>通过</td><td>有效</td><td>Gate 2 — 自建 chunk 能否文本匹配回官方 gold</td></tr><tr data-index-experiment="E7" data-status="pass"><td><a href="#exp-E7">E7</a></td><td>通过</td><td>有效</td><td>全语料 OCR</td></tr><tr data-index-experiment="E8" data-status="correct"><td><a href="#exp-E8">E8</a></td><td>已修正</td><td>有效</td><td>oracle 增益需要排除测量噪声与选择效应</td></tr><tr data-index-experiment="E9" data-status="neg"><td><a href="#exp-E9">E9</a></td><td>负结果</td><td>有效</td><td>已测生成输入模态路由的负结果</td></tr><tr data-index-experiment="E10" data-status="pos"><td><a href="#exp-E10">E10</a></td><td>正向</td><td>有效</td><td>已测模型的输入模态成本与引用质量比较</td></tr><tr data-index-experiment="E11" data-status="fix"><td><a href="#exp-E11">E11</a></td><td>修复</td><td>有效</td><td>泄漏探针的一个自查 bug</td></tr><tr data-index-experiment="E12" data-status="correct"><td><a href="#exp-E12">E12</a></td><td>已修正</td><td>有效</td><td>我自己的 OCR 消解了我自己的立论</td></tr><tr data-index-experiment="E13" data-status="neg"><td><a href="#exp-E13">E13</a></td><td>负结果</td><td>有效</td><td>页粒度上的文本与视觉证据检索比较</td></tr><tr data-index-experiment="E14" data-status="pos"><td><a href="#exp-E14">E14</a></td><td>正向</td><td>有效</td><td>模态信号是粒度依赖的</td></tr><tr data-index-experiment="E15" data-status="neg"><td><a href="#exp-E15">E15</a></td><td>负结果</td><td>有效</td><td>候选池组成影响表观模态优势</td></tr><tr data-index-experiment="E16" data-status="pos"><td><a href="#exp-E16">E16</a></td><td>正向</td><td>有效</td><td>检索器交叉：符号翻转，四个 k 全部一致</td></tr><tr data-index-experiment="E17" data-status="correct"><td><a href="#exp-E17">E17</a></td><td>已修正</td><td>有效</td><td>纠正标签后的检索器路由评估</td></tr><tr data-index-experiment="E18" data-status="pos"><td><a href="#exp-E18">E18</a></td><td>正向</td><td>有效</td><td>图片描述与裁剪 OCR 的检索表示比较</td></tr><tr data-index-experiment="E19" data-status="correct"><td><a href="#exp-E19">E19</a></td><td>已修正</td><td>有效</td><td>并列最优与固定配额：更正路由空间估计</td></tr><tr data-index-experiment="E20" data-status="pass"><td><a href="#exp-E20">E20</a></td><td>通过</td><td>有效</td><td>改变文本候选池后的敏感性复核</td></tr><tr data-index-experiment="E21" data-status="pos"><td><a href="#exp-E21">E21</a></td><td>正向</td><td>有效</td><td>使用真实模态比例的配额分配分析</td></tr><tr data-index-experiment="E22" data-status="pass"><td><a href="#exp-E22">E22</a></td><td>通过</td><td>人工核对</td><td>核实外部报告引用的四篇论文</td></tr><tr data-index-experiment="E23" data-status="correct"><td><a href="#exp-E23">E23</a></td><td>已修正</td><td>有效</td><td>低维与句向量特征的预测及分配效果</td></tr><tr data-index-experiment="E24" data-status="neg"><td><a href="#exp-E24">E24</a></td><td>负结果</td><td>有效</td><td>候选池设定下的 ColQwen 与图片描述检索比较</td></tr><tr data-index-experiment="E25" data-status="pos"><td><a href="#exp-E25">E25</a></td><td>正向</td><td>有效</td><td>粒度 × 预算：两个轴给出完全相反的排序</td></tr><tr data-index-experiment="E26" data-status="neg"><td><a href="#exp-E26">E26</a></td><td>负结果</td><td>有效</td><td>已测 small-to-big 方案与预算量化效应</td></tr><tr data-index-experiment="E27" data-status="pos"><td><a href="#exp-E27">E27</a></td><td>正向</td><td>有效</td><td>静态检索配置相对本地论文式基线的内部折外结果</td></tr><tr data-index-experiment="E28" data-status="correct"><td><a href="#exp-E28">E28</a></td><td>已修正</td><td>有效</td><td>复现性与结论边界审计</td></tr><tr data-index-experiment="E29" data-status="pos"><td><a href="#exp-E29">E29</a></td><td>正向</td><td>有效</td><td>生成后的引用片段选择 F1 提升，答案正确性尚未测量</td></tr><tr data-index-experiment="E30" data-status="pos"><td><a href="#exp-E30">E30</a></td><td>正向</td><td>有效</td><td>归因消融：+0.054 究竟来自哪个组件</td></tr><tr data-index-experiment="E31" data-status="fix"><td><a href="#exp-E31">E31</a></td><td>修复</td><td>有效</td><td>可复现运行系统：一条命令重算全部当前有效实验</td></tr><tr data-index-experiment="E32" data-status="fix"><td><a href="#exp-E32">E32</a></td><td>修复</td><td>有效</td><td>replay 完整性与可追溯性修复</td></tr><tr data-index-experiment="E33" data-status="fix"><td><a href="#exp-E33">E33</a></td><td>修复</td><td>有效</td><td>可追溯性与科学表述收尾：source bundle、E24 视觉分支命名、覆盖率数据模型</td></tr><tr data-index-experiment="E34" data-status="pos"><td><a href="#exp-E34">E34</a></td><td>正向</td><td>有效</td><td>本地基线版本差异与完整图片池复核</td></tr><tr data-index-experiment="E35" data-status="pos"><td><a href="#exp-E35">E35</a></td><td>正向</td><td>有效</td><td>预算约束下的 oracle 空间与对照分析</td></tr><tr data-index-experiment="E36" data-status="neg"><td><a href="#exp-E36">E36</a></td><td>负结果</td><td>有效</td><td>CPU 路由负结果与 GPU 升级的部分信号</td></tr><tr data-index-experiment="E37" data-status="pos"><td><a href="#exp-E37">E37</a></td><td>正向</td><td>有效</td><td>题型切片：视觉证据题增益更大，两个池共享样本</td></tr><tr data-index-experiment="E38" data-status="neg"><td><a href="#exp-E38">E38</a></td><td>负结果</td><td>有效</td><td>特定误差假设下的 R² 与配额收益模拟</td></tr><tr data-index-experiment="E39" data-status="pending"><td><a href="#exp-E39">E39</a></td><td>待运行</td><td>受阻</td><td>GPU 级联后的引用质量评价：已准备，未生成</td></tr><tr data-index-experiment="E40" data-status="pos"><td><a href="#exp-E40">E40</a></td><td>正向</td><td>有效</td><td>BGE-large 上的静态检索折外复核</td></tr><tr data-index-experiment="E41" data-status="pos"><td><a href="#exp-E41">E41</a></td><td>正向</td><td>有效</td><td>八项 OOF 比较的事后多重检验复核</td></tr><tr data-index-experiment="E42" data-status="pass"><td><a href="#exp-E42">E42</a></td><td>通过</td><td>有效</td><td>演示控制台：只读已记录运行的展示界面</td></tr></tbody></table></div></details>
+</section>
+<section id="new-experiment-records"><h2>新增独立条目：待运行与统计复核</h2><div class="entry current-entry" id="exp-E39" data-experiment="E39" data-registry-status="pending">
+<div class="gutter"><span class="eid">E39</span><span class="status pending">待运行</span></div>
+<div class="body"><p class="entry-title">GPU 级联后的引用质量评价：已准备，未生成</p><p class="current-label">当前结论 · 2026-09-05</p><p><b>prepared_not_generated：尚未生成、未评分。</b>输入含 600 题、220 文档、1,552 条 gold；冻结路由在该子集升级 118 题（19.67%），按决策计数减少 80.3% ColQwen 调用。平均 CPU 遍历 2.1967、GPU 遍历 0.1967，静态分别为 2 和 1；这不是实测端到端提速。生成 API 调用 0 次。</p><p>生成前仍需冻结模型、thinking、token 预算和非劣界。当前拟定最多损失 2 个引用 F1 点，判据是差值双侧 95% CI 下界严格大于 −2；界值和功效尚未确认。600题两臂基础方案需1,200条回答，旧E29回答不能直接复用。</p><p>即使引用F1通过非劣，也不能替代<a href='ANSWER_EVALUATION_PROTOCOL.md'>正确性/忠实度盲评</a>，或实际端到端时延测量。</p></div></div>
+<div class="entry current-entry" id="exp-E41" data-experiment="E41" data-registry-status="pos">
+<div class="gutter"><span class="eid">E41</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">八项 OOF 比较的事后多重检验复核</p><p class="current-label">当前结论 · 2026-09-05</p><p>汇总 E27/E40 的 8 项比较，8/8 通过 Holm，校正 p 均为 0.0008（10,000 次 bootstrap 的有限精度）。家族在历史结果已被观察后才汇总，是事后多重比较敏感性复核，<b>不是事先注册，也不能把 OOF 变成外部确认</b>。每格 2,000 题、220 文档、5,813 条 gold；自建池未映射 62 条仍计 miss，canonical 全映射，未丢弃 gold。</p></div></div>
+</section>
+
+<section id="demo-20260908">
+<h2>2026-09-08 · 演示控制台</h2>
+<div class="entry current-entry" id="exp-E42" data-experiment="E42" data-registry-status="pass">
+<div class="gutter"><span class="eid">E42</span><span class="status pass">通过</span></div>
+<div class="body"><p class="entry-title">把已记录的运行做成可以当场展示的界面</p><p class="current-label">当前结论 · 2026-09-08</p>
+<p>新增 <code>demo/</code>（<code>store</code>/<code>dashboard</code>/<code>server</code>，只读产物）与 <code>webui/</code>（同组同学的 React 界面 <a href="https://github.com/kosuzu123/Multimodal-rag-UI">kosuzu123/Multimodal-rag-UI</a>，改接本仓库后端）。四个视图：回放已记录的端到端问答、两臂并排的逐题分析、五组已记录指标的看板、以及逐条列出数据来源的 provenance 页。<b>控制台不调用模型、不重跑检索、不在服务时重算任何指标</b>；答案来自 <code>response/</code>，排名来自 E27 builder 写出的动作表缓存，看板每一格都来自某次运行的 <code>metrics.jsonl</code>。</p>
+<p><b>关键断言：</b>arm 文件只有局部 quote id（<code>text3</code>/<code>image7</code>），没有 evidence id，所以界面上的页码和 gold 标记必须靠重建恢复——用同一 builder、同一候选池、同一编码器、同一配额从动作表重建候选块。<code>tests/test_demo.py</code> 断言这次重建逐条精确重现了两臂共 1,200 条已记录行；这条断言不过，界面就没有资格标页码。48 项断言全部通过，另有前端 render-check 用真实 payload 渲染每个组件，70/70 通过。</p>
+<p><b>与原界面的差异及理由：</b>原界面的实验分组是 overview / modality / retriever / granularity / top-k 五个 fixture 标签，其中至少两个在本项目没有对应实验。已改为本项目真正跑过的五组比较（E29、E27/E40/E41、E24/E34、E37、E35/E36），<b>而不是为了填满标签页而造数字</b>。同理，原界面把 modality/retriever/granularity 显示成逐题“路由决策”并配三个置信度；本项目的检索配置是<b>静态</b>的（嵌套 CV 一次性选出，对所有题相同），因此界面把静态配置与 E36 的逐题 GPU 升级决策分开陈述，后者标注为成本结论。引用指标一律写作 quote-selection F1 并注明不是答案正确性、不是忠实度。</p>
+<p><b>边界：</b>本环境没有可用浏览器，<b>没有做视觉验收</b>；render-check 只能证明组件用真实 payload 渲染成功、表格不丢行、HTML 中的数值等于产物中的数值。控制台不产生任何新数字，它的可信度完全等于它读取的那次运行；缺产物时显示缺失并在 provenance 页列出，不回落到替代值。用法见 <code>demo/README.md</code>。</p></div></div>
+</section>
+
+<section id="audit-20260905">
+<h2>2026-09-05 · 研究复核与可复现入口</h2>
+<div class="entry"><div class="gutter"><span class="eid">审计</span><span class="status correct">口径修正</span></div><div class="body">
+<p class="entry-title">先读通俗总结，再看历史实验</p>
+<p>项目已经支持“检索配置改进能提高证据召回和引用 F1”，还没有证明“逐题路由在生成后保持质量”，也没有单独评价答案正确性与事实忠实度。<a href="research-status.html"><b>打开通俗版研究总结</b></a>，其中解释每个指标、已完成贡献、修正和剩余工作。</p>
+<p><b>保留数值、修正解释：</b>E29 的 +2.90 是引用片段选择 F1；E27/E40 是内部文档分组 OOF，不能把开发中反复看过的数据当新确认集；两个候选池共享题目。E38 的裁剪高斯误差模拟不是所有同 R² 预测器的通用上界，“排除所有未来特征”的结论撤回。下方历史条目中的这些解释以本条为准。</p>
+<p><b>论文附录纠错：</b>旧审计遗漏了Table 14；论文明确列出BGE-large-en-v1.5和ColQwen2-v0.1，本地视觉模型则为v1.0。“论文没给版本”的旧断言撤回。<a href="2026-09-05-paper-appendix-correction.md">查看原文核查与影响</a>。</p>
+<p><b>E39：</b>原命令漏写级联类型，会默认跑 CPU。已明确 GPU cheap=dense,bm25、expensive=rrf,colqwen、5/5 配额。600题/220文档输入已生成，118题升级，GPU调用减少80.3%，生成API调用仍为0。旧“CI包含0就算同质量”规则撤回；拟定2个F1点非劣界，须在生成前认可。当前状态是 prepared_not_generated。</p>
+<p><b>E34：</b>全图片池已覆盖220/220文档、1,995道含视觉gold的题；重新测得recall@10=0.782。旧注册表的5文档信息已过期，更新时保留旧哈希。无需重新跑GPU索引。</p>
+<p><b>实现：</b>新增 <code>python reproduce.py</code>，四组测试加36项缓存实验。补齐E29/E34/E35–E38等重放入口；缓存键绑定模型、折数、配额和输入/源码哈希；运行前存源码快照；失败非零退出，命令级检查点可续跑。OCR复核明确零字符定义：14,763页中1,486→49，不与旧阈值指标混写。</p>
+<p><b>复算已完成：</b><a href="../artifacts/runs/20260905T073315Z_cached/summary.html">完整缓存运行</a>成功执行36项实验、0失败，719条结构化指标；E41的8项比较全部通过Holm校正，仍属探索性复核。附录纠错后另在<a href="../artifacts/runs/20260905T080029Z_cached/summary.html">小范围运行</a>重跑E19/E20/E29/E34，4项成功、0失败、26条结构化指标。</p>
+<p><b>收尾回归修复：</b>前次收尾实际为runner 66通过/1失败、source bundle 18通过/3失败，早先“150项全绿”不能代表该次结果。未固定行尾的.gitignore在补丁中为LF、归档中为CRLF，导致整份补丁拒绝应用；ZIP仍完整。现改为先还原补丁目标的Git blob，再应用补丁；源文件行尾转换必须通过完整SHA-256校验。旧运行的31个补丁文件全部应用，67个已跟踪源文件全部还原，ZIP补齐其余5个。历史文件未改写，原有断言未放宽。</p>
+<p><b>最终测试：</b>runner 67、source bundle 25、statistics 30、phase3 35，共157项通过、0失败。新增测试覆盖CRLF、已固定的混合行尾及正文篡改。统计/Phase 3测试受Windows沙箱限制的首轮日志与获准重跑的通过日志均保留在<code>artifacts/logs/continue-20260905-*.log</code>。完整记录见<a href="RESEARCH_STATUS.md">总结末尾</a>。</p>
+<p><b>修复后入口验证：</b><a href="../artifacts/runs/20260905T130816Z_cached/summary.html">E29缓存重评分</a>仍为600题/220文档、引用F1差+2.8990，文档聚类95% CI [1.0147,4.7713]，p=0.0025；32个补丁文件全部应用，源码72/72还原，运行目录记录1,613,585 bytes。新增生成API调用0次，E39仍未生成。</p>
+</div></div></section>
+
 
 <h2>怎么读这份记录</h2>
 <p>
   每条实验有稳定编号 <code>E<i>n</i></code>，后续讨论可以直接引用。状态含义：
   <span class="status pass">通过</span> 达到预设门槛；
-  <span class="status neg">负结果</span> 假设被证伪，结论有效；
+  <span class="status neg">负结果</span> 已测方法未支持预期，不排除所有未来方案；
   <span class="status correct">已更正</span> 推翻了本项目先前的判断；
   <span class="status live">进行中</span>。
 </p>
 <p>
-  所有数字均来自仓库内可复现脚本，命令附在每条末尾。凡是估计值、含建模假设或未经核验的，都在原地标注。
+  默认显示各条当前结论；展开“历史原文”可查看旧数字、旧解释和当时命令。历史标题可能已被撤回，引用时以上方当前结论及指定运行的指标为准。
 </p>
 
 <!-- ============================ PHASE 0 ============================ -->
 <h2>Phase 0 · 可复现基础</h2>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E1</span><span class="status pass">通过</span></div>
-  <div class="body">
+<div class="entry current-entry" id="exp-E1" data-experiment="E1" data-registry-status="pass">
+<div class="gutter"><span class="eid">E1</span><span class="status pass">通过</span></div>
+<div class="body"><p class="entry-title">保存输出的官方评测复现锚点</p><p class="current-label">当前结论 · 2026-09-05</p><p>已保存输出可复现官方评测数字。它检查评分与已公布记录是否一致，不等同于重新调用所有原模型，也不证明新增系统的答案正确性。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">建立复现锚点</p>
     <p class="why">先证明官方指标代码与其公布数字自洽，否则后续一切改动都无从判断对错。</p>
     <p>
@@ -201,12 +276,12 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       <b>这个锚点此后每次改动 <code>eval_all.py</code> 都重跑，全程保持逐位命中。</b>
       <code>qwen2.5-7b</code> 纯文本 C20 也精确复现。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E2</span><span class="status pass">已修复</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E2" data-experiment="E2" data-registry-status="fix">
+<div class="gutter"><span class="eid">E2</span><span class="status fix">修复</span></div>
+<div class="body"><p class="entry-title">评测脚本的静默截断缺陷</p><p class="current-label">当前结论 · 2026-09-05</p><p>修复题数不匹配时静默截断的评测问题。配对输入必须核对数量与题目身份；程序通过只是工程条件。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">评测脚本的静默截断缺陷</p>
     <p class="why">复现能对上，不代表代码在别的输入下也对。</p>
     <p>
@@ -224,12 +299,12 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       所有 response 文件都是完整的，只有 judge 缺。
       <strong>论文的 LLM-Judge 列不是在同一批问题上算出来的</strong>，跨模型比较不严格可比。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E3</span><span class="status pass">已修复</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E3" data-experiment="E3" data-registry-status="fix">
+<div class="gutter"><span class="eid">E3</span><span class="status fix">修复</span></div>
+<div class="body"><p class="entry-title">工程可复现性</p><p class="current-label">当前结论 · 2026-09-05</p><p>补齐运行参数、输入身份和输出留存。当前入口为 <code>python reproduce.py</code>；完整复算仍依赖本地保存的数据和缓存。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">工程可复现性整改</p>
     <ul>
       <li>依赖版本冻结到 <code>requirements.txt</code></li>
@@ -239,15 +314,15 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       <li>每次实验落一份 manifest：git commit + dirty 文件、数据 sha256、包版本、CUDA 设备、配置、结果</li>
       <li>删除 <code>train_swift_qwen.py:2</code> 硬编码的 <code>CUDA_VISIBLE_DEVICES='3,4'</code>，改为 <code>--devices</code></li>
     </ul>
-  </div>
-</div>
+  </div></details></div></div>
+
 
 <!-- ============================ PHASE 0.5 ============================ -->
 <h2>Phase 0.5 · Canonical 数据层</h2>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E4</span><span class="status correct">关键发现</span></div>
-  <div class="body">
+<div class="entry current-entry" id="exp-E4" data-experiment="E4" data-registry-status="correct">
+<div class="gutter"><span class="eid">E4</span><span class="status correct">已修正</span></div>
+<div class="body"><p class="entry-title">局部 quote 标签不是身份，q_id 也不是主键</p><p class="current-label">当前结论 · 2026-09-05</p><p>局部 quote 标签不能作为跨配置身份，题目主键使用 (split, q_id)。原始解释及其更正保留在下方。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">局部 quote 标签不是身份，q_id 也不是主键</p>
     <div class="callout correction">
       <div class="callout-label">表述已收窄 · 见 E28</div>
@@ -292,12 +367,12 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       <b>canonical 身份定为</b> <code>sha1(doc_name|page_id|layout_id)[:16]</code>。
       这是后续换 retriever、换 chunk、换 top-k 之后仍能复用原始 gold 标注的唯一基础。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E5</span><span class="status pass">Gate 1 通过</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E5" data-experiment="E5" data-registry-status="pass">
+<div class="gutter"><span class="eid">E5</span><span class="status pass">通过</span></div>
+<div class="body"><p class="entry-title">Gate 1 — gold 全部可映射</p><p class="current-label">当前结论 · 2026-09-05</p><p>数据层 4,055 题、223 文档中的 21,978 条 gold 已完成 canonical 映射。这个全库范围与主要检索实验的 2,000 题、220 文档不同。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">gold 全量映射审计</p>
     <p>
       5 张表：<code>questions</code> 4,055 · <code>question_settings</code> 8,110 ·
@@ -311,12 +386,12 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       2 处重复标签、2 处歧义标签（<code>dev:486/text11</code> 指向两个不同版面块）已显式报告而非静默处理。
     </p>
     <pre><code>python -m canonical.build</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E6</span><span class="status pass">Gate 2 通过</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E6" data-experiment="E6" data-registry-status="pass">
+<div class="gutter"><span class="eid">E6</span><span class="status pass">通过</span></div>
+<div class="body"><p class="entry-title">Gate 2 — 自建 chunk 能否文本匹配回官方 gold</p><p class="current-label">当前结论 · 2026-09-05</p><p>自建 chunk 的匹配覆盖并非 100%。未映射 gold 在无条件召回率中继续计 miss，不能只留下可匹配部分计算后仍称总体召回。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">自建 chunk 能否靠文本匹配对齐官方 gold</p>
     <p class="why">
       <code>layout_id</code> 是作者 MinerU 那次运行的产物，无法从 PDF 重建。
@@ -351,12 +426,12 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       MinerU 侧 OCR 损坏（<code>C0VID</code> 把 O 写成 0）。第三类无解，占比可接受并已声明。
     </p>
     <pre><code>python -m canonical.gate2</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E7</span><span class="status pass">完成</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E7" data-experiment="E7" data-registry-status="pass">
+<div class="gutter"><span class="eid">E7</span><span class="status pass">通过</span></div>
+<div class="body"><p class="entry-title">全语料 OCR</p><p class="current-label">当前结论 · 2026-09-05</p><p>已完成 OCR。2026-09-05 复核按“原始提取文本长度为零”统计：14,763 页中零字符页由 1,486 降到 49。旧 1,748→357 使用不同阈值，不能直接混写。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">全语料 OCR</p>
     <p>
       RapidOCR（ONNX，CPU，纯 pip，无外部二进制）。阈值 <code>--min-chars 100</code>：
@@ -373,15 +448,15 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       </table>
     </div>
     <pre><code>python -m canonical.ocr --targets all --min-chars 100 --dpi 200</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
+
 
 <!-- ============================ PHASE 1A.5 ============================ -->
 <h2>Phase 1A.5 · 生成输入层的模态路由</h2>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E8</span><span class="status correct">立项依据被推翻</span></div>
-  <div class="body">
+<div class="entry current-entry" id="exp-E8" data-experiment="E8" data-registry-status="correct">
+<div class="gutter"><span class="eid">E8</span><span class="status correct">已修正</span></div>
+<div class="body"><p class="entry-title">oracle 增益需要排除测量噪声与选择效应</p><p class="current-label">当前结论 · 2026-09-05</p><p>逐题取多个含噪分数的最大值会制造正向 oracle 增益；oracle 空间必须与匹配的噪声或配比对照比较。它本身不是可学习路由的证据。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">oracle 增益：看起来是机会，其实是测量结构的产物</p>
     <p class="why">
       仓库里有 19 个模型的 pure-text / multimodal 成对 response，覆盖同一批 2000 题，
@@ -404,12 +479,12 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
       <b>纪律：</b>此后凡报告 oracle 上界，必同时报告同类系统之间的参照水平。
       已写入 proposal 的 RQ1a 与 plan，适用于 RQ1b 及 RQ2–RQ5。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E9</span><span class="status neg">负结果</span><br><span class="status correct" style="margin-top:6px">已更正</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E9" data-experiment="E9" data-registry-status="neg">
+<div class="gutter"><span class="eid">E9</span><span class="status neg">负结果</span></div>
+<div class="body"><p class="entry-title">已测生成输入模态路由的负结果</p><p class="current-label">当前结论 · 2026-09-05</p><p>现有输入模态路由方法没有给出稳定优势。早期特征管线曾被更正；负结论限定于已测试的数据、方法和模型，不排除所有未来路由。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">模态路由器：0/19 统计显著胜出</p>
     <div class="callout correction">
       <div class="callout-label">已补 CLI 并重跑 · 见 E28</div>
@@ -494,12 +569,12 @@ judge  3.69 / 2.79 / 3.17 / 2.86 / 3.05 / 3.11</code></pre>
 python -m router.features --setting 20
 python -m router.train_modality --all --transfer
 python -m router.diagnose</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E10</span><span class="status pass">正面产出</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E10" data-experiment="E10" data-registry-status="pos">
+<div class="gutter"><span class="eid">E10</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">已测模型的输入模态成本与引用质量比较</p><p class="current-label">当前结论 · 2026-09-05</p><p>得到已测模型的模态成本与引用质量比较。单模型结论不能自动转成逐题决策；token 按模型分别报告，旧价格不能套用于新请求。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">模态选择是模型级决策，不是问题级决策</p>
     <p class="why">负结果之外，同一批数据能回答 proposal §13 的预算控制问题。</p>
     <ul>
@@ -532,12 +607,12 @@ python -m router.diagnose</code></pre>
     </div>
     <pre><code>python -m router.oracle --setting 20 --pareto
 python -m router.cost_quality</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E11</span><span class="status correct">自查发现的 bug</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E11" data-experiment="E11" data-registry-status="fix">
+<div class="gutter"><span class="eid">E11</span><span class="status fix">修复</span></div>
+<div class="body"><p class="entry-title">泄漏探针的一个自查 bug</p><p class="current-label">当前结论 · 2026-09-05</p><p>已修复泄漏探针对特征实际使用范围的误判。引用早期特征结果时要同时阅读更正，不能沿用已撤回的低维特征结论。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">泄漏探针一度在测错误的东西</p>
     <p>
       <code>evidence_modality_type</code> <strong>从不包含字符串 <code>"image"</code></strong>，
@@ -548,15 +623,15 @@ python -m router.cost_quality</code></pre>
     <p class="verdict">
       改正后用的是有区分度的版本——<b>gold 是否「纯视觉」</b>（37.9%）。结论不变：只在 2/19 上胜出。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
+
 
 <!-- ============================ PHASE 1B ============================ -->
 <h2>Phase 1B · 检索层</h2>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E12</span><span class="status correct">自己推翻自己</span></div>
-  <div class="body">
+<div class="entry current-entry" id="exp-E12" data-experiment="E12" data-registry-status="correct">
+<div class="gutter"><span class="eid">E12</span><span class="status correct">已修正</span></div>
+<div class="body"><p class="entry-title">我自己的 OCR 消解了我自己的立论</p><p class="current-label">当前结论 · 2026-09-05</p><p>OCR 补充削弱了“部分文档对文本检索结构性不可见”的旧论据。研究动机应按实际检索效果表述，而非继续宣称无法访问。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">「视觉证据结构上不可达」——这个论据被本项目自己的 OCR 消解了</p>
     <p class="why">
       RQ1b 最初的立论是结构性的：有些文档是纯扫描件，文本索引根本看不见。
@@ -582,12 +657,12 @@ python -m router.cost_quality</code></pre>
       <b>立论方式从结构性改为实证性</b>，已写入 proposal RQ1b 的「待验证的前提」。
     </p>
     <pre><code>python -m router.retrieval_signal        # 加 --no-ocr 看仅文本层的对照</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E13</span><span class="status neg">负结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E13" data-experiment="E13" data-registry-status="neg">
+<div class="gutter"><span class="eid">E13</span><span class="status neg">负结果</span></div>
+<div class="body"><p class="entry-title">页粒度上的文本与视觉证据检索比较</p><p class="current-label">当前结论 · 2026-09-05</p><p>页粒度比较未支持原先预期的视觉证据检索劣势。未检出优势或差异不构成两系统等价的证明。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">页粒度：文本检索对视觉证据没有劣势</p>
     <p>
       页级语料 14,763 页（文本层 + OCR，均 428 token/页），自实现 BM25（k1=1.5, b=0.75，
@@ -614,12 +689,12 @@ python -m router.cost_quality</code></pre>
       M3DocRAG 正是做页级视觉检索的，不能想当然。
     </p>
     <pre><code>python -m retrieval.corpus &amp;&amp; python -m retrieval.eval_page_recall</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E14</span><span class="status pass">机制确认</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E14" data-experiment="E14" data-registry-status="pos">
+<div class="gutter"><span class="eid">E14</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">模态信号是粒度依赖的</p><p class="current-label">当前结论 · 2026-09-05</p><p>模态检索差异依赖评测粒度；页级结果不能直接替代 quote 级结论。结论限定于已测候选池与检索器。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">模态信号是粒度依赖的</p>
     <p>
       同样的 gold，换个检索单元，图景完全不同：
@@ -644,12 +719,12 @@ python -m router.cost_quality</code></pre>
       quote 粒度上图被从上下文剥离，交叉才显现。</b>
       这是 RQ1b × RQ3 的交互效应，本身就是一个发现，也把两个原本分开的 RQ 连了起来。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E15</span><span class="status correct">假设被证伪</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E15" data-experiment="E15" data-registry-status="neg">
+<div class="gutter"><span class="eid">E15</span><span class="status neg">负结果</span></div>
+<div class="body"><p class="entry-title">候选池组成影响表观模态优势</p><p class="current-label">当前结论 · 2026-09-05</p><p>池大小和组成解释了相当部分表观模态优势，因此不能把“图片 quote 更好找”直接解释成可路由信号。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">「图片 quote 更好检索」是池组成的产物，不是模态信号</p>
     <p class="why">
       我先提出的解释是「VLM 描述与问题词汇对齐」。这个假设站不住。
@@ -681,12 +756,12 @@ python -m router.cost_quality</code></pre>
       <b>这条线索要划掉。</b>真正的 RQ1b 问题——视觉检索器 vs 文本检索器的交叉——仍未测。
     </p>
     <pre><code>python -m retrieval.diagnose_modality</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E16</span><span class="status pass">交叉确认</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E16" data-experiment="E16" data-registry-status="pos">
+<div class="gutter"><span class="eid">E16</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">检索器交叉：符号翻转，四个 k 全部一致</p><p class="current-label">当前结论 · 2026-09-05</p><p>已测检索器在文本与图片描述分支上的表现存在交叉。图片描述上的 BM25/BGE 属于 image-description retrieval，不读取像素。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">检索器交叉：符号翻转，四个 k 全部一致</p>
     <p>BM25 vs BGE-small dense vs RRF 融合，quote 粒度，同池同查询同 gold。</p>
     <div class="scroll">
@@ -724,12 +799,12 @@ python -m router.cost_quality</code></pre>
     </div>
     <pre><code>python -m retrieval.dense --image-repr vlm
 python -m retrieval.eval_retrievers</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E17</span><span class="status neg">负结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E17" data-experiment="E17" data-registry-status="correct">
+<div class="gutter"><span class="eid">E17</span><span class="status correct">已修正</span></div>
+<div class="body"><p class="entry-title">纠正标签后的检索器路由评估</p><p class="current-label">当前结论 · 2026-09-05</p><p>旧 outcome 标签使部分路由解释失效；以纠正后的结果为准。已测逐题选择没有稳定超过强融合对照，不能据此证明结构上永远不可学。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">二元检索器路由跑不过融合——原因是结构性的</p>
     <div class="callout correction">
       <div class="callout-label">结论已收窄并部分反转 · 见 E28</div>
@@ -825,12 +900,12 @@ python -m retrieval.eval_retrievers</code></pre>
       </p>
     </div>
     <pre><code>python -m retrieval.route_headroom</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E18</span><span class="status pass">机制量化</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E18" data-experiment="E18" data-registry-status="pos">
+<div class="gutter"><span class="eid">E18</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">图片描述与裁剪 OCR 的检索表示比较</p><p class="current-label">当前结论 · 2026-09-05</p><p>VLM 生成的图片描述与裁剪 OCR 的表示比较支持前者在本设定下的检索收益。两者都是文字表示检索，不能写成像素检索优势；也未覆盖全图片池描述生成成本。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">「看懂图」比「读出图上的字」值 +0.42 recall</p>
     <div class="callout correction">
       <div class="callout-label">推断已收窄 · 见 E28</div>
@@ -900,12 +975,12 @@ python -m retrieval.eval_retrievers</code></pre>
     </p>
     <pre><code>python -m retrieval.ocr_quotes
 python -m retrieval.eval_quote_recall --compare</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E19</span><span class="status neg">负结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E19" data-experiment="E19" data-registry-status="correct">
+<div class="gutter"><span class="eid">E19</span><span class="status correct">已修正</span></div>
+<div class="body"><p class="entry-title">并列最优与固定配额：更正路由空间估计</p><p class="current-label">当前结论 · 2026-09-05</p><p>早先的 argmax 破 tie 放大了可争取空间；closest-to-fixed 在最优集合内取值，与 oracle 同分的差为零是恒等式。当前应看 oracle−fixed regret 与固定策略已最优的比例。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">自适应预算分配：结构真实存在，但观测不到</p>
     <div class="callout correction">
       <div class="callout-label">数字已修正 · 见 E28</div>
@@ -999,12 +1074,12 @@ python -m retrieval.eval_quote_recall --compare</code></pre>
       </p>
     </div>
     <pre><code>python -m retrieval.budget_alloc --features both --target pure</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E20</span><span class="status pass">稳健性确认</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E20" data-experiment="E20" data-registry-status="pass">
+<div class="gutter"><span class="eid">E20</span><span class="status pass">通过</span></div>
+<div class="body"><p class="entry-title">改变文本候选池后的敏感性复核</p><p class="current-label">当前结论 · 2026-09-05</p><p>换成自建文本池后重复分析，检查池构造敏感性。两个池共享题目、文档和图片侧，不能称为两次独立样本复制。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">真实规模自建语料：E19 的结论原样复现</p>
     <p class="why">
       E19 最大的软肋是池偏差——本项目的池只有论文的 16% 文字覆盖，且文字:图片比 3.2:1 对 8.5:1。
@@ -1061,12 +1136,12 @@ python -m retrieval.eval_quote_recall --compare</code></pre>
     </p>
     <pre><code>python -m retrieval.quote_corpus
 python -m retrieval.budget_alloc --pool selfbuilt --features both --target pure</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E21</span><span class="status pass">瓶颈定位</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E21" data-experiment="E21" data-registry-status="pos">
+<div class="gutter"><span class="eid">E21</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">使用真实模态比例的配额分配分析</p><p class="current-label">当前结论 · 2026-09-05</p><p>用真实模态比例进行分配说明该规则在此设定下有描述性收益；真实比例来自 gold，不能作为可部署路由器的输入或性能承诺。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">比例分配规则：规则是对的，输入拿不到</p>
     <p class="why">
       一份外部生成的调研报告把「按预测的模态构成比例分配配额」
@@ -1104,12 +1179,12 @@ python -m retrieval.budget_alloc --pool selfbuilt --features both --target pure<
         当前 R² 是负的，所以任何正的 R² 都是进展。
       </p>
     </div>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E22</span><span class="status correct">论文核实</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E22" data-experiment="E22" data-registry-status="pass">
+<div class="gutter"><span class="eid">E22</span><span class="status pass">通过</span></div>
+<div class="body"><p class="entry-title">核实外部报告引用的四篇论文</p><p class="current-label">当前结论 · 2026-09-05</p><p>已完成指定论文的人工核对；它是文献证据审查，不是数据上的自动实验，也未纳入 36 项缓存复算。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">外部报告引用的四篇论文：三篇真实，但用途都不是我们的问题</p>
     <p class="why">
       那份报告的表格里已发现确凿的数字捏造与张冠李戴（见对账），所以它引用的论文必须逐一核实后才能进 related work。
@@ -1135,12 +1210,12 @@ python -m retrieval.budget_alloc --pool selfbuilt --features both --target pure<
       三篇都是真论文，但报告把它们当作我们这个问题的解法，跨度被高估了。
       唯一可迁移的成分是「用更强的编码器表示问题」——这在 E23 里被验证为<b>反方向</b>有效。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E23</span><span class="status neg">负结果 + 方法学更正</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E23" data-experiment="E23" data-registry-status="correct">
+<div class="gutter"><span class="eid">E23</span><span class="status correct">已修正</span></div>
+<div class="body"><p class="entry-title">低维与句向量特征的预测及分配效果</p><p class="current-label">当前结论 · 2026-09-05</p><p>低维特征改善了模态比例预测，但对配额收益的传导有限。方法与特征在同一批数据上探索，应保留探索性标签。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">测试期反思：预测变好了，分配没变好；而句向量一直在拖后腿</p>
     <p class="why">
       检索层相对生成层的结构性优势本该是「可以先看一眼再决定」。
@@ -1198,12 +1273,12 @@ python -m retrieval.budget_alloc --pool selfbuilt --features both --target pure<
     </div>
     <pre><code>python -m retrieval.reflect_alloc --pool canonical
 python -m retrieval.reflect_alloc --pool selfbuilt</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E24</span><span class="status neg">负结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E24" data-experiment="E24" data-registry-status="neg">
+<div class="gutter"><span class="eid">E24</span><span class="status neg">负结果</span></div>
+<div class="body"><p class="entry-title">候选池设定下的 ColQwen 与图片描述检索比较</p><p class="current-label">当前结论 · 2026-09-05</p><p>结论依赖候选池、文本编码器强度和比较配置。E34 加强文本编码器后撤回了部分像素检索优势；不要引用旧条目作所有场景下 GPU 检索不值得的证明。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">ColQwen2 视觉检索：在这个设定下不值它的 GPU 成本</p>
     <div class="callout correction">
       <div class="callout-label">原结论维持；池口径已更正 · 见 E28 / E31</div>
@@ -1328,13 +1403,13 @@ python -m retrieval.reflect_alloc --pool selfbuilt</code></pre>
     </p>
     <pre><code>.venv-colpali/Scripts/python.exe -m retrieval.colqwen_index
 python -m retrieval.eval_colqwen</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
+
 
 <!-- ============================ 横切 ============================ -->
-<div class="entry">
-  <div class="gutter"><span class="eid">E25</span><span class="status correct">机制确认</span></div>
-  <div class="body">
+<div class="entry current-entry" id="exp-E25" data-experiment="E25" data-registry-status="pos">
+<div class="gutter"><span class="eid">E25</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">粒度 × 预算：两个轴给出完全相反的排序</p><p class="current-label">当前结论 · 2026-09-05</p><p>固定 top-k 与固定 word-like token 预算得到不同粒度排序。当前只是文本 BM25 的粒度分析，不能当作生成模型 BPE token、视觉粒度或端到端生成结果。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">粒度 × 预算：固定 top-k 与固定 token 预算给出<b>完全相反</b>的粒度排序</p>
     <div class="callout correction">
       <div class="callout-label">单位与覆盖范围已修正 · 见 E28</div>
@@ -1451,12 +1526,12 @@ python -m retrieval.eval_colqwen</code></pre>
     <pre><code>python -m retrieval.quote_corpus --target-chars 600 --out retrieval/quotes_t600.sqlite --no-gold-map
 python -m retrieval.eval_granularity
 python -m retrieval.eval_granularity --pack greedy</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E26</span><span class="status neg">负结果 + 对照拦截</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E26" data-experiment="E26" data-registry-status="neg">
+<div class="gutter"><span class="eid">E26</span><span class="status neg">负结果</span></div>
+<div class="body"><p class="entry-title">已测 small-to-big 方案与预算量化效应</p><p class="current-label">当前结论 · 2026-09-05</p><p>所测 small-to-big 方案未给出预期收益，预算量化解释了部分粒度差异。负结论不涵盖所有其它粒度、检索器和生成设置。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">small-to-big 被证伪；细粒度优势的一半是「预算量化损失」而非排序能力</p>
     <p class="why">
       E25 的粒度旋钮是<b>重载</b>的：chunk 大小同时决定「检索器能多精确地打分」和
@@ -1511,12 +1586,12 @@ python -m retrieval.eval_granularity --pack greedy</code></pre>
     </p>
     <pre><code>python -m retrieval.eval_small2big --fine retrieval/quotes_t100.sqlite --coarse retrieval/quotes_t600.sqlite
 python -m retrieval.eval_small2big --fine retrieval/quotes_t100.sqlite --coarse retrieval/quotes_t600.sqlite --pack greedy</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E27</span><span class="status pass">正向结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E27" data-experiment="E27" data-registry-status="pos">
+<div class="gutter"><span class="eid">E27</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">静态检索配置相对本地论文式基线的内部折外结果</p><p class="current-label">当前结论 · 2026-09-05</p><p>保留 BGE-small 的文档分组 OOF 结果；对外主表优先引用 <a href='#exp-E40'>E40</a> 的 BGE-large 复核。比较对象是本地论文式基线。下方早期六格数字、按题区间及“比已发表配置更好”的标题已经撤回，不能引用为当前结果。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">比论文发布的检索配置高 <b>+0.023 ~ +0.049</b> recall：两个池 × 三个预算，六格全显著</p>
     <div class="callout correction">
       <div class="callout-label">已修正 · 见 E28</div>
@@ -1610,12 +1685,12 @@ python -m retrieval.eval_stack --k 10
 python -m retrieval.eval_stack --k 15
 python -m retrieval.eval_stack --k 20
 python -m retrieval.eval_stack --pool canonical --k 20</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E28</span><span class="status correct">审计与修正</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E28" data-experiment="E28" data-registry-status="correct">
+<div class="gutter"><span class="eid">E28</span><span class="status correct">已修正</span></div>
+<div class="body"><p class="entry-title">复现性与结论边界审计</p><p class="current-label">当前结论 · 2026-09-05</p><p>修复统计单位、分母和基线身份，并增加文档分组 OOF。折内选参能避免本次拟合直接使用测试折，但无法抹去方法空间在相同数据上开发的历史；仍是内部、探索性验证。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">复现性与结论边界审计：三处系统性错误，四条结论被改写</p>
     <p class="why">
       对 E27 及相关记录做的一次逐项复核，起因是外部审计指出基线身份、统计单位与 recall 分母都可能有问题。
@@ -1791,12 +1866,12 @@ python -m retrieval.eval_stack_v2 --k 20 --pool canonical --dump
 python -m retrieval.audit_e19_ties --pool selfbuilt --k 20
 python -m retrieval.route_outcome --features scores --k 10
 python -m retrieval.nested_cv --pool selfbuilt --k 20</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E30</span><span class="status pass">归因</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E30" data-experiment="E30" data-registry-status="pos">
+<div class="gutter"><span class="eid">E30</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">归因消融：+0.054 究竟来自哪个组件</p><p class="current-label">当前结论 · 2026-09-05</p><p>三个主效应在 12 项比较的 Holm 校正后均通过。它是同一批数据上固定配置的探索性消融；组件效应在此设定下近似可加，不等于普遍的因果独立，也不构成外部确认。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">归因消融：+0.054 里，RRF 融合是三者中最小的一项</p>
     <p class="why">
       E28 自己写下了一条要求——主结果同时更换了文本检索器、图片证据的检索方式和模态配额，
@@ -1901,12 +1976,12 @@ python -m retrieval.nested_cv --pool selfbuilt --k 20</code></pre>
 python -m retrieval.ablation --pool canonical --k 20
 python -m retrieval.ablation --pool selfbuilt --k 10
 python -m retrieval.ablation --pool selfbuilt --k 20</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E31</span><span class="status correct">基础设施</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E31" data-experiment="E31" data-registry-status="fix">
+<div class="gutter"><span class="eid">E31</span><span class="status fix">修复</span></div>
+<div class="body"><p class="entry-title">可复现运行系统：一条命令重算全部当前有效实验</p><p class="current-label">当前结论 · 2026-09-05</p><p>完整缓存套件包含 36 项实验；四组工程测试另行运行。成功执行与研究假设得到支持是不同状态，负结果仍应完整留存。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">可复现运行系统：把「终端里见过的数字」变成落盘产物</p>
     <p class="why">
       到 E30 为止，这个项目的绝大多数数字只存在于终端回滚缓冲里。一张打印给人看的表格
@@ -2024,12 +2099,12 @@ python -m retrieval.ablation --pool selfbuilt --k 20</code></pre>
     <pre><code>python experiments.py run-suite replay --offline
 python experiments.py verify E24
 python -m tests.test_runner</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E32</span><span class="status correct">基础设施</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E32" data-experiment="E32" data-registry-status="fix">
+<div class="gutter"><span class="eid">E32</span><span class="status fix">修复</span></div>
+<div class="body"><p class="entry-title">replay 完整性与可追溯性修复</p><p class="current-label">当前结论 · 2026-09-05</p><p>指定运行保留命令、指标和检查点。<code>verify</code> 必须明确 <code>--run &lt;run_id&gt;</code>；只验证最新单项运行不能代表全部实验重验。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">replay 完整性与可追溯性：让四格结果真的来自同一次运行</p>
     <p class="why">
       E31 让数字落了盘，但没有回答两个问题：报告里的四格<b>是不是这一次跑出来的</b>，
@@ -2166,12 +2241,12 @@ python -m tests.test_runner</code></pre>
 python experiments.py verify E24
 python experiments.py verify E27
 python -m tests.test_runner --scratch-root artifacts/test-runs</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E33</span><span class="status correct">基础设施</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E33" data-experiment="E33" data-registry-status="fix">
+<div class="gutter"><span class="eid">E33</span><span class="status fix">修复</span></div>
+<div class="body"><p class="entry-title">可追溯性与科学表述收尾：source bundle、E24 视觉分支命名、覆盖率数据模型</p><p class="current-label">当前结论 · 2026-09-05</p><p>源码 ZIP 与逐文件 SHA-256 保证已记录源码可还原。2026-09-05 修复 LF/CRLF 导致的补丁应用失败，四组测试已通过 67/25/30/35 项；历史失败记录仍保留。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">可追溯性与科学表述收尾：能验证 ≠ 能重建；换了两样东西就不能只归因给一样</p>
     <p class="why">
       E32 给每个 run 加了 <code>source_manifest.json</code>，并在里面写了一行还原命令：
@@ -2430,12 +2505,12 @@ python experiments.py verify E27
 python -m tests.test_runner --scratch-root artifacts/test-runs
 python -m tests.test_source_bundle --scratch-root artifacts/test-runs
 python -m expkit.source reconstruct --run &lt;run_id&gt;</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E29</span><span class="status pass">正向结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E29" data-experiment="E29" data-registry-status="pos">
+<div class="gutter"><span class="eid">E29</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">生成后的引用片段选择 F1 提升，答案正确性尚未测量</p><p class="current-label">当前结论 · 2026-09-05</p><p>600 题、220 文档，引用 F1 从 55.21 提高到 58.11；配对差 <b>+2.8990</b>，文档聚类 95% CI <b>[1.0147, 4.7713]</b>，p=0.0025。它衡量引用片段选择，不评判答案正确性或忠实度。单一生成器、pure-text 生成模式，未检验跨生成器迁移。<a href='../artifacts/runs/20260905T130816Z_cached/summary.html'>保存回答复算记录</a>。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">端到端：k=10 上 +0.054 的检索优势，变成了 +2.90 的答案 F1</p>
     <p class="why">
       到 E30 为止，这个项目证明的都是<b>检索侧</b>的事：recall 更高、组件归因清楚、
@@ -2579,12 +2654,12 @@ python -m expkit.source reconstruct --run &lt;run_id&gt;</code></pre>
     </p>
     <pre><code>python experiments.py run-suite api --allow-api
 python eval_e29_paired.py</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E34</span><span class="status pass">正向结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E34" data-experiment="E34" data-registry-status="pos">
+<div class="gutter"><span class="eid">E34</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">本地基线版本差异与完整图片池复核</p><p class="current-label">当前结论 · 2026-09-05</p><p>完整图片池已覆盖 220/220 文档；1,995 道含视觉 gold 的题上 recall@10=<b>0.7824</b>，文档聚类 95% CI [0.7466, 0.8170]。同文档配对“全池−候选池”=-0.0374，CI [-0.0509, -0.0265]。附录 Table 14 给出了 BGE-large-en-v1.5 / ColQwen2-v0.1；本地为 ColQwen2-v1.0，模型与池管线差异仍在。<a href='2026-09-05-paper-appendix-correction.md'>版本更正证据</a>。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">论文式基线：缺口不在模型身份，在池规模；换上更强的文本检索器后，头条提升反而变大</p>
     <p class="why">
       E27/E29 的提升都是「相对最接近论文的本地对照」。悬在上面的质疑一直是同一个：
@@ -2736,12 +2811,12 @@ python eval_e29_paired.py</code></pre>
 python -m retrieval.dense --model models/bge-large-en-v1.5 --image-repr vlm
 python -m retrieval.dense_chunks --model models/bge-large-en-v1.5 --batch 128
 python -m retrieval.eval_stack_v2 --pool selfbuilt --k 10 --dense-model models/bge-large-en-v1.5</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E35</span><span class="status pass">正向结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E35" data-experiment="E35" data-registry-status="pos">
+<div class="gutter"><span class="eid">E35</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">预算约束下的 oracle 空间与对照分析</p><p class="current-label">当前结论 · 2026-09-05</p><p>并列感知 oracle、最优固定动作和匹配预算的配比对照共同刻画路由空间。oracle 使用逐题真实收益，不能当作可训练路由器的已实现效果；CPU/GPU 遍历分别计数。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">路由的天花板：先证明有空间可路由，再去训练路由器</p>
     <p class="why">
       proposal 的标题承诺逐题路由，而 E27 交付的是更好的<b>静态</b>配置。
@@ -2817,12 +2892,12 @@ python -m retrieval.eval_stack_v2 --pool selfbuilt --k 10 --dense-model models/b
     <pre><code>python -m router.actions --pool selfbuilt
 python -m router.tie_audit --pool selfbuilt --k 10
 python -m router.tie_audit --pool canonical --k 20</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E36</span><span class="status neg">负结果（含一处正向）</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E36" data-experiment="E36" data-registry-status="neg">
+<div class="gutter"><span class="eid">E36</span><span class="status neg">负结果</span></div>
+<div class="body"><p class="entry-title">CPU 路由负结果与 GPU 升级的部分信号</p><p class="current-label">当前结论 · 2026-09-05</p><p>2,000 题、220 文档；主家族为同预算下路由器相对随机分配的 8 项比较。固定低维特征时 GPU 3/4 通过 Holm、CPU 0/4；折内选特征时 GPU 1/4、CPU 0/4。<b>未检出差异不证明同质量</b>；预算曲线交点仅为描述量，实际生成质量、总时延和 API 费用未测。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">逐题路由：图片侧的「要不要看像素」可学，文本侧的「要不要融合」不可学</p>
     <p class="why">
       问题的提法很关键。E17 已经否掉了「路由器能否在质量上打过融合」。
@@ -2927,14 +3002,14 @@ python -m router.tie_audit --pool canonical --k 20</code></pre>
 python -m router.phase3_cells --features shape+firstpass
 python -m router.budget_router --pool selfbuilt --k 10 --policy A --features free
 python -m tests.test_phase3</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
 
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E37</span><span class="status pass">正向结果</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E37" data-experiment="E37" data-registry-status="pos">
+<div class="gutter"><span class="eid">E37</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">题型切片：视觉证据题增益更大，两个池共享样本</p><p class="current-label">当前结论 · 2026-09-05</p><p>在已保存 OOF 预测上切片，不重新选择配置。k=10 的已报告切片通过 Holm；两个候选池共享题目和文档，不能称为独立复现。纯文本仅 1 题、不可回答题 0 题。跨页对照 CI 跨零表示证据不足，不能据此证明与跨页推理无关。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">静态提升按题型切片：稳健，但增益的三分之二集中在纯视觉题</p>
     <p class="why">
       E27 交付的是一个数：折外选出的配置相对最接近论文的本地基线 +0.061。
@@ -3015,14 +3090,14 @@ python -m tests.test_phase3</code></pre>
     </p>
     <pre><code>python -m retrieval.slice_by_type --pool selfbuilt
 python -m retrieval.slice_by_type --pool canonical</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
 
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E40</span><span class="status pos">正向（稳健性）</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E40" data-experiment="E40" data-registry-status="pos">
+<div class="gutter"><span class="eid">E40</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">BGE-large 上的静态检索折外复核</p><p class="current-label">当前结论 · 2026-09-05</p><p>BGE-large 文本编码器下，四组相对本地论文式基线的 OOF 召回差均为正，详见下表。每格 2,000 题、220 文档。区间在保存预测上按文档重采样，没有重新执行整个方法开发过程；两个池共享样本，仍属探索性内部验证。</p><div class="scroll"><table><thead><tr><th>候选池</th><th>k</th><th>召回绝对差</th><th>文档聚类 95% CI</th></tr></thead><tbody><tr><td>selfbuilt</td><td>10</td><td>+0.0605</td><td>[0.0466, 0.0752]</td></tr><tr><td>selfbuilt</td><td>20</td><td>+0.0329</td><td>[0.0232, 0.0428]</td></tr><tr><td>canonical</td><td>10</td><td>+0.0525</td><td>[0.0379, 0.0672]</td></tr><tr><td>canonical</td><td>20</td><td>+0.0267</td><td>[0.0173, 0.0361]</td></tr></tbody></table></div><p class="note">数值来源：<a href="../artifacts/runs/20260905T073315Z_cached/summary.html">20260905T073315Z_cached</a>。gold 总数 5,813；自建池 62 条未映射计 miss，canonical 全映射，丢弃数均为 0。</p><p></p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">头条提升不是弱编码器的产物：换成 bge-large，四格全部存活</p>
     <p class="why">
       E34 用 bge-large 重跑静态对照时，撤回了一条结论——「ColQwen 读像素优于在图片描述上
@@ -3079,12 +3154,12 @@ python -m retrieval.slice_by_type --pool canonical</code></pre>
       理论上对编码器不敏感，但<b>尚未实测</b>，不应写成已复核。
       这条切分自 E9 起被反复观察，本结果与 E27 一样只能标 exploratory。
     </p>
-  </div>
-</div>
+  </div></details></div></div>
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E38</span><span class="status neg">负结果（结案性）</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E38" data-experiment="E38" data-registry-status="neg">
+<div class="gutter"><span class="eid">E38</span><span class="status neg">负结果</span></div>
+<div class="body"><p class="entry-title">特定误差假设下的 R² 与配额收益模拟</p><p class="current-label">当前结论 · 2026-09-05</p><p>保留裁剪高斯误差下的敏感性模拟数值；<b>撤回通用上界、同 R² 下真实模型必然更差、据此排除全部未来特征的解释</b>。测试集选择 lambda 使结果乐观，逐点 CI 未校正该选择。该实验不能单独关闭 RQ1b 的其它方法空间。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">RQ1b 的 R² 目标问错了：把它推到完美，也只多买到 +0.014 recall</p>
     <p class="why">
       proposal 给 RQ1b 设了一个 R² 目标，并点名三个未试的特征源：
@@ -3166,14 +3241,14 @@ python -m retrieval.slice_by_type --pool canonical</code></pre>
     </p>
     <pre><code>python -m retrieval.r2_target --pool canonical
 python -m retrieval.r2_target --pool selfbuilt</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
 
 
 
-<div class="entry">
-  <div class="gutter"><span class="eid">E34+</span><span class="status pass">收尾</span></div>
-  <div class="body">
+
+<div class="entry current-entry" id="exp-E34-fullpool" data-experiment="E34" data-registry-status="pos">
+<div class="gutter"><span class="eid">E34+</span><span class="status pos">正向</span></div>
+<div class="body"><p class="entry-title">完整图片池补充记录：旧阻塞已解除</p><p class="current-label">当前结论 · 2026-09-05</p><p>完整图片池已覆盖 220/220 文档；1,995 道含视觉 gold 的题上 recall@10=<b>0.7824</b>，文档聚类 95% CI [0.7466, 0.8170]。同文档配对“全池−候选池”=-0.0374，CI [-0.0509, -0.0265]。附录 Table 14 给出了 BGE-large-en-v1.5 / ColQwen2-v0.1；本地为 ColQwen2-v1.0，模型与池管线差异仍在。<a href='2026-09-05-paper-appendix-correction.md'>版本更正证据</a>。</p><details class="historical"><summary>历史原文与当时判断（含已撤回表述，不作为当前结论）</summary><div class="history-body">
     <p class="entry-title">ColQwen 全池索引跑完了，并检验了一条事先写下的预测</p>
     <p class="why">
       这条索引搁置了整整一轮，理由记在交接文档里是「GPU 被占用、需要 5–9 小时、
@@ -3226,8 +3301,8 @@ python -m retrieval.r2_target --pool selfbuilt</code></pre>
     --image-source fulldisk --doc-order random \
     --out retrieval/colqwen_scores_fullpool.sqlite
 python -m retrieval.eval_fullpool</code></pre>
-  </div>
-</div>
+  </div></details></div></div>
+
 
 
 <h2>横切：反复出现的方法学教训</h2>
@@ -3401,7 +3476,7 @@ python -m retrieval.eval_fullpool</code></pre>
   </p>
 </div>
 
-<div class="callout lesson">
+<div class="callout lesson"><p class="callout-label">L22 · 合成模拟的结论必须限定于其误差假设</p><p>先检查中间目标的下游价值是有用的探索步骤，但一种误差结构不能排除同精度下的其它方法。E38 的通用上界与关闭全部特征方向的解释已经撤回。</p><details class="historical"><summary>原先的经验总结（解释已撤回）</summary><div class="callout lesson">
   <p class="callout-label">L22 · 中间量被设成目标时，先测它取到完美时下游值多少</p>
   <p>
     出现在 E38。proposal 给 RQ1b 设了 R² 目标，于是自然的下一步是去找更好的特征。
@@ -3412,7 +3487,7 @@ python -m retrieval.eval_fullpool</code></pre>
     映射本身是平的</strong>，所以 R² 目标问错了。
     两小时的合成实验关掉了一整轮特征工程加一笔 API 开销。
   </p>
-</div>
+</div></details></div>
 
 <div class="callout lesson">
   <p class="callout-label">L23 · 合成对照本身要校准，扫参数要用共同随机数</p>
@@ -3520,7 +3595,7 @@ python -m retrieval.eval_fullpool</code></pre>
   <code>data_utils.py</code> 全项目沿用。
 </p>
 
-<h2>当前状态</h2>
+<h2>历史综合判断与旧待办</h2><p>这部分保留旧叙述及其先后更正。当前状态与严谨性边界见<a href="#current-conclusions">页首概览</a>，下一项生成实验见<a href="#exp-E39">E39</a>。</p><details class="historical"><summary>展开历史综合判断（含已撤回解释）</summary><h2>当前状态</h2>
 <div class="callout correction">
   <div class="callout-label">2026-08-25 审计后重述</div>
   <p>
@@ -3616,7 +3691,7 @@ python -m retrieval.eval_fullpool</code></pre>
   </p>
 </div>
 <p>
-  <b>下一步</b>，按依赖顺序：
+  <b>历史待办（2026-09-05 已被 <a href="research-status.html">当前总结</a> 取代；以下保留作追溯）</b>：
   (1) <b>document-grouped nested CV</b>——把 exploratory 变成可报告的泛化结论，零 API；
   (2) <b>补 <code>--features</code> CLI 重跑 E9</b>，把撤下的表述换成可复现的；
   (3) <b>把 tie-aware oracle 并入 <code>budget_alloc.py</code></b>，输出 regret 与安全区间；
@@ -3624,13 +3699,14 @@ python -m retrieval.eval_fullpool</code></pre>
   (5) <s>需批准：下载 bge-large-en-v1.5 与 ColQwen2-v0.1 重建真正的论文式对照</s><br>　　<b>已于 2026-08-30 执行并修正范围（E34）</b>：ColQwen2-v1.0 <b>本就在本地且真跑像素</b>，无需下载；论文未给任何版本，故换模型不构成「与论文一致」。实际主缺口是<b>图片池规模</b>——论文 63 图/篇，本项目此前 29.8 图/篇。已建 <code>colqwen_scores_fullpool.sqlite</code>（13,999 张图、63.9/篇）并下载 bge-large-en-v1.5（revision 已固定、逐文件 SHA-256 可复验）。<br>
   (6) <b>把 E36 的 GPU 级联接到端到端生成</b>——目前 Phase 3 全部指标是 evidence recall，
   「同质量、更少 ColQwen 调用」这句话在 F1 上尚未验证，需一次配对 API 运行；
-  (7) <b>补完 ColQwen 全池索引</b>（仍是 5/220 篇，见 E34 限制）。
+  (7) <b>补完 ColQwen 全池索引</b>（旧状态5/220篇；现已220/220，2026-09-05重新复核）。
 </p>
 
 
+</details>
 <footer>
   本记录随每次推进更新，URL 保持不变。
-  数字均出自仓库内可复现脚本；未核验项（价格）已在原地标注。
+  当前结论按指定运行与更正记录核对；历史原文供追溯，不作为未更正的最新结论。
 </footer>
 
 </div>

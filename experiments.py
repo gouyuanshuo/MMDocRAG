@@ -64,8 +64,8 @@ if hasattr(sys.stdout, "reconfigure"):
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 PY = sys.executable
-NOTEBOOK = "https://claude.ai/code/artifact/41d0a96f-f0a8-4bc8-8f9b-f01e98498a4a"
-AUDIT = "https://claude.ai/code/artifact/29d4751e-010a-48a5-a3f8-782c29a61842"
+NOTEBOOK = "docs/lab-notebook.html"
+AUDIT = "docs/research-status.html"
 
 # Anything here is EXPLORATORY unless it says otherwise: the document-disjoint
 # split was observed repeatedly across E1-E28 and used to choose methods. Only
@@ -670,8 +670,10 @@ dict(id="E39", phase="3", status="pending",
      asks="「同质量下 ColQwen 调用从 100% 降到 5%~15%」这句话目前只在 evidence recall 上成立。"
           "它在 quote-selection F1 上还成不成立？",
      cmds=["{py} -m router.budget_router --pool canonical --k 10 --policy B "
-           "--features shape+firstpass --metrics-out artifacts/e39/router",
-           "# 然后照 E29 的两臂配对生成，唯一变量是候选块"],
+           "--features shape+firstpass --cheap dense,bm25 --expensive rrf,colqwen "
+           "--metrics-out artifacts/e39/router",
+           "{py} -m router.prepare_e39 --router-dir artifacts/e39/router "
+           "--out artifacts/e39/generation"],
      result="**尚未执行。** 需要一次付费的配对 API 运行，预算参照 E29："
             "600 题 × 2 臂 = 1,225 次调用、12.09 AUD。**未获批准前不跑。**",
      result2="设计已定死，照 E29 的协议：同模型、同 prompt、同 gold，只有候选块不同。"
@@ -1354,8 +1356,8 @@ META = {
                             "把池补到论文规模后该数应当**下降**并逼近 0.708。"
                             "CI 覆盖论文值只说明本地实现通过量级核查，"
                             "不说明复现了论文系统。",
-             limits="论文未给出任何检索器的版本，解析流水线也未发布，"
-                    "因此与论文的绝对数值对齐永远不可达。"
+             limits="附录 C.3 Table 14 给出 BGE-large-en-v1.5 与 ColQwen2-v0.1；"
+                    "本地视觉模型为 v1.0，候选池和解析流水线也没有完全对齐。"
                     "论文的 ColQwen 文本 recall 不可复现（论文未说明视觉检索器"
                     "如何排文本 quote），不做任何文本侧对照。"
                     "全池索引**只可**用于 ColQwen 单臂绝对值："
@@ -1364,6 +1366,119 @@ META = {
                     "同池比较会单方面惩罚 ColQwen——eval_colqwen 因此对 "
                     "unpooled: 条目直接 exit 1。"),
 }
+
+E.append(dict(id="E41", phase="audit", status="pending",
+    title="八组 OOF 比较的多重检验复核",
+    asks="把 E27/E40 的两种模型、两个候选池、两个 k 合为八项比较后，结论是否仍然成立？",
+    cmds=["{py} -m retrieval.oof_family"],
+    result="读取同一运行的 E27/E40 折外预测，不重新选择配置；按文档重采样并做八项 Holm 校正。",
+    limits="比较族在看到历史结果后才汇总，因此这是探索性的多重比较敏感性分析，不能追溯称为预注册。"))
+META["E41"] = dict(suites=("cached",), replay=(0,), deps=(),
+                   primary_metric="paired OOF recall delta vs local paper-style baseline",
+                   sample_unit="document", estimated_runtime=10)
+
+E.append(dict(id="E42", phase="infra", status="pass",
+    title="演示控制台：把已记录的运行做成可展示的界面",
+    asks="这些实验能不能在不重跑、不生成、也不新造任何数字的前提下被人当场看懂？",
+    cmds=["{py} -m tests.test_demo"],
+    result="新增 demo/（store/dashboard/server，仅读取产物）与 webui/（同学的 UI，"
+           "改接本仓库后端）。四个视图：回放已记录的端到端问答、两臂并排的逐题分析、"
+           "五组已记录指标的看板、以及逐条说明数据来源的 provenance 页。"
+           "tests/test_demo.py 48 项断言全过；webui 的 render-check 70/70 通过。",
+    result2="关键断言是候选块重建：arm 文件只有局部 quote id，没有 evidence id，"
+            "因此页码和 gold 标记必须靠用同一 builder、同一池、同一编码器、同一配额"
+            "重建排名来恢复。1,200 条已记录 arm 行逐条精确重现，"
+            "这条断言不过就没有资格在界面上标页码。",
+    note="展示层最容易让主张漂移：答案、页码和指标同屏出现，观众会默认它们相互印证。"
+         "因此界面把静态检索配置与 E36 的逐题升级决策分开陈述，"
+         "把 citation F1 写成 quote-selection F1 并注明不是答案正确性，"
+         "并且缺产物时显示缺失而不是回落到替代值。",
+    limits="本环境没有可用浏览器，没有做视觉验收；render-check 只能证明"
+           "每个组件用真实 payload 渲染成功、表格不丢行、HTML 中的数值等于产物中的数值。"
+           "控制台不做任何新的评测，它的可信度完全等于它读取的那次运行。"))
+# The registered command is the offline test, which the cached suite picks up
+# below like any other replay. The two commands that are NOT registered are
+# `python -m demo.server` (long-lived) and the npm build (needs Node); a suite
+# cannot assert anything about either, so neither belongs in one.
+META["E42"] = dict(suites=(), lifecycle="active", replay=(0,),
+                   estimated_runtime=60, primary_metric="断言通过数",
+                   sample_unit="question",
+                   expected_outputs=("demo/server.py 的 /api/provenance 输出",
+                                     "webui/dist/"),
+                   how="demo/store.py 读取 arm 文件、response 文件、动作表、"
+                       "路由决策 CSV 与某次运行的 metrics.jsonl；"
+                       "demo/dashboard.py 只挑选与命名，不计算。",
+                   metric_meaning="48 项断言覆盖重建精确性、指标可溯源、分母守恒、"
+                                  "命名纪律、缺产物时的可见降级与图片路径越界防护。",
+                   limits="没有视觉验收；控制台不产生任何新数字。")
+
+# Offline replay of every completed empirical experiment, including paid
+# generations that are ALREADY on disk. Generation commands keep their API gate.
+_corrections_20260905 = {
+    "E27": "2026-09-05：分组折外预测避免了每一外折直接参与配置选择，但方法空间本身在同一批题上开发。应称内部 OOF 验证，不能称独立确认实验；两个池共享问题和文档，也不是独立样本复制。",
+    "E29": "2026-09-05：600 题两臂缓存重算仍为 quote-selection F1 55.21→58.11，配对差 +2.90 点，文档聚类 95% CI [+1.01,+4.77]，220 文档。这不是答案正确性或事实忠实度评分。",
+    "E34": "2026-09-05：全池 SQLite 实际已覆盖 220 文档、1,995 道含视觉 gold 的问题，23,367,680 bytes；5 文档是旧注册状态。重新评价全池 recall@10=0.782，候选池=0.820，配对差 -0.0374，95% CI [-0.0509,-0.0265]。",
+    "E38": "2026-09-05：撤回‘同一 R² 下的通用上界’及‘排除全部未来特征’解释。此实验是裁剪高斯误差下的敏感性模拟；测试集挑 lambda 使它乐观，逐点 CI 没有补偿该选择。同一 R² 可在不同问题和配额边界上犯错。原数值保留。",
+    "E39": "2026-09-05：已离线准备，尚未生成。修复命令默认 CPU 级联的错误，固定 GPU cheap=dense,bm25、expensive=rrf,colqwen、配额5/5、B=.15。600题中118题升级，实测减少80.3% ColQwen 调用。撤回‘CI包含0即同质量’规则；拟定非劣界2个F1点，须在生成前认可并冻结模型、thinking与预算；判据为差值95% CI下界严格大于-2。计划及输入位于 artifacts/e39/20260905/generation/plan.json。",
+}
+for _eid, _text in _corrections_20260905.items():
+    _entry = next(e for e in E if e["id"] == _eid)
+    _n = 2
+    while f"result{_n}" in _entry:
+        _n += 1
+    _entry[f"result{_n}"] = _text
+    _entry.setdefault("corrections", []).append(_text)
+for _eid, _text in {
+    "E34": "2026-09-05 附录核查：撤回‘论文没给版本/HF id’。arXiv v2 附录 C.3 Table 14 明列 BGE-large-en-v1.5 和 ColQwen2-v0.1，本地视觉模型为 v1.0。当前结果仍是本地论文式基线，视觉版本是已知待控制因素。证据：docs/2026-09-05-paper-appendix-correction.md。",
+    "E19": "2026-09-05：修复 ties 审计末尾的错误解释：closest-to-fixed 在逐题最优集合内选，所以 oracle−closest 恒为零，不能据此把可获得增益上界写成零；真正的描述性空间是 oracle−fixed。数值计算未变。",
+    "E41": "2026-09-05 已完成，run=20260905T073315Z_cached：8/8 比较通过探索性 Holm 校正，p_holm 均为0.0008（10,000次文档重采样的有限精度）；每格2,000题/220文档/5,813 gold。自建池62条未映射gold继续计miss，未丢弃；canonical全部映射。",
+}.items():
+    _entry = next(e for e in E if e["id"] == _eid)
+    _n = 2
+    while f"result{_n}" in _entry:
+        _n += 1
+    _entry[f"result{_n}"] = _text
+    if _eid == "E41":
+        _entry["status"] = "pos"
+    else:
+        _entry.setdefault("corrections", []).append(_text)
+for _eid in ("E4", "E5", "E7"):
+    _entry = next(e for e in E if e["id"] == _eid)
+    _entry["cmds"].append(f"{{py}} -m expkit.audit_inputs --experiment {_eid}")
+    META[_eid]["replay"] = (len(_entry["cmds"]) - 1,)
+_cached_replays = {"E6": (0,), "E8": (3,), "E25": (1, 2),
+                   "E29": (4, 5, 6), "E34": (0, 4), "E35": (2, 3, 4, 5),
+                   "E36": (0, 1, 2, 3), "E37": (0, 1), "E38": (0, 1)}
+for _eid, _replay in _cached_replays.items():
+    META[_eid]["replay"] = _replay
+for _eid, _meta in META.items():
+    if _eid not in ("E22", "E31", "E32", "E33", "E39", "E41"):
+        _meta["suites"] = (*_meta.get("suites", ()), "cached")
+META["E40"]["deps"] += ("embeddings/bge-large-query", "embeddings/bge-large-chunks")
+META["E34"]["deps"] += (COLQ,)
+META["E29"]["required_files"] = (
+    "dataset/evaluation_paperk10.jsonl", "dataset/evaluation_oursk10.jsonl",
+    "response/gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl",
+    "response/gemini-3.6-flash_pure-text_quotesoursk10_response.jsonl")
+# The console replays E29's two arms and annotates them from E27's action table,
+# so it needs exactly E29's inputs plus that cache.
+META["E42"]["required_files"] = (
+    *META["E29"]["required_files"],
+    "router/cache/actions_canonical_bge-small-en-v1.5.pkl")
+META["E42"]["deps"] = (CANON, BGE)
+for _eid in ("E8", "E9", "E10", "E11"):
+    META[_eid]["required_files"] = ("router/outcomes.sqlite",)
+    META[_eid]["deps"] = (*META[_eid].get("deps", ()), "router/outcomes", "router/features")
+META["E7"]["required_files"] = ("retrieval/pages.sqlite", "canonical/ocr_cache.sqlite")
+META["E7"]["deps"] = (CANON, PAGES, "corpora/ocr-pages")
+META["E6"]["deps"] += ("corpora/ocr-pages",)
+for _eid in ("E25", "E26"):
+    META[_eid]["required_files"] = tuple(
+        f"retrieval/quotes_t{n}.sqlite" for n in
+        ((100, 600, 1200, 2400) if _eid == "E25" else (100, 600)))
+for _meta in META.values():
+    if BGE in _meta.get("deps", ()):
+        _meta["deps"] += ("embeddings/bge-small-query",)
 
 for _e in E:
     _m = dict(_DEFAULT_META)
@@ -1380,6 +1495,11 @@ LIFECYCLE_LABEL = {"active": "有效", "superseded": "已被取代",
                    "manual": "人工核对", "blocked": "受阻"}
 
 SUITES = {
+    "cached": dict(
+        label="复算全部已完成实验，复用向量、OCR、排名和 API 响应",
+        desc="重算指标和本地路由训练，不请求 API、不重做向量化。"
+             "E4/E5/E7 检查已保存的数据；E39 尚未运行，不算作已复现。",
+        replay_only=True, allow_expensive=False, allow_api=False),
     "replay": dict(
         label="只重算指标，不重建任何产物",
         desc="复用现有数据库、向量、排名与 response 文件。不联网、不调 API、"
@@ -1422,7 +1542,8 @@ def _gate(e, suite, cfg, include_expensive, allow_api, registry):
         return None, "manual", "没有可执行命令（人工核对）"
     if e.get("lifecycle") == "superseded":
         return None, "skipped", "已被取代的口径，不作为当前结果重新发布"
-    if e.get("requires_api") and not allow_api:
+    safe_replay = cfg["replay_only"] and bool(e.get("replay"))
+    if e.get("requires_api") and not allow_api and not safe_replay:
         return None, "blocked", ("需要外部 API；未传 --allow-api" if not allow_api
                                  else "")
     if e.get("lifecycle") == "blocked" and not allow_api:
@@ -1431,10 +1552,13 @@ def _gate(e, suite, cfg, include_expensive, allow_api, registry):
     # dependency check -- a missing input is a skip with a named cause, never a
     # crash halfway through a suite
     missing = []
+    for rel in e.get("required_files", ()):
+        if not os.path.isfile(os.path.join(REPO, rel)):
+            missing.append(rel)
     for dep in e.get("deps") or ():
         state, target = registry.status(dep)
-        if state == "missing":
-            missing.append(dep)
+        if state in ("missing", "stale"):
+            missing.append(f"{dep} ({state})")
     if missing:
         return None, "skipped", "缺少依赖产物：" + "、".join(missing)
 
@@ -1444,6 +1568,8 @@ def _gate(e, suite, cfg, include_expensive, allow_api, registry):
             return None, "skipped", "本实验没有 replay 安全的命令（其命令会重建产物）"
         return idx, "run", ""
 
+    if suite == "full-local" and e.get("replay"):
+        return list(e["replay"]), "run", "依赖按 DAG 构建后，只运行评价命令"
     if e.get("expensive") and not include_expensive:
         return None, "skipped", "昂贵步骤；未传 --include-expensive"
     return list(range(len(e["cmds"]))), "run", ""
@@ -1509,15 +1635,17 @@ def cmd_show():
         print(f"怎么做      : {e['how']}")
     if e.get("metric_meaning"):
         print(f"指标含义    : {e['metric_meaning']}")
-    print(f"\n当前结论    : {e['result']}")
+    updates = sorted((int(k[6:]), k) for k in e if k.startswith("result") and k[6:].isdigit())
+    if updates:
+        print(f"\n最近更新    : {e[updates[-1][1]]}")
+    print(f"\n原始记录    : {e['result']}")
     # Every resultN beyond the first is printed. An earlier version stopped at
     # result2, so E34's and E36's result3 -- both load-bearing paragraphs --
     # sat in the registry and were never shown by `show`. A field that is
     # written but never rendered is worse than a missing one: it reads as
     # recorded while being invisible, which is how the status-key defect in
     # section 5.5 of the handoff survived two whole experiments.
-    for _n in range(2, 10):
-        _k = f"result{_n}"
+    for _n, _k in updates[:-1]:
         if e.get(_k):
             _label = "补充" if _n == 2 else f"补充{_n - 1}"
             print(f"\n{_label:<12}: {e[_k]}")
@@ -1666,8 +1794,12 @@ def _finish_run(run_id, exp_ids, run_meta, artifact_root=None, extra=None,
     })
     if extra:
         meta.update(extra)
-    src, src_path = source.write(run_id, registry=E, argv_lists=argv_lists,
-                                 artifact_root=artifact_root)
+    src = source.load(run_id, artifact_root)
+    if src is None:
+        src, src_path = source.write(run_id, registry=E, argv_lists=argv_lists,
+                                     artifact_root=artifact_root)
+    else:
+        src_path = P.rel(os.path.join(rdir, "source_manifest.json"))
     meta["source_fingerprint"] = src["fingerprint"]
     meta["source_manifest"] = src_path
     meta["source_patch"] = src["git"].get("patch")
@@ -1692,6 +1824,13 @@ def _finish_run(run_id, exp_ids, run_meta, artifact_root=None, extra=None,
 
     entries = report.collect(run_id, BY_ID, artifact_root)
     paths_out = report.write_all(run_id, entries, meta, artifact_root)
+    for _ in range(4):
+        size = sum(os.path.getsize(os.path.join(d, f))
+                   for d, _, fs in os.walk(rdir) for f in fs)
+        if meta.get("artifact_bytes") == size:
+            break
+        meta["artifact_bytes"] = size
+        atomic_json(os.path.join(rdir, "run.json"), meta)
     P.write_latest(run_id, artifact_root)
 
     print()
@@ -1740,6 +1879,7 @@ def cmd_run_suite():
     ap = argparse.ArgumentParser(prog="experiments.py run-suite")
     ap.add_argument("suite", choices=sorted(SUITES))
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--resume", default="", help="resume an interrupted run with unchanged sources/inputs")
     ap.add_argument("--offline", action="store_true")
     ap.add_argument("--include-expensive", action="store_true")
     ap.add_argument("--no-reconstruct-test", action="store_true",
@@ -1756,6 +1896,10 @@ def cmd_run_suite():
                     help="per-command timeout in seconds (0 = none)")
     a = ap.parse_args(sys.argv[2:])
     cfg = SUITES[a.suite]
+    if a.force_rebuild and a.suite != "full-local":
+        raise SystemExit("--force-rebuild requires full-local; replay suites never rebuild inputs")
+    if a.resume and a.suite != "cached":
+        raise SystemExit("--resume is supported by the cached suite; rebuilding changes inputs")
 
     from expkit import paths as P, runner, artifacts as A
 
@@ -1773,9 +1917,14 @@ def cmd_run_suite():
 
     env = P.enforce_offline(a.artifact_root) if a.offline else P.online_env()
     only = {s.strip().upper() for s in a.only.split(",") if s.strip()}
+    unknown = only - {e["id"] for e in suite_members(a.suite)}
+    if unknown:
+        raise SystemExit("IDs not in this suite: " + ", ".join(sorted(unknown)))
     members = [e for e in suite_members(a.suite) if not only or e["id"] in only]
 
-    run_id = P.new_run_id(a.suite)
+    run_id = a.resume or P.new_run_id(a.suite)
+    if a.resume and (os.path.basename(a.resume) != a.resume or a.resume in (".", "..")):
+        raise SystemExit("--resume must be a run ID, not a path")
     os.environ["MMDOCRAG_RUN_ID"] = run_id
 
     # dependency plan, printed before anything runs
@@ -1810,6 +1959,10 @@ def cmd_run_suite():
                   + "、".join(d["artifact"] for d in exp))
             print("    GPU/CPU 需求见 expkit/artifacts.py 的 DAG 表。")
 
+    if a.suite == "full-local" and not a.dry_run:
+        A.execute_plan(dep_plan, reg, run_id,
+                       include_expensive=a.include_expensive, env=env)
+
     print()
     print(f"{'id':<6}{'决定':<10}原因")
     print("-" * 92)
@@ -1837,9 +1990,41 @@ def cmd_run_suite():
         print("加 --offline 可把模型缓存钉在项目内。去掉 --dry-run 真正运行。")
         return
 
+    from expkit import source
+    from expkit.cache_identity import identity
+    from expkit.results import atomic_json
+    planned_argv = [e["argv"][i] for e, idx, state, _ in gated if state == "run"
+                    for i in idx]
+    input_paths = {reg.status(dep)[1] for dep in dep_names
+                   if reg.status(dep)[0] == "present"}
+    input_paths.update(os.path.join(REPO, p) for e in members
+                       for p in e.get("required_files", ()) if os.path.isfile(os.path.join(REPO, p)))
+    checkpoint = identity(dict(suite=a.suite, ids=[e["id"] for e in members],
+                               argv=planned_argv, offline=a.offline), sorted(input_paths))
+    checkpoint_path = os.path.join(P.run_dir(run_id, a.artifact_root), "checkpoint.json")
+    if a.resume:
+        src = source.load(run_id, a.artifact_root)
+        if not src or any(r["status"] != "pass" for r in source.verify_tree(src, REPO)):
+            raise SystemExit("Sources changed or no source checkpoint; start a NEW run")
+        if not os.path.isfile(checkpoint_path):
+            raise SystemExit("No input checkpoint; start a NEW run")
+        with open(checkpoint_path, encoding="utf-8") as fh:
+            if json.load(fh) != checkpoint:
+                raise SystemExit("Inputs/options changed; start a NEW run")
+    else:
+        source.write(run_id, registry=E, argv_lists=planned_argv, artifact_root=a.artifact_root)
+        atomic_json(checkpoint_path, checkpoint)
+
+    failed = False
+    stopped = False
+    executed_argv = []
     for e, idx, state, reason in gated:
+        if stopped:
+            runner.skip_experiment(e, run_id, "skipped", "stopped by --fail-fast", a.artifact_root)
+            continue
         if state != "run":
             runner.skip_experiment(e, run_id, state, reason, a.artifact_root)
+            failed |= state in ("blocked", "skipped")
             continue
         print()
         print("=" * 92)
@@ -1847,14 +2032,14 @@ def cmd_run_suite():
         print("=" * 92)
         st = runner.run_experiment(e, run_id, cmd_indices=idx, dry_run=False,
                                    env_overlay=env, artifact_root=a.artifact_root,
-                                   timeout=a.timeout or None)
+                                   timeout=a.timeout or None, resume=bool(a.resume))
+        executed_argv.extend(c["argv"] for c in st["commands"])
+        failed |= st["status"] == "error"
         if st["status"] == "error" and a.fail_fast:
             print(f"\n[fail-fast] {e['id']} 失败，停止后续实验。"
                   f"已完成的结果保留在 {P.rel(P.run_dir(run_id, a.artifact_root))}")
-            break
+            stopped = True
 
-    ran_argv = [e["argv"][i] for e, idx, st, _ in gated if st == "run"
-                for i in (idx or ())]
     _finish_run(run_id, [e["id"] for e in members],
                 {"suite": a.suite, "offline": bool(a.offline),
                  "allow_api": bool(a.allow_api),
@@ -1863,8 +2048,14 @@ def cmd_run_suite():
                 a.artifact_root,
                 extra={"dependency_plan": dep_plan,
                        "legacy_adopted": [{"name": n, "action": s} for n, s in adopted]},
-                argv_lists=ran_argv,
+                argv_lists=executed_argv,
                 skip_reconstruct=bool(a.no_reconstruct_test))
+    run_record = os.path.join(P.run_dir(run_id, a.artifact_root), "run.json")
+    if os.path.isfile(run_record):
+        with open(run_record, encoding="utf-8") as fh:
+            failed |= json.load(fh).get("reconstruction_test", {}).get("status") == "FAIL"
+    if failed:
+        raise SystemExit(1)
 
 
 def cmd_verify():
@@ -1960,38 +2151,19 @@ def cmd_corrections():
 
 def cmd_plan():
     print("""
-E29 · 端到端运行计划（待执行）
-==============================================================================
-问题   k=10 上 +0.054 的检索优势，能否变成 quote-selection F1 的提升？
+E29 已完成：用 python reproduce.py --only E29 --skip-tests 离线重算保存的引用 F1。
+E39 已完成输入准备，尚未调用 API；见 docs/research-status.html。
 
-设计   池     canonical——它的检索单元就是官方 quote，所以 F1 的语义与论文完全一致。
-              自建池上「quote」是我们发明的 chunk，F1 会悄悄变成另一个量。
-       预算   k=10——检索差距在这里最大（+0.054，是 k=20 的两倍），最有机会看到传导。
-       对比   E（论文式：dense 文本 + ColQwen 视觉，7/3） vs D（RRF/RRF，4/6），配对同题。
-       分母   未检索到的 gold 用哨兵 id 写进 gold_quotes，模型引不到，必然记为 false
-              negative。只列检索到的 gold 会让 F1 对检索质量免疫，必然得到 null。
-       judge  不需要。主指标 quote-selection F1 是本地从引用算的。
+E39 的 GPU 级联：canonical，k=10，文本/图片配额5/5；
+cheap=dense,bm25，expensive=rrf,colqwen，policy B=.15，shape+firstpass。
+600题/220文档的实际升级数为118（19.67%），不能直接套用全体2000题的15%。
+同题两臂最多需要1200次成功生成；旧 E29 的检索配置不同，不能替用响应。
 
-⚠ BLEU / ROUGE 在此无效，不可报告：参考答案内嵌官方局部编号，而我们重新编了号。
-
-样本量 已冻结 600 题（manifests/e29_subset.json），按文档轮转排序，任何前缀都是
-       文档分层的。试点用前 100 题，其调用在扩量时不浪费。
-       100 题只够验证管道：该子集上连检索差距都不显著（+0.034，CI [−0.024,+0.092]）。
-       600 是算出来的：文档聚类 CI 半宽约 0.0144*sqrt(2000/n)，效应 +0.054，需 n>~555。
-
-配额   gemini-2.0-flash 免费层 250 次/天、10 RPM。
-       试点 200 次 → 一天内。 600 题 × 2 = 1,200 次 → 约 5 天。
-       gemini-2.0-flash-lite 是 1,000 次/天（约 1.5 天），但它不是本项目的复现锚点模型，
-       若使用必须在报告中注明。
-       inference_api.py 的 --resume 默认开启：撞到日配额后次日重跑同一命令即可续上。
-
-步骤   export GEMINI_API_KEY=...
-       python experiments.py run E29
-       扩到 600 题：把上面命令里的 --limit 100 改成 --limit 600，重新 cp，再跑一次
-       inference（resume 会跳过已完成的 100 题）。
-
-跑完   把两个 response 文件给我，我做配对的 document-cluster 检验并落盘。
-==============================================================================
+生成前必须确定预算、模型及thinking，并冻结plan里的哈希和非劣界。
+拟定非劣界为2个引用F1点：差值95% CI下界必须严格大于-2；CI包含0不是同质量证据。
+输入：artifacts/e39/20260905/generation/plan.json。
+评价：python eval_e39_paired.py --help。
+答案正确性与事实忠实度仍是独立、未完成的测量，不能由引用F1冒充。
 """.strip())
 
 
