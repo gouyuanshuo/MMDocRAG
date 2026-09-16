@@ -122,7 +122,7 @@ def run_command(argv, *, cwd=None, outdir=None, env_overlay=None, echo=True,
 
 def run_experiment(exp, run_id, *, cmd_indices=None, dry_run=False,
                    env_overlay=None, artifact_root=None, echo=True,
-                   timeout=None):
+                   timeout=None, resume=False):
     """Run one experiment's commands into artifacts/runs/<run>/experiments/<id>/.
 
     Multiple commands share one experiment directory; per-command logs are
@@ -155,12 +155,23 @@ def run_experiment(exp, run_id, *, cmd_indices=None, dry_run=False,
         return status
 
     overall = "ok"
+    status["status"] = "running"
+    atomic_json(os.path.join(outdir, "status.json"), status)
     for i, argv in enumerate(cmds):
         argv = [a.replace("{py}", sys.executable) for a in argv]
         sub = outdir if len(cmds) == 1 else os.path.join(outdir, f"cmd{i}")
         os.makedirs(sub, exist_ok=True)
         printable = " ".join(argv)
         print(f"\n  $ {printable}", flush=True)
+        checkpoint = os.path.join(sub, "command.json")
+        if resume and os.path.isfile(checkpoint):
+            with open(checkpoint, encoding="utf-8") as fh:
+                saved = json.load(fh)
+            if saved.get("argv") == argv and saved.get("status") == "ok":
+                saved["outdir"] = paths.rel(sub)
+                status["commands"].append(saved)
+                print("  [resume] completed command retained", flush=True)
+                continue
         if dry_run:
             status["commands"].append({"argv": argv, "status": "dry-run",
                                        "outdir": paths.rel(sub)})
@@ -169,6 +180,7 @@ def run_experiment(exp, run_id, *, cmd_indices=None, dry_run=False,
                           timeout=timeout, label=f"{exp_id}#{i}", exp_id=exp_id)
         rec["outdir"] = paths.rel(sub)
         status["commands"].append(rec)
+        atomic_json(os.path.join(outdir, "status.json"), status)
         if rec["status"] != "ok":
             overall = "error"
             break                          # later commands usually depend on earlier
@@ -186,6 +198,8 @@ def run_experiment(exp, run_id, *, cmd_indices=None, dry_run=False,
             found.append(os.path.join(root, "metrics.json"))
     status["metrics_files"] = [paths.rel(p) for p in sorted(found)]
     status["instrumented"] = bool(found)
+    status["artifact_bytes_before_status"] = sum(
+        os.path.getsize(os.path.join(d, f)) for d, _, fs in os.walk(outdir) for f in fs)
     atomic_json(os.path.join(outdir, "status.json"), status)
     return status
 

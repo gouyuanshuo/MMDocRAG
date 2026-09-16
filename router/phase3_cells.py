@@ -71,6 +71,7 @@ from router.budget_router import (BUDGETS, curve, curve_auc,  # noqa: E402
                                   random_expectation)
 from router.tie_audit import QUOTA_FAMILY                     # noqa: E402
 from expkit.results import ExperimentResult, add_output_args  # noqa: E402
+from expkit.cache_identity import identity
 
 BOOT = 4000
 CASCADES = collections.OrderedDict([
@@ -97,7 +98,7 @@ def cluster_boot(d, docs, rng, n_boot=BOOT):
     lo, hi = np.percentile(m, [2.5, 97.5])
     tail = min((m <= 0).mean(), (m >= 0).mean())
     return (float(d.mean()), float(lo), float(hi),
-            float(max(2.0 * tail, 1.0 / n_boot)), len(ks))
+            float(min(1.0, max(2.0 * tail, 1.0 / n_boot))), len(ks))
 
 
 def analyse(name, pool, k, quota_family, features, budget, dense_model,
@@ -110,13 +111,27 @@ def analyse(name, pool, k, quota_family, features, budget, dense_model,
     # the same command would print different numbers depending on what was
     # already on disk. crc32 rather than hash(), which is salted per process.
     rng = np.random.default_rng([SEED, zlib.crc32(key.encode())])
-    path = os.path.join(cache_dir, key + ".json") if cache_dir else None
+    # The old key omitted model, quota and fold counts and accepted stale
+    # results before inspecting any inputs. A renamed model could therefore
+    # report the old model's result as a new experiment.
+    rows, _ = A.load(pool, k, dense_model)
+    provenance = identity(
+        dict(cascade=name, pool=pool, k=k, quota=quota_family, features=features,
+             budget=budget, dense_model=str(dense_model), folds=folds,
+             inner_folds=inner_folds, seed=SEED, bootstrap=BOOT),
+        [A.cache_path(pool, dense_model), DEFAULT_DB, __file__,
+         os.path.join(A.REPO_ROOT, "router/budget_router.py"),
+         os.path.join(A.REPO_ROOT, "router/features_p3.py"),
+         os.path.join(A.REPO_ROOT, "retrieval/nested_cv.py")])
+    path = (os.path.join(cache_dir, key + "_" + provenance["fingerprint"][:16] + ".json")
+            if cache_dir else None)
     if path and os.path.exists(path):
         with open(path, encoding="utf-8") as fh:
-            return json.load(fh)
+            cached = json.load(fh)
+        if cached.get("provenance") == provenance:
+            return cached
 
     quota = QUOTA_FAMILY[quota_family][k]
-    rows, _ = A.load(pool, k, dense_model)
     docs = [r["doc"] for r in rows]
     n = len(rows)
     qs = load_questions(DEFAULT_DB)
@@ -154,6 +169,7 @@ def analyse(name, pool, k, quota_family, features, budget, dense_model,
 
     inc = A.incremental_cost(cheap, expensive)
     out = {
+        "provenance": provenance,
         "cascade": name, "pool": pool, "k": k, "features": features,
         "budget": budget, "n": n, "n_documents": len(set(docs)),
         "cheap": A.action_label(cheap), "expensive": A.action_label(expensive),

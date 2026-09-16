@@ -243,6 +243,50 @@ def _is_tracked(rel):
     return r.returncode == 0
 
 
+def test_mixed_line_endings(root):
+    """Changed unpinned CRLF files must not reject other source hunks."""
+    from pathlib import Path
+    print("\n5. patch preimages and working-tree line endings")
+    repo = Path(root) / "line-ending-repo"
+    repo.mkdir()
+
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=repo, capture_output=True,
+                              check=True).stdout
+
+    git("init", "--quiet")
+    git("config", "core.autocrlf", "true")
+    (repo / ".gitattributes").write_bytes(b".gitattributes -text\n*.py -text\n")
+    (repo / "notes.txt").write_bytes(b"before\r\ncontext\r\n")
+    (repo / "pinned.py").write_bytes(b"# before\n# context\r\n")
+    git("add", ".")
+    git("-c", "user.name=Reconstruction Test", "-c", "user.email=test@example.invalid",
+        "commit", "--quiet", "-m", "fixture")
+    expected = {"notes.txt": b"after\r\ncontext\r\n",
+                "pinned.py": b"# after\n# context\r\n"}
+    for rel, data in expected.items():
+        (repo / rel).write_bytes(data)
+    patch = Path(root) / "line-endings.patch"
+    patch.write_bytes(git("diff", "--no-ext-diff", "--no-textconv", "HEAD"))
+    man = {"git": {"commit": git("rev-parse", "HEAD").decode().strip()},
+           "source_files": {rel: {"sha256": hashlib.sha256(data).hexdigest()}
+                            for rel, data in expected.items()}}
+    tree = Path(root) / "line-ending-tree"
+    steps = source.restore(man, str(tree), patch_path=str(patch), repo=str(repo))
+    check("LF patch applies alongside unpinned CRLF and pinned mixed endings",
+          next(s for s in steps if s["step"] == "git apply source.patch")["ok"])
+    check("unpinned file restores recorded CRLF bytes",
+          (tree / "notes.txt").read_bytes() == expected["notes.txt"])
+    check("byte-pinned mixed endings survive unchanged",
+          (tree / "pinned.py").read_bytes() == expected["pinned.py"])
+    patch.write_bytes(patch.read_bytes().replace(b"+after", b"+wrong"))
+    bad_tree = Path(root) / "line-ending-tampered-tree"
+    source.restore(man, str(bad_tree), patch_path=str(patch), repo=str(repo))
+    check("line-ending recovery cannot hide altered source content",
+          any(r["path"] == "notes.txt" and r["status"] == "FAIL"
+              for r in source.verify_tree(man, str(bad_tree))))
+
+
 def test_no_pollution(man, before_files, before_runs):
     print("\n5. the test changed no project file and removed no run")
     changed = []
@@ -324,6 +368,7 @@ def main():
         if bundle:
             test_full_reconstruction(run_id, man, root)
             test_tampering_fails_loudly(run_id, man, bundle, root)
+        test_mixed_line_endings(root)
         test_no_pollution(man, before_files, before_runs)
     finally:
         # A restored tree is an intermediate, not evidence: what this test

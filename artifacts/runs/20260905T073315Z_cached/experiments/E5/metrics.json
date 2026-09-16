@@ -1,0 +1,115 @@
+{
+  "experiment": "E5",
+  "title": "Cached input audit",
+  "run_id": "20260905T073315Z_cached",
+  "status": "ok",
+  "error": null,
+  "config": {
+    "analysis": "cached_input_audit",
+    "recomputed_from_saved_inputs": true,
+    "reran_ocr": false,
+    "n_questions": 4055,
+    "n_documents": 223,
+    "n_gold_total": 21978,
+    "n_gold_mapped": 21978,
+    "n_gold_dropped": 0,
+    "gold_mapping_rate": 1.0
+  },
+  "config_missing": [
+    "pool",
+    "k"
+  ],
+  "elapsed_sec": 0.0,
+  "created_utc": "2026-09-05T07:34:07Z",
+  "n_metrics": 6,
+  "n_per_question": 0,
+  "notes": [
+    "Read-only integrity/coverage audit. Reuses existing extraction; does not claim to regenerate OCR or document parsing."
+  ],
+  "metrics": [
+    {
+      "experiment": "E5",
+      "name": "n_questions",
+      "value": 4055.0,
+      "analysis": "cached_input_audit",
+      "recomputed_from_saved_inputs": true,
+      "reran_ocr": false,
+      "n_questions": 4055,
+      "n_documents": 223,
+      "n_gold_total": 21978,
+      "n_gold_mapped": 21978,
+      "n_gold_dropped": 0,
+      "gold_mapping_rate": 1.0
+    },
+    {
+      "experiment": "E5",
+      "name": "n_documents",
+      "value": 223.0,
+      "analysis": "cached_input_audit",
+      "recomputed_from_saved_inputs": true,
+      "reran_ocr": false,
+      "n_questions": 4055,
+      "n_documents": 223,
+      "n_gold_total": 21978,
+      "n_gold_mapped": 21978,
+      "n_gold_dropped": 0,
+      "gold_mapping_rate": 1.0
+    },
+    {
+      "experiment": "E5",
+      "name": "n_gold_total",
+      "value": 21978.0,
+      "analysis": "cached_input_audit",
+      "recomputed_from_saved_inputs": true,
+      "reran_ocr": false,
+      "n_questions": 4055,
+      "n_documents": 223,
+      "n_gold_total": 21978,
+      "n_gold_mapped": 21978,
+      "n_gold_dropped": 0,
+      "gold_mapping_rate": 1.0
+    },
+    {
+      "experiment": "E5",
+      "name": "n_gold_mapped",
+      "value": 21978.0,
+      "analysis": "cached_input_audit",
+      "recomputed_from_saved_inputs": true,
+      "reran_ocr": false,
+      "n_questions": 4055,
+      "n_documents": 223,
+      "n_gold_total": 21978,
+      "n_gold_mapped": 21978,
+      "n_gold_dropped": 0,
+      "gold_mapping_rate": 1.0
+    },
+    {
+      "experiment": "E5",
+      "name": "n_gold_dropped",
+      "value": 0.0,
+      "analysis": "cached_input_audit",
+      "recomputed_from_saved_inputs": true,
+      "reran_ocr": false,
+      "n_questions": 4055,
+      "n_documents": 223,
+      "n_gold_total": 21978,
+      "n_gold_mapped": 21978,
+      "n_gold_dropped": 0,
+      "gold_mapping_rate": 1.0
+    },
+    {
+      "experiment": "E5",
+      "name": "gold_mapping_rate",
+      "value": 1.0,
+      "analysis": "cached_input_audit",
+      "recomputed_from_saved_inputs": true,
+      "reran_ocr": false,
+      "n_questions": 4055,
+      "n_documents": 223,
+      "n_gold_total": 21978,
+      "n_gold_mapped": 21978,
+      "n_gold_dropped": 0,
+      "gold_mapping_rate": 1.0
+    }
+  ]
+}

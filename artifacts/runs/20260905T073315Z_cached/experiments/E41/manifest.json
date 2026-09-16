@@ -1,0 +1,188 @@
+{
+  "name": "E41",
+  "created_utc": "2026-09-05T07:56:09Z",
+  "git": {
+    "commit": "4f8f9ddf0d9ea7b98f19356c5917ee0f7c62729b",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "AGENTS.md",
+      "REPRODUCE.md",
+      "artifacts/derived/registry.json",
+      "artifacts/runs/20260905T073315Z_cached/",
+      "docs/2026-09-05-paper-appendix-correction.md",
+      "docs/ANSWER_EVALUATION_PROTOCOL.md",
+      "docs/HANDOFF.md",
+      "docs/RESEARCH_STATUS.md",
+      "docs/Research_Project_Proposal.docx",
+      "docs/artifacts-git-policy.md",
+      "docs/lab-notebook.html",
+      "docs/paper-baseline-audit.md",
+      "docs/research-status.html",
+      "eval_e29_paired.py",
+      "eval_e39_paired.py",
+      "experiments.py",
+      "expkit/artifacts.py",
+      "expkit/audit_inputs.py",
+      "expkit/cache_identity.py",
+      "expkit/paths.py",
+      "expkit/runner.py",
+      "expkit/source.py",
+      "gitignore",
+      "manifests/canonical/gate2_20260905T073440Z.json",
+      "manifests/canonical/gate2_failures.json",
+      "manifests/e27_canonical_k20_test.json",
+      "manifests/e27_selfbuilt_k10_test.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073348Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073402Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_oursk10_20260905T075600Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_paperk10_20260905T075553Z.json",
+      "reproduce.py",
+      "requirements.txt",
+      "retrieval/nested_cv.py",
+      "retrieval/oof_family.py",
+      "retrieval/r2_target.py",
+      "router/actions.py",
+      "router/phase3_cells.py",
+      "router/prepare_e39.py",
+      "tests/test_phase3.py",
+      "tests/test_runner.py",
+      "tests/test_statistics.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd2\\metrics.json",
+      "sha256": "d36100e60aac0cad4631bb048e24edb4cb2c35ba279ba2b7fce2e9338a4fa782",
+      "bytes": 9456
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd2\\per_question.csv",
+      "sha256": "0ca9e8deaf8c7e3858338a524a8a7090da34081f23cd2e29033005c1f0460242",
+      "bytes": 554550
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd3\\metrics.json",
+      "sha256": "3e6e33985a9d0624a18d06b7ce73b3a81e7aae60e6b184c195ed1f9eb17d5edf",
+      "bytes": 9562
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd3\\per_question.csv",
+      "sha256": "e0cfde93bbba6bd5f87fd0316cb24ec1b68b654d18ab1b4b1f59b5ffeaa80b4c",
+      "bytes": 555710
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd4\\metrics.json",
+      "sha256": "5d87bf2099bd62890cea7a96d2663ca5435a6fa1a159f37dc491a54ac28620fa",
+      "bytes": 9460
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd4\\per_question.csv",
+      "sha256": "a5d4579270d4ea650b57fcf66f5936912c147ae7a5e9234ce44a46929a8ccb03",
+      "bytes": 554194
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd5\\metrics.json",
+      "sha256": "0ec9671120e91f3bc2e2c27bbfbfb2f08fc6bc3a8c36d87f293c8e13f078d27c",
+      "bytes": 9562
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E27\\cmd5\\per_question.csv",
+      "sha256": "62c5f035795ec1a9c8dccb1b86a9b516f1dbc3658a2e00c0733a976bbe52a520",
+      "bytes": 554155
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd0\\metrics.json",
+      "sha256": "a96b5e076f6087a858eea0fe68fbc50bfaa844f815a8388bf82c830391e625dc",
+      "bytes": 9482
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd0\\per_question.csv",
+      "sha256": "a8353b1195c88742f072e019c0704a70b3bcc175d6412795836d8f9276f23a7c",
+      "bytes": 558829
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd1\\metrics.json",
+      "sha256": "a122f0addfc4147c537f48331204848f8bcd1af129c3ce5f9165c1d529b8c8d9",
+      "bytes": 9518
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd1\\per_question.csv",
+      "sha256": "ff87f59ddac07c3c30eca99915aae845e2fbb17075e4a296df89769e29f7fcfc",
+      "bytes": 557092
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd2\\metrics.json",
+      "sha256": "d5882f0e3a321f645fa0afce13b7c6d2b20bf0e643b90765dd76385de3c60f01",
+      "bytes": 9483
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd2\\per_question.csv",
+      "sha256": "c89f449b1d93ba8253efb42bd47be91569868f3ef66a5e81cfb43e1378b7cbb6",
+      "bytes": 558502
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd3\\metrics.json",
+      "sha256": "aa3787758ad454dd9844e5af875062f75c4ee708525fc7125e85918912d3ea60",
+      "bytes": 9594
+    },
+    {
+      "path": "artifacts\\runs\\20260905T073315Z_cached\\experiments\\E40\\cmd3\\per_question.csv",
+      "sha256": "c96424a6af958a7460616a81a45699605f249078c1e9d7dbd952819287f327b4",
+      "bytes": 557853
+    }
+  ],
+  "config": {
+    "experiment": "E41",
+    "run_id": "20260905T073315Z_cached",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\retrieval\\oof_family.py"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "analysis": "oof_family_audit",
+    "sample_unit": "document",
+    "source_run": "20260905T073315Z_cached",
+    "family_size": 8,
+    "bootstrap": 10000,
+    "seed": 20260905,
+    "status": "exploratory post-hoc multiplicity sensitivity",
+    "selection_rerun": false
+  },
+  "results": {
+    "delta:E27:canonical:10": 0.054147240259740256,
+    "delta:E27:canonical:20": 0.02686352813852814,
+    "delta:E27:selfbuilt:10": 0.06081109307359307,
+    "delta:E27:selfbuilt:20": 0.030438492063492063,
+    "delta:E40:canonical:10": 0.05246605339105339,
+    "delta:E40:canonical:20": 0.026707539682539683,
+    "delta:E40:selfbuilt:10": 0.060512103174603184,
+    "delta:E40:selfbuilt:20": 0.032858730158730164
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\retrieval\\oof_family.py"
+  ]
+}

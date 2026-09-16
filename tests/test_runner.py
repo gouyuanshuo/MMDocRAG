@@ -518,6 +518,7 @@ def main():
         test_pool_modes_are_distinct_and_id_stable(root)
         test_fullpool_index_is_refused_by_the_paired_evaluator(root)
         test_chunk_embeddings_resume_from_shards(root)
+        test_real_suite_failure_and_resume(root)
     finally:
         if not a.keep:
             shutil.rmtree(root, ignore_errors=True)
@@ -531,6 +532,40 @@ def main():
             print(f"  FAILED: {f}")
         raise SystemExit(1)
     print("=" * 78)
+
+
+def test_real_suite_failure_and_resume(root):
+    """Exercise the actual suite controller, not a second implementation of it."""
+    from unittest.mock import patch
+    import experiments as E
+    from expkit import source
+    exps = []
+    for i, code in enumerate(("print('ok')", "raise SystemExit(7)", "print('last')")):
+        e = dict(E.BY_ID["E3"], id=f"TS{i}",
+                 argv=[[sys.executable, "-c", code]], cmds=["stub"], replay=(0,))
+        exps.append(e)
+    argv = ["experiments.py", "run-suite", "cached", "--fail-fast",
+            "--artifact-root", os.path.join(root, "real-suite")]
+    with patch.object(E, "suite_members", return_value=exps), \
+         patch.object(E, "_finish_run") as finish, \
+         patch.object(source, "write"), patch.object(sys, "argv", argv):
+        try:
+            E.cmd_run_suite()
+        except SystemExit as exc:
+            exitcode = exc.code
+        else:
+            exitcode = 0
+        check("actual suite returns nonzero when an experiment fails", exitcode == 1)
+        rid = finish.call_args.args[0]
+        st = runner.load_status(rid, "TS2", os.path.join(root, "real-suite"))
+        check("fail-fast leaves an explicit skipped record", st["status"] == "skipped")
+    marker = os.path.join(root, "executions.txt")
+    script = "from pathlib import Path; p=Path(" + repr(marker) + "); p.write_text(p.read_text()+'x' if p.exists() else 'x')"
+    exp = dict(exps[0], id="TR", argv=[[sys.executable, "-c", script]])
+    runner.run_experiment(exp, "resume-test", artifact_root=root, echo=False)
+    runner.run_experiment(exp, "resume-test", artifact_root=root, echo=False, resume=True)
+    check("resume retains a completed command without executing it again",
+          io.open(marker).read() == "x")
 
 
 if __name__ == "__main__":

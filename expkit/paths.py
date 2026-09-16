@@ -23,6 +23,10 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # than copied: they are large, they are already reproducible from their own
 # scripts, and duplicating them would double disk use for no gain.
 LEGACY_ARTIFACTS = {
+    "corpora/ocr-pages": os.path.join(REPO_ROOT, "canonical", "ocr_cache.sqlite"),
+    "corpora/quote-ocr": os.path.join(REPO_ROOT, "retrieval", "quote_ocr.sqlite"),
+    "router/outcomes": os.path.join(REPO_ROOT, "router", "outcomes.sqlite"),
+    "router/features": os.path.join(REPO_ROOT, "router", "features_20.npz"),
     "embeddings/bge-small-vlm": os.path.join(
         REPO_ROOT, "retrieval", "embeddings",
         "bge-small-en-v1.5_vlm_passages.npz"),

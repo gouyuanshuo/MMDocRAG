@@ -138,7 +138,9 @@ def main():
     print(f"DOCUMENT-GROUPED NESTED CV   pool={args.pool}  k={k}  folds={args.folds}")
     print("=" * 88)
     print(f"questions {len(rows)}, documents {len(uniq)}, "
-          f"unmapped gold counted as miss: {sum(r['n_unmapped'] for r in rows)}")
+          f"gold {sum(r['n_total'] for r in rows)}, "
+          f"mapped {sum(r['n_total']-r['n_unmapped'] for r in rows)}, "
+          f"unmapped {sum(r['n_unmapped'] for r in rows)}, dropped 0")
     print(f"fold sizes (questions): {load}")
     print(f"inner search space: {len(CONFIGS)} retriever configs x {k + 1} quotas")
 
@@ -177,7 +179,7 @@ def main():
 
     print()
     print(f"{'system':<44}{'recall@' + str(k):>12}")
-    print(f"{'A  local BGE-small surrogate, quota ' + f'{pa[0]}/{pa[1]}':<44}"
+    print(f"{'A  local dense surrogate, quota ' + f'{pa[0]}/{pa[1]}':<44}"
           f"{ref_A.mean():>12.4f}")
     print(f"{'E  closest local paper-style hybrid':<44}{ref_E.mean():>12.4f}")
     print(f"{'nested-CV selected pipeline (out-of-fold)':<44}{selected.mean():>12.4f}")
@@ -202,14 +204,15 @@ def main():
               f"{'[' + format(lo, '+.4f') + ',' + format(hi, '+.4f') + ']' + star:>26}")
     print("-" * 88)
     print("Every question is scored under a configuration chosen without it.")
-    print("This is the protocol that can support a generalisation claim; the")
-    print("earlier single-split numbers cannot.")
+    print("Internal document-grouped OOF evidence. The method space was developed")
+    print("on these same questions; this does not create an untouched confirmation set.")
 
     with ExperimentResult("E28", args.metrics_out,
                           title="document-grouped OOF 检索配置评价") as res:
         res.config(analysis="nested_cv", grouping="document", oof=True,
                    unmapped_gold="counted as miss",
-                   pool=args.pool, k=k, seed=SEED, bootstrap=BOOT, folds=args.folds,
+                   pool=args.pool, k=k, dense_model=args.dense_model,
+                   seed=SEED, bootstrap=BOOT, folds=args.folds,
                    sample_unit="document", quota_paper=f"{pa[0]}/{pa[1]}",
                    n_questions=len(rows), n_documents=len(uniq),
                    selection_stable_across_folds=bool(stable),
@@ -217,7 +220,7 @@ def main():
                             "(not a strict two-level inner CV)")
         res.data_file(args.db, args.quotes, args.colqwen)
         res.metric("recall_surrogate_A", float(ref_A.mean()),
-                   desc="local BGE-small surrogate, official quota")
+                   desc="local dense surrogate, local paper-style quota")
         res.metric("recall_paper_style_E", float(ref_E.mean()),
                    desc="closest local paper-style hybrid (dense text + ColQwen)")
         res.metric("recall_nested_cv_oof", float(selected.mean()),

@@ -270,6 +270,7 @@ def main():
     test_cache_truncation_changes_no_number()
     test_oof_predictions_are_out_of_fold()
     test_oracle_and_tie_controls_are_consistent()
+    test_cell_cache_tracks_configuration()
     print()
     print("=" * 78)
     print(f"{len(PASS)} passed, {len(FAIL)} failed")
@@ -278,6 +279,30 @@ def main():
             print(f"  FAILED: {f}")
         raise SystemExit(1)
     print("=" * 78)
+
+
+def test_cell_cache_tracks_configuration():
+    """Changing model/quota/folds must actually refit, even with cached results."""
+    import tempfile
+    from unittest.mock import patch
+    from router import phase3_cells as P
+    from expkit.cache_identity import identity
+    rows = [{"doc": "a"}, {"doc": "b"}, {"doc": "a"}, {"doc": "b"}]
+    X = np.zeros((4, 1))
+    with tempfile.TemporaryDirectory() as cache, \
+         patch.object(P.A, "load", return_value=(rows, {})), \
+         patch.object(P, "identity", side_effect=lambda config, files: identity(config, [])), \
+         patch.object(P, "load_questions", return_value={}), \
+         patch.object(P.F, "featurize", return_value=(X, [])), \
+         patch.object(P, "recall", return_value=0.5), \
+         patch.object(P, "oof_predict", return_value=(np.zeros(4), ["dummy"])) as fit:
+        args = ("gpu", "canonical", 10, "balanced", "shape+firstpass", 0.5)
+        P.analyse(*args, "model-one", 2, 2, cache)
+        P.analyse(*args, "model-one", 2, 2, cache)
+        check("identical cell configuration reuses its result", fit.call_count == 1)
+        P.analyse(*args, "model-two", 2, 2, cache)
+        P.analyse(*args, "model-two", 3, 2, cache)
+        check("changed model or folds refits instead of returning old numbers", fit.call_count == 3)
 
 
 if __name__ == "__main__":

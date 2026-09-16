@@ -1,0 +1,48 @@
+{
+  "config": {
+    "suite": "cached",
+    "ids": [
+      "E29"
+    ],
+    "argv": [
+      [
+        "{py}",
+        "eval_all.py",
+        "--model",
+        "gemini-3.6-flash",
+        "--setting",
+        "paperk10",
+        "--mode",
+        "pure-text",
+        "--no-judge"
+      ],
+      [
+        "{py}",
+        "eval_all.py",
+        "--model",
+        "gemini-3.6-flash",
+        "--setting",
+        "oursk10",
+        "--mode",
+        "pure-text",
+        "--no-judge"
+      ],
+      [
+        "{py}",
+        "eval_e29_paired.py"
+      ]
+    ],
+    "offline": true
+  },
+  "files": {
+    "D:\\Playground\\MMDocRAG\\canonical\\mmdocrag.sqlite": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+    "D:\\Playground\\MMDocRAG\\dataset\\evaluation_oursk10.jsonl": "7fe90c71e87a870dd0af81d5f74eb7eee02184d33315c6dfa832d51bd4d4095b",
+    "D:\\Playground\\MMDocRAG\\dataset\\evaluation_paperk10.jsonl": "d1cb633f66a3f6592034a34043cb18ed133450d0d6829d166b6a680a59788a7c",
+    "D:\\Playground\\MMDocRAG\\response\\gemini-3.6-flash_pure-text_quotesoursk10_response.jsonl": "19f689f41dbfd0a662d92d689f6a6c2327988d10b6c5e2d5dcdf6d84d8955875",
+    "D:\\Playground\\MMDocRAG\\response\\gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl": "6550a15fa89941cc73a7d5f4a00e890a2159a3ea57f797f03a3449b1f5f2ea6e",
+    "D:\\Playground\\MMDocRAG\\retrieval\\colqwen_scores.sqlite": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+    "D:\\Playground\\MMDocRAG\\retrieval\\embeddings\\bge-small-en-v1.5_query_questions.npz": "7ccddf52dc1a28da6c6836a4587e14d696653f3365c872411faf9281dee5eb5d",
+    "D:\\Playground\\MMDocRAG\\retrieval\\embeddings\\bge-small-en-v1.5_vlm_passages.npz": "3e46c3828dcf5424ef1ba0bbe4966e019744fb918549e81518a1d6aebd63c07e"
+  },
+  "fingerprint": "73b15a6cd868e4a60bd715a71d93bd44ffdf28ca99a8f699c699cb99a9c46e1a"
+}

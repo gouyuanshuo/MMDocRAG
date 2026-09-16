@@ -1,0 +1,361 @@
+{
+  "suite": "cached",
+  "offline": true,
+  "allow_api": false,
+  "include_expensive": false,
+  "fail_fast": false,
+  "dry_run": false,
+  "run_id": "20260905T080029Z_cached",
+  "created_utc": "2026-09-05T08:01:59Z",
+  "python": "D:\\Python313\\python.exe",
+  "python_version": "3.13.7",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cwd": "D:\\Playground\\MMDocRAG",
+  "artifact_root": "D:\\Playground\\MMDocRAG\\artifacts",
+  "experiments": [
+    "E19",
+    "E20",
+    "E29",
+    "E34"
+  ],
+  "git": {
+    "commit": "4f8f9ddf0d9ea7b98f19356c5917ee0f7c62729b",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "AGENTS.md",
+      "REPRODUCE.md",
+      "artifacts/derived/registry.json",
+      "artifacts/runs/20260905T073315Z_cached/",
+      "artifacts/runs/20260905T080029Z_cached/",
+      "artifacts/runs/latest.json",
+      "artifacts/verify/E24_20260905T075642Z.json",
+      "artifacts/verify/E24_latest.json",
+      "artifacts/verify/E27_20260905T075643Z.json",
+      "artifacts/verify/E27_latest.json",
+      "docs/2026-09-05-paper-appendix-correction.md",
+      "docs/ANSWER_EVALUATION_PROTOCOL.md",
+      "docs/HANDOFF.md",
+      "docs/RESEARCH_STATUS.md",
+      "docs/Research_Project_Proposal.docx",
+      "docs/artifacts-git-policy.md",
+      "docs/lab-notebook.html",
+      "docs/paper-baseline-audit.md",
+      "docs/research-status.html",
+      "eval_e29_paired.py",
+      "eval_e39_paired.py",
+      "experiments.py",
+      "expkit/artifacts.py",
+      "expkit/audit_inputs.py",
+      "expkit/cache_identity.py",
+      "expkit/paths.py",
+      "expkit/runner.py",
+      "expkit/source.py",
+      "gitignore",
+      "manifests/canonical/gate2_20260905T073440Z.json",
+      "manifests/canonical/gate2_failures.json",
+      "manifests/e27_canonical_k20_test.json",
+      "manifests/e27_selfbuilt_k10_test.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073348Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073402Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_oursk10_20260905T075600Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_oursk10_20260905T080151Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_paperk10_20260905T075553Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_paperk10_20260905T080144Z.json",
+      "reproduce.py",
+      "requirements.txt",
+      "retrieval/audit_e19_ties.py",
+      "retrieval/eval_fullpool.py",
+      "retrieval/eval_stack_v2.py",
+      "retrieval/nested_cv.py",
+      "retrieval/oof_family.py",
+      "retrieval/r2_target.py",
+      "router/actions.py",
+      "router/phase3_cells.py",
+      "router/prepare_e39.py",
+      "tests/test_phase3.py",
+      "tests/test_runner.py",
+      "tests/test_statistics.py"
+    ]
+  },
+  "dependency_plan": [
+    {
+      "artifact": "corpora/canonical-db",
+      "label": "canonical evidence DB",
+      "state": "present",
+      "path": "canonical/mmdocrag.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at canonical/mmdocrag.sqlite",
+      "expensive": false,
+      "dependencies": [],
+      "build_cmd": [
+        "-m",
+        "canonical.build"
+      ]
+    },
+    {
+      "artifact": "corpora/ocr-pages",
+      "label": "saved full-corpus page OCR",
+      "state": "present",
+      "path": "canonical/ocr_cache.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at canonical/ocr_cache.sqlite",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        "-m",
+        "canonical.ocr",
+        "--min-chars",
+        "100"
+      ]
+    },
+    {
+      "artifact": "corpora/quotes-selfbuilt",
+      "label": "self-built chunk corpus (~92.7k chunks)",
+      "state": "present",
+      "path": "retrieval/quotes.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/quotes.sqlite",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db",
+        "corpora/ocr-pages"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.quote_corpus"
+      ]
+    },
+    {
+      "artifact": "embeddings/bge-large-vlm",
+      "label": "BGE-large vectors over canonical evidence (VLM descriptions)",
+      "state": "present",
+      "path": "retrieval/embeddings/bge-large-en-v1.5_vlm_passages.npz",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/embeddings/bge-large-en-v1.5_vlm_passages.npz",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.dense",
+        "--model",
+        "models/bge-large-en-v1.5",
+        "--image-repr",
+        "vlm"
+      ]
+    },
+    {
+      "artifact": "embeddings/bge-small-chunks",
+      "label": "BGE-small vectors over self-built chunks",
+      "state": "present",
+      "path": "retrieval/embeddings/bge-small-en-v1.5_quotes_chunks.npz",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/embeddings/bge-small-en-v1.5_quotes_chunks.npz",
+      "expensive": true,
+      "dependencies": [
+        "corpora/quotes-selfbuilt"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.dense_chunks"
+      ]
+    },
+    {
+      "artifact": "embeddings/bge-small-query",
+      "label": "BGE-small question vectors",
+      "state": "present",
+      "path": "retrieval/embeddings/bge-small-en-v1.5_query_questions.npz",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/embeddings/bge-small-en-v1.5_query_questions.npz",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.dense",
+        "--image-repr",
+        "vlm"
+      ]
+    },
+    {
+      "artifact": "embeddings/bge-small-vlm",
+      "label": "BGE-small vectors over canonical evidence (VLM descriptions)",
+      "state": "present",
+      "path": "retrieval/embeddings/bge-small-en-v1.5_vlm_passages.npz",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/embeddings/bge-small-en-v1.5_vlm_passages.npz",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        "-m",
+        "retrieval.dense",
+        "--image-repr",
+        "vlm"
+      ]
+    },
+    {
+      "artifact": "indexes/colqwen-fullpool",
+      "label": "ColQwen2 rankings over the FULL image pool (GPU, ~130 min)",
+      "state": "present",
+      "path": "retrieval/colqwen_scores_fullpool.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/colqwen_scores_fullpool.sqlite",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        ".venv-colpali/Scripts/python.exe",
+        "-m",
+        "retrieval.colqwen_index",
+        "--image-source",
+        "fulldisk",
+        "--out",
+        "retrieval/colqwen_scores_fullpool.sqlite"
+      ]
+    },
+    {
+      "artifact": "indexes/colqwen-rankings",
+      "label": "ColQwen2 late-interaction rankings (GPU, ~62 min)",
+      "state": "present",
+      "path": "retrieval/colqwen_scores.sqlite",
+      "decision": "reuse",
+      "reason": "artifact present at retrieval/colqwen_scores.sqlite",
+      "expensive": true,
+      "dependencies": [
+        "corpora/canonical-db"
+      ],
+      "build_cmd": [
+        ".venv-colpali/Scripts/python.exe",
+        "-m",
+        "retrieval.colqwen_index"
+      ]
+    }
+  ],
+  "legacy_adopted": [
+    {
+      "name": "corpora/ocr-pages",
+      "action": "already registered"
+    },
+    {
+      "name": "corpora/quote-ocr",
+      "action": "already registered"
+    },
+    {
+      "name": "router/outcomes",
+      "action": "already registered"
+    },
+    {
+      "name": "router/features",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-small-vlm",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-small-query",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-small-chunks",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-small-ocr",
+      "action": "already registered"
+    },
+    {
+      "name": "corpora/page-corpus",
+      "action": "already registered"
+    },
+    {
+      "name": "indexes/colqwen-rankings",
+      "action": "already registered"
+    },
+    {
+      "name": "corpora/canonical-db",
+      "action": "already registered"
+    },
+    {
+      "name": "corpora/quotes-selfbuilt",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-large-vlm",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-large-query",
+      "action": "already registered"
+    },
+    {
+      "name": "embeddings/bge-large-chunks",
+      "action": "already registered"
+    },
+    {
+      "name": "indexes/colqwen-fullpool",
+      "action": "already registered"
+    }
+  ],
+  "source_fingerprint": "32f30e4e81dd6daf",
+  "source_manifest": "artifacts/runs/20260905T080029Z_cached/source_manifest.json",
+  "source_patch": "artifacts/runs/20260905T080029Z_cached/source.patch",
+  "n_source_files": 72,
+  "source_bundle": "artifacts/runs/20260905T080029Z_cached/source_bundle.zip",
+  "source_bundle_sha256": "26721dd8f5d294fd9e90c3a460e4ae43c4a40cb75ce01ff66405b9c82644a81d",
+  "source_bundle_files": 72,
+  "source_bundle_bytes": 344651,
+  "reconstruct_command": "python -m expkit.source reconstruct --run 20260905T080029Z_cached",
+  "reconstruction_protocol": [
+    "git archive --format=zip <commit> -o head.zip   # read-only; never `git checkout` a dirty tree",
+    "unzip head.zip -d <tree>",
+    "cd <tree> && git apply <run>/source.patch        # tracked-file working-tree deltas",
+    "unzip -o <run>/source_bundle.zip -d <tree>       # authoritative: overwrites with the exact bytes that ran",
+    "python -m expkit.source reconstruct --run <run_id>  # does all of the above and re-hashes every file"
+  ],
+  "reconstruction_test": {
+    "status": "pass",
+    "n_pass": 72,
+    "n_total": 72,
+    "n_fail": 0,
+    "tree": "artifacts/test-runs/20260905T080029Z_cached-reconstruct/tree",
+    "tree_kept": false,
+    "tree_bytes": 4248640,
+    "tree_note": "removed after verification; the hash table in this record is the evidence. Regenerate with: python -m expkit.source reconstruct --run 20260905T080029Z_cached --into <dir>",
+    "steps": [
+      {
+        "step": "git archive <commit>",
+        "ok": true,
+        "files": 183,
+        "files_in_commit": 1978,
+        "skipped_not_source": 1795,
+        "skipped_bytes": 1037061806,
+        "skipped_why": "data, models and binaries are not under test here; see _wanted_in_tree",
+        "commit": "4f8f9ddf0d9ea7b98f19356c5917ee0f7c62729b"
+      },
+      {
+        "step": "git apply source.patch",
+        "ok": false,
+        "applied": 0,
+        "skipped": 0,
+        "error": "D:/Playground/MMDocRAG/artifacts/runs/20260905T080029Z_cached/source.patch:1704: trailing whitespace.\n# MMDocRAG 项目交接\r\nD:/Playground/MMDocRAG/artifacts/runs/20260905T080029Z_cached/source.patch:1705: trailing whitespace.\n\r\nD:/Playground/MMDocRAG/artifacts/runs/20260905T080029Z_cached/source.patch:1706: trailing whitespace.\n> 写于 2026-08-30，2026-09-01 大幅更新（E37/E38、统计机器测试、全池索引解除阻塞）。\r\nD:/Playground/MM"
+      },
+      {
+        "step": "unzip source_bundle.zip over the tree",
+        "ok": true,
+        "files": 72
+      }
+    ],
+    "failures": [],
+    "protocol": "git archive <commit> -> git apply source.patch -> unzip source_bundle.zip -> sha256 every manifest file"
+  },
+  "artifact_bytes": 1709225
+}

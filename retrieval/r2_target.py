@@ -11,8 +11,8 @@ observations) and stopped there, noting that the allocation gain stayed at
 so that a better feature source would pay off -- or is the mapping from R^2 to
 retrieval gain itself so flat that no achievable R^2 matters?
 
-Chasing a higher R^2 is only worth doing if the answer is the first one. This
-script settles it by measuring the curve directly instead of arguing about it.
+This script explores one assumed error model. It cannot settle whether a
+particular future feature source would produce useful allocation decisions.
 
 Method
 ------
@@ -22,8 +22,12 @@ prediction error. For a grid of target R^2, this builds a synthetic predictor
 
     p = v + eps,    eps ~ N(0, sigma^2),    sigma^2 = (1 - R^2) * Var(v)
 
-and measures what allocating from p buys. Two properties make the resulting
-curve an UPPER BOUND rather than a forecast, and both matter for reading it:
+and measures what allocating from p buys. This is an optimistic sensitivity
+simulation for one error family, NOT a universal upper bound at a given R^2.
+Equal R^2 can hide errors on different questions and different quota boundaries.
+Clipping also biases conditional errors near 0 and 1.
+
+The historical upper-bound argument below is RETRACTED (2026-09-05):
 
   * The synthetic predictor is UNBIASED and its error is independent of v. A
     fitted ridge shrinks toward the training mean, so its errors correlate with
@@ -31,10 +35,8 @@ curve an UPPER BOUND rather than a forecast, and both matter for reading it:
   * The shrinkage coefficient is chosen on the TEST set, which no deployable
     system could do. It is chosen there on purpose: the point is a ceiling.
 
-So if the curve says an achievable R^2 buys nothing, no feature source can
-rescue it, and that is a conclusion about the target rather than about the
-features. If it says the target is reachable and would pay, then the three
-untried sources are worth the money.
+The historical inference that "no feature source can rescue it" is also
+retracted. The simulation does not order every possible predictor at fixed R^2.
 
 Clipping predictions into [0, 1] perturbs the realised R^2 away from its
 nominal target, so every row reports the REALISED R^2 of the predictor it
@@ -161,7 +163,7 @@ def main():
     print()
 
     # ---- the curve -------------------------------------------------------
-    print("SYNTHETIC PREDICTORS AT A TARGET R^2  (ceiling, see module docstring)")
+    print("SYNTHETIC PREDICTORS AT A TARGET R^2  (sensitivity, see module docstring)")
     print("-" * 92)
     print(f"{'target':>7}{'realised':>10}{'lambda':>8}{'recall':>9}"
           f"{'vs fixed':>10}  {'95% CI':>21}{'of headroom':>13}")
@@ -252,26 +254,24 @@ def main():
             and o["share_of_headroom"] >= 0.5 * (d_true / head)]
     print()
     print("READING THIS")
-    print("  lambda is chosen on the TEST set and the predictor's error is")
-    print("  unbiased and independent of the truth, so each row is a CEILING.")
-    print("  A deployable ridge at the same R^2 does strictly worse.")
+    print("  Optimistic synthetic sensitivity analysis: lambda was chosen on TEST.")
+    print("  This is NOT a universal upper bound at a given R^2. Error placement")
+    print("  matters, and clipping biases conditional errors near the boundaries.")
+    print("  Pointwise intervals do not correct for test-set lambda selection.")
     print()
     if reach:
         first = min(reach, key=lambda o: o["target_r2"])
-        print(f"  Lowest R^2 whose interval clears zero even as a ceiling: "
+        print(f"  Lowest nominal R^2 whose pointwise interval clears zero in this simulation: "
               f"{first['target_r2']:.2f}")
     else:
         print("  No R^2 on this grid produces an interval clear of zero, not")
-        print("  even at perfect prediction. The allocation decision itself is")
-        print("  what does not pay, and the R^2 target is the wrong target.")
+        print("  even at perfect prediction under this allocation rule and split.")
     if half:
         h = min(half, key=lambda o: o["target_r2"])
         print(f"  Lowest R^2 delivering half of what the true mix delivers: "
               f"{h['target_r2']:.2f}")
-    print(f"  E23 measured {MEASURED_R2:.3f}. The distance between that and the")
-    print("  figures above is what the proposal's three untried feature sources")
-    print("  would have to close, and it is the honest way to decide whether")
-    print("  paying for them is justified.")
+    print(f"  E23 measured {MEASURED_R2:.3f}. The simulated thresholds are")
+    print("  descriptive, not necessary R^2 requirements for a future predictor.")
     print()
     print("EXPLORATORY. This split has been observed since E9 and was used to")
     print("choose methods.")
@@ -280,9 +280,9 @@ def main():
                           title="RQ1b 的 R² 目标要多高才值得追") as res:
         res.config(pool=args.pool, k_total=k, k_first=kf,
                    draws=args.draws, sample_unit="document", bootstrap=BOOT,
-                   predictor="synthetic, unbiased, homoscedastic noise",
+                   predictor="true share + Gaussian noise, clipped to [0,1]",
                    lambda_selection="chosen on test -- deliberately optimistic",
-                   status="exploratory ceiling, not a forecast",
+                   status="exploratory sensitivity; not a universal upper bound",
                    measured_r2_from_E23=MEASURED_R2)
         res.metric("recall_best_fixed_split", float(fixed), unit="recall")
         res.metric("recall_oracle_split", float(orc), unit="recall")
@@ -297,8 +297,8 @@ def main():
             res.metric(f"delta_at_r2_{o['target_r2']:.3f}".replace(".", "_"),
                        o["delta"], unit="recall", ci=[o["lo"], o["hi"]],
                        realised_r2=o["realised_r2"], shrinkage=o["lambda"],
-                       desc="ceiling: unbiased predictor at this R^2, shrinkage "
-                            "chosen on test")
+                       desc="synthetic sensitivity, shrinkage selected on test; "
+                            "pointwise CI conditional on this selection")
 
 
 if __name__ == "__main__":

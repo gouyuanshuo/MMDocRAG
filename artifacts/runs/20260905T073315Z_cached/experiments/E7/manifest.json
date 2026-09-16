@@ -1,0 +1,105 @@
+{
+  "name": "E7",
+  "created_utc": "2026-09-05T07:34:40Z",
+  "git": {
+    "commit": "4f8f9ddf0d9ea7b98f19356c5917ee0f7c62729b",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "artifacts/derived/registry.json",
+      "artifacts/runs/20260905T073315Z_cached/",
+      "docs/Research_Project_Proposal.docx",
+      "eval_e29_paired.py",
+      "eval_e39_paired.py",
+      "experiments.py",
+      "expkit/artifacts.py",
+      "expkit/audit_inputs.py",
+      "expkit/cache_identity.py",
+      "expkit/paths.py",
+      "expkit/runner.py",
+      "expkit/source.py",
+      "gitignore",
+      "manifests/canonical/gate2_20260905T073440Z.json",
+      "manifests/canonical/gate2_failures.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073348Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073402Z.json",
+      "reproduce.py",
+      "requirements.txt",
+      "retrieval/nested_cv.py",
+      "retrieval/oof_family.py",
+      "retrieval/r2_target.py",
+      "router/actions.py",
+      "router/phase3_cells.py",
+      "router/prepare_e39.py",
+      "tests/test_phase3.py",
+      "tests/test_runner.py",
+      "tests/test_statistics.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [
+    {
+      "path": "retrieval\\pages.sqlite",
+      "sha256": "4cfc7d0056e4d4590cb0be8eb4163bac1ad707ba0d3c9577c6fa3fab8306cce8",
+      "bytes": 51830784
+    },
+    {
+      "path": "canonical\\ocr_cache.sqlite",
+      "sha256": "edc7b0db58b4fabf425a84f8de102dd74e1272aa1aac345c2cfa5985c6db5853",
+      "bytes": 1376256
+    }
+  ],
+  "config": {
+    "experiment": "E7",
+    "run_id": "20260905T073315Z_cached",
+    "argv": [
+      "D:\\Playground\\MMDocRAG\\expkit\\audit_inputs.py",
+      "--experiment",
+      "E7"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "analysis": "cached_input_audit",
+    "recomputed_from_saved_inputs": true,
+    "reran_ocr": false,
+    "n_pages": 14763,
+    "n_documents": 220,
+    "pages_with_zero_raw_chars_before": 1486,
+    "pages_with_zero_raw_chars_after": 49,
+    "cached_ocr_pages": 1983
+  },
+  "results": {
+    "n_pages": 14763.0,
+    "n_documents": 220.0,
+    "pages_with_zero_raw_chars_before": 1486.0,
+    "pages_with_zero_raw_chars_after": 49.0,
+    "cached_ocr_pages": 1983.0
+  },
+  "argv": [
+    "D:\\Playground\\MMDocRAG\\expkit\\audit_inputs.py",
+    "--experiment",
+    "E7"
+  ]
+}

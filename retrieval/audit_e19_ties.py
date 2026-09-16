@@ -141,10 +141,11 @@ def main():
     c2 = collections.Counter(sample_tied())
     print("  " + ", ".join(f"a={a}:{c}" for a, c in sorted(c2.items())[:10]) + " ...")
     print()
-    print("Reading: if the fixed split is already optimal for a large share of "
-          "questions,\nthe oracle's advantage on the rest is what an adaptive "
-          "policy could win, and\nthat is bounded by 'oracle - closest-to-fixed' "
-          f"= {oracle - closest_val:+.4f}.")
+    print("Reading: oracle - closest-to-fixed is zero by construction: both "
+          "choose a tied-optimal action. It is NOT a bound on adaptive gain.")
+    print(f"The measured oracle headroom over this fixed policy is "
+          f"oracle - fixed = {oracle - fixed:+.4f}; it is descriptive and "
+          "does not show how much a learned router can recover.")
 
 
 if __name__ == "__main__":

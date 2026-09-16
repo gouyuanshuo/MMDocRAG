@@ -69,18 +69,31 @@ def load_jsonl(path):
 
 def score_arm(gold_path, resp_path):
     """Per-question F1, keyed by q_id, using eval_all's own scorers."""
-    gold = {r["q_id"]: r for r in load_jsonl(gold_path)}
-    resp = {r["q_id"]: r for r in load_jsonl(resp_path)}
+    gold_rows, resp_rows = load_jsonl(gold_path), load_jsonl(resp_path)
+    gold = {r["q_id"]: r for r in gold_rows}
+    resp = {r["q_id"]: r for r in resp_rows}
+    if len(gold) != len(gold_rows) or len(resp) != len(resp_rows):
+        raise ValueError("Duplicate q_id in a single-split paired evaluation")
+    if not gold or set(gold) != set(resp):
+        raise ValueError("Paired evaluation requires the full frozen question set "
+                         "in each response file; no complete-case deletion")
     f1, docs, missing = {}, {}, []
     for qid, g in gold.items():
         r = resp.get(qid)
         if r is None or not r.get("response"):
             missing.append(qid)
             continue
-        _p, _r, f = get_scores(g["gold_quotes"],
+        # Numeric missing-gold sentinels in legacy datasets must never earn
+        # credit if a model happens to hallucinate that nonexistent citation.
+        visible = {q["quote_id"] for q in g["text_quotes"] + g["img_quotes"]}
+        gold_labels = [x if x in visible else "unretrieved:" + x for x in g["gold_quotes"]]
+        _p, _r, f = get_scores(gold_labels,
                                extract_citations(strip_thinking(r["response"]))[2])
         f1[qid] = f
         docs[qid] = g["doc_name"]
+    if missing:
+        raise ValueError(f"Incomplete responses: {len(missing)}/{len(gold)}; "
+                         "finish/resume generation before reporting paired F1")
     return f1, docs, missing, len(gold)
 
 
@@ -91,8 +104,15 @@ def main():
     args = ap.parse_args()
 
     scored, docs_of, per_arm = {}, {}, {}
+    reference = None
+    for _, gold_path, _, _ in ARMS:
+        design = {r["q_id"]: (r["doc_name"], r["question"], len(r["gold_quotes"]))
+                  for r in load_jsonl(gold_path)}
+        if reference is not None and design != reference:
+            raise ValueError("Arms differ in question identity, document or gold denominator")
+        reference = design
     print("=" * 84)
-    print("E29 PAIRED: retrieval configuration -> generation quality")
+    print("E29 PAIRED: retrieval configuration -> quote-selection F1")
     print("=" * 84)
     for name, gold_path, resp_path, desc in ARMS:
         f1, docs, missing, n_gold = score_arm(gold_path, resp_path)
@@ -146,7 +166,7 @@ def main():
     lo, hi = np.percentile(boot, [2.5, 97.5])
     # Two-sided bootstrap p, floored at the resolution the design can resolve.
     p_two = 2.0 * min((boot <= 0).mean(), (boot >= 0).mean())
-    p_two = max(p_two, 1.0 / args.bootstrap)
+    p_two = min(1.0, max(p_two, 1.0 / args.bootstrap))
     sig = lo > 0 or hi < 0
 
     # A question-level interval is computed only as a contrast. Note it is NOT

@@ -35,6 +35,8 @@
 | `artifacts/derived/embeddings/**`、`indexes/**` | 向量与索引，数十至数百 MB |
 | `artifacts/model_cache/**` | 真正的缓存，可从 hub 重新下载 |
 | `artifacts/test-runs/**` | 测试产物，不是实验记录 |
+| `artifacts/e39/**` | 冻结候选输入包含完整文档文字/图片描述；本地保留，轻量设计和统计摘要写入研究总结 |
+| `artifacts/derived/rebuild-backups/**` | 强制重建时保留的旧派生产物及大小记录；用于本地回滚，不提交 |
 
 ## 为什么二进制的 source_bundle.zip 反而要提交
 

@@ -485,11 +485,16 @@ class LiveEngine:
                 "evidence to score the answer against. Retrieval and generation "
                 "are real; the evaluation is the part that cannot exist here."))
         from eval_all import get_scores
-        visible = {q["localId"] for q in quotes}
+        # Gold that retrieval never surfaced gets a sentinel label nothing can
+        # match, so it stays in the denominator as a miss -- the same trick
+        # eval_e29_paired uses, and what makes this F1 sensitive to retrieval.
         local_of = {q["evidenceId"]: q["localId"] for q in quotes}
         labels = [local_of.get(e, "unretrieved:" + e) for e in gold]
-        precision, recall, f1 = get_scores(labels, [c for c in cited if c in visible]
-                                           or list(cited))
+        # Predictions are passed through unfiltered. A citation to a quote the
+        # model was never given is a false positive, exactly as it is in the
+        # recorded path; filtering those out would quietly inflate precision and
+        # make this number stop meaning what E29's means.
+        precision, recall, f1 = get_scores(labels, sorted(cited))
         return dict(
             scored=True, precision=round(precision, 4), recall=round(recall, 4),
             f1=round(f1, 4),

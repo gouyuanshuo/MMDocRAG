@@ -37,13 +37,25 @@ REGISTRY_NAME = "registry.json"
 # The topology the suites reason about. `expensive` means GPU time or a long
 # CPU pass; those never run unless --include-expensive is passed.
 DAG = {
+    "corpora/ocr-pages": (
+        ["corpora/canonical-db"], ["-m", "canonical.ocr", "--min-chars", "100"],
+        "saved full-corpus page OCR", True),
+    "corpora/quote-ocr": (
+        ["corpora/canonical-db"], ["-m", "retrieval.ocr_quotes"],
+        "saved crop OCR", True),
+    "router/outcomes": (
+        ["corpora/canonical-db"], ["-m", "router.build_outcomes"],
+        "locally scored released response pairs", True),
+    "router/features": (
+        ["router/outcomes"], ["-m", "router.features", "--setting", "20"],
+        "generation-input routing features", True),
     "corpora/canonical-db": (
         [], ["-m", "canonical.build"], "canonical evidence DB", False),
     "corpora/page-corpus": (
-        ["corpora/canonical-db"], ["-m", "retrieval.corpus"],
+        ["corpora/canonical-db", "corpora/ocr-pages"], ["-m", "retrieval.corpus"],
         "page-level text corpus (needs OCR)", True),
     "corpora/quotes-selfbuilt": (
-        ["corpora/canonical-db"], ["-m", "retrieval.quote_corpus"],
+        ["corpora/canonical-db", "corpora/ocr-pages"], ["-m", "retrieval.quote_corpus"],
         "self-built chunk corpus (~92.7k chunks)", True),
     "embeddings/bge-small-vlm": (
         ["corpora/canonical-db"], ["-m", "retrieval.dense", "--image-repr", "vlm"],
@@ -52,7 +64,8 @@ DAG = {
         ["corpora/canonical-db"], ["-m", "retrieval.dense", "--image-repr", "vlm"],
         "BGE-small question vectors", True),
     "embeddings/bge-small-ocr": (
-        ["corpora/canonical-db"], ["-m", "retrieval.ocr_quotes"],
+        ["corpora/canonical-db", "corpora/quote-ocr"],
+        ["-m", "retrieval.dense", "--image-repr", "ocr"],
         "BGE-small vectors over crop-OCR text", True),
     "embeddings/bge-small-chunks": (
         ["corpora/quotes-selfbuilt"], ["-m", "retrieval.dense_chunks"],
@@ -62,7 +75,7 @@ DAG = {
         [".venv-colpali/Scripts/python.exe", "-m", "retrieval.colqwen_index"],
         "ColQwen2 late-interaction rankings (GPU, ~62 min)", True),
     # The paper-baseline arm. bge-large is the closest local stand-in for the
-    # paper's unnamed "BGE"; the full-pool index is the only one whose pool
+    # paper's Table 14 BGE checkpoint; the full-pool index is the only one whose pool
     # size (63.6 img/doc) matches the paper's 63. See
     # docs/paper-baseline-audit.md for what these do and do not establish.
     "embeddings/bge-large-vlm": (
@@ -438,6 +451,9 @@ def plan(names, registry=None, force_rebuild=()):
     """
     reg = registry or Registry()
     force = set(force_rebuild or ())
+    unknown = force - set(DAG)
+    if unknown:
+        raise ValueError("Unknown --force-rebuild artifact: " + ", ".join(sorted(unknown)))
     seen, order = set(), []
 
     def visit(n):
@@ -448,24 +464,76 @@ def plan(names, registry=None, force_rebuild=()):
             visit(dep)
         order.append(n)
 
-    for n in names:
+    for n in list(names) + sorted(force):
         visit(n)
 
     out = []
+    rebuilding = set()
     for n in order:
         deps, cmd, label, expensive = DAG.get(n, ([], None, n, False))
         state, target = reg.status(n)
         if n in force:
             decision, why = "rebuild", "explicitly requested via --force-rebuild"
+        elif any(d in rebuilding for d in deps):
+            decision, why = "rebuild", "an upstream dependency is being rebuilt"
         elif state in ("present", "unregistered"):
             decision, why = "reuse", f"artifact {state} at {paths.rel(target or '')}"
         elif state == "stale":
             decision, why = "rebuild", "content hash differs from registration"
         else:
             decision, why = "rebuild", "artifact missing"
+        if decision == "rebuild":
+            rebuilding.add(n)
         out.append({"artifact": n, "label": label, "state": state,
                     "path": paths.rel(target) if target else None,
                     "decision": decision, "reason": why,
                     "expensive": expensive, "dependencies": deps,
                     "build_cmd": cmd})
     return out
+
+
+def execute_plan(plan_rows, registry, run_id, *, include_expensive=False, env=None):
+    """Execute the printed DAG, preserving old derived files before replacement."""
+    from pathlib import Path
+    from expkit import runner
+    from expkit.results import atomic_json
+    root = Path(paths.REPO_ROOT).resolve()
+    backup_root = Path(registry.root)/"rebuild-backups"/run_id
+    results = []
+    for i, step in enumerate(plan_rows):
+        if step["decision"] == "reuse":
+            continue
+        if step["expensive"] and not include_expensive:
+            raise ValueError("Rebuild needs --include-expensive: " + step["artifact"])
+        cmd = step["build_cmd"]
+        if not cmd:
+            raise ValueError("No builder for " + step["artifact"])
+        target = registry.status(step["artifact"])[1]
+        if not target:
+            raise ValueError("No output path for " + step["artifact"])
+        p = Path(target).resolve()
+        if not p.is_relative_to(root) or p.is_relative_to(root/"response") or p.is_relative_to(root/"artifacts/api"):
+            raise ValueError("Refusing to move an output outside derived workspace data")
+        backup = None
+        if p.exists():
+            if not p.is_file():
+                raise ValueError("Rebuild replacement only supports individual derived files")
+            backup_root.mkdir(parents=True, exist_ok=True)
+            backup = backup_root/f"{i}_{p.name}"
+            if backup.exists():
+                raise ValueError("Backup exists; start a new rebuild run")
+            p.replace(backup)
+            atomic_json(str(backup_root/"size.json"),
+                        {"bytes_before_metadata_write": size_of(str(backup_root)),
+                         "reason": "previous derived inputs retained for rollback"})
+        argv = ([sys.executable] + cmd) if cmd[0].startswith("-") else list(cmd)
+        out = os.path.join(paths.run_dir(run_id, os.path.dirname(registry.root)),
+                           "dependencies", str(i))
+        rec = runner.run_command(argv, outdir=out, env_overlay=env, exp_id="dependency")
+        results.append(rec)
+        if rec["status"] != "ok" or not p.is_file():
+            if backup is not None and not p.exists():
+                backup.replace(p)
+            raise RuntimeError("Dependency build failed: " + step["artifact"])
+        registry.register(step["artifact"], str(p), **describe(step["artifact"], str(p)))
+    return results

@@ -1,0 +1,103 @@
+{
+  "config": {
+    "suite": "cached",
+    "ids": [
+      "E19",
+      "E20",
+      "E29",
+      "E34"
+    ],
+    "argv": [
+      [
+        "{py}",
+        "-m",
+        "retrieval.budget_alloc",
+        "--pool",
+        "canonical",
+        "--k",
+        "20"
+      ],
+      [
+        "{py}",
+        "-m",
+        "retrieval.audit_e19_ties",
+        "--pool",
+        "selfbuilt",
+        "--k",
+        "20"
+      ],
+      [
+        "{py}",
+        "-m",
+        "retrieval.audit_e19_ties",
+        "--pool",
+        "canonical",
+        "--k",
+        "20"
+      ],
+      [
+        "{py}",
+        "-m",
+        "retrieval.budget_alloc",
+        "--pool",
+        "selfbuilt",
+        "--k",
+        "20"
+      ],
+      [
+        "{py}",
+        "eval_all.py",
+        "--model",
+        "gemini-3.6-flash",
+        "--setting",
+        "paperk10",
+        "--mode",
+        "pure-text",
+        "--no-judge"
+      ],
+      [
+        "{py}",
+        "eval_all.py",
+        "--model",
+        "gemini-3.6-flash",
+        "--setting",
+        "oursk10",
+        "--mode",
+        "pure-text",
+        "--no-judge"
+      ],
+      [
+        "{py}",
+        "eval_e29_paired.py"
+      ],
+      [
+        "{py}",
+        "-m",
+        "retrieval.fetch_model",
+        "BAAI/bge-large-en-v1.5",
+        "--check"
+      ],
+      [
+        "{py}",
+        "-m",
+        "retrieval.eval_fullpool"
+      ]
+    ],
+    "offline": true
+  },
+  "files": {
+    "D:\\Playground\\MMDocRAG\\canonical\\mmdocrag.sqlite": "cb62ac26871ce3fa15880dcd57c34c49564857f052138068ef05237cf2f9e0cd",
+    "D:\\Playground\\MMDocRAG\\dataset\\evaluation_oursk10.jsonl": "7fe90c71e87a870dd0af81d5f74eb7eee02184d33315c6dfa832d51bd4d4095b",
+    "D:\\Playground\\MMDocRAG\\dataset\\evaluation_paperk10.jsonl": "d1cb633f66a3f6592034a34043cb18ed133450d0d6829d166b6a680a59788a7c",
+    "D:\\Playground\\MMDocRAG\\response\\gemini-3.6-flash_pure-text_quotesoursk10_response.jsonl": "19f689f41dbfd0a662d92d689f6a6c2327988d10b6c5e2d5dcdf6d84d8955875",
+    "D:\\Playground\\MMDocRAG\\response\\gemini-3.6-flash_pure-text_quotespaperk10_response.jsonl": "6550a15fa89941cc73a7d5f4a00e890a2159a3ea57f797f03a3449b1f5f2ea6e",
+    "D:\\Playground\\MMDocRAG\\retrieval\\colqwen_scores.sqlite": "9c54447814c28f0aa7e7c740df229c9b880cbc123a5450ed2b65e900cabddffd",
+    "D:\\Playground\\MMDocRAG\\retrieval\\colqwen_scores_fullpool.sqlite": "5dbfbce9f74a81f7509ab48a3c12005e363a75c6a2456c600c84cb9b405fe69c",
+    "D:\\Playground\\MMDocRAG\\retrieval\\embeddings\\bge-large-en-v1.5_vlm_passages.npz": "ab46a56997c133963097ba24d9f73812f88c222a55e567d89b5fca532c72f9a5",
+    "D:\\Playground\\MMDocRAG\\retrieval\\embeddings\\bge-small-en-v1.5_query_questions.npz": "7ccddf52dc1a28da6c6836a4587e14d696653f3365c872411faf9281dee5eb5d",
+    "D:\\Playground\\MMDocRAG\\retrieval\\embeddings\\bge-small-en-v1.5_quotes_chunks.npz": "330cc94b284d8d0eddaa066fad8ac0aa501aafb7dc56b6b32ec3fa1e5d4f39e9",
+    "D:\\Playground\\MMDocRAG\\retrieval\\embeddings\\bge-small-en-v1.5_vlm_passages.npz": "3e46c3828dcf5424ef1ba0bbe4966e019744fb918549e81518a1d6aebd63c07e",
+    "D:\\Playground\\MMDocRAG\\retrieval\\quotes.sqlite": "efbb2602397f23a623ba0e4ae74f201cf234106509767bb1b223fd84d82570bc"
+  },
+  "fingerprint": "3fa0d44c391b91ceee6a111408329534af52c3e4bc09f6ec1665e1def8d1a0cd"
+}

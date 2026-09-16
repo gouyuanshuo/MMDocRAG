@@ -70,6 +70,7 @@ from retrieval.eval_stack_v2 import (BALANCED_QUOTA, DEFAULT_COLQWEN,  # noqa: E
                                      DEFAULT_DB, DEFAULT_QUOTES,
                                      build, recall)
 from retrieval.dense import MODEL as DENSE_MODEL                       # noqa: E402
+from expkit.cache_identity import identity, retrieval_inputs
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE_DIR = os.path.join(REPO_ROOT, "router", "cache")
@@ -144,13 +145,18 @@ def load(pool="selfbuilt", k=None, dense_model=DENSE_MODEL, rebuild=False,
         raise ValueError(f"k={k} exceeds stored ranking depth TOP={TOP}; "
                          "rebuild the cache with a larger TOP")
     path = cache_path(pool, dense_model)
+    provenance = identity(dict(pool=pool, dense_model=str(dense_model), top=TOP),
+                          retrieval_inputs(db, quotes, colqwen, dense_model, pool))
     if os.path.exists(path) and not rebuild:
         with open(path, "rb") as fh:
             blob = pickle.load(fh)
         if blob.get("top", 0) < (k or 0):
             raise ValueError(f"cache stores top-{blob.get('top')}, "
                              f"k={k} needs more")
-        return blob["rows"], blob["meta"]
+        if blob.get("provenance") == provenance:
+            return blob["rows"], blob["meta"]
+        if verbose:
+            print("[actions] source/input identity missing or changed; rebuilding from saved vectors")
 
     os.makedirs(CACHE_DIR, exist_ok=True)
     t0 = time.time()
@@ -161,7 +167,7 @@ def load(pool="selfbuilt", k=None, dense_model=DENSE_MODEL, rebuild=False,
     meta["dense_model"] = str(dense_model)
     meta["top"] = TOP
     meta["n_questions"] = len(rows)
-    blob = {"rows": rows, "meta": meta, "top": TOP}
+    blob = {"rows": rows, "meta": meta, "top": TOP, "provenance": provenance}
     tmp = path + ".tmp"
     with open(tmp, "wb") as fh:
         pickle.dump(blob, fh, protocol=4)

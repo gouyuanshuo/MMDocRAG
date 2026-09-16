@@ -79,8 +79,8 @@ BALANCED_QUOTA = {10: (5, 5), 15: (8, 7), 20: (10, 10)}
 RRF_C = 60
 BOOTSTRAP = 4000
 SEED = 20260825
-COLQWEN_LOCAL = ("vidore/colqwen2-v1.0 (local copy; the paper names no "
-                 "version for any retriever)")
+COLQWEN_LOCAL = ("vidore/colqwen2-v1.0 (local copy; paper Appendix C.3 "
+                 "Table 14 specifies vidore/colqwen2-v0.1)")
 
 
 def rrf(*rankings):
@@ -341,10 +341,9 @@ def main():
     ap.add_argument("--colqwen", default=DEFAULT_COLQWEN)
     ap.add_argument("--split", default=DEFAULT_SPLIT)
     ap.add_argument("--pool", default="selfbuilt", choices=("selfbuilt", "canonical"))
-    # The paper names its text retriever only as "BGE", with no version. This
-    # project has run bge-small throughout; models/bge-large-en-v1.5 is the
-    # closest local stand-in for the scale the paper is likely to have used.
-    # Swapping it is a flag rather than an edit so both can be reported.
+    # Appendix C.3 Table 14 specifies BGE-large-en-v1.5. Earlier experiments
+    # used BGE-small; E40 uses the named text checkpoint. The local ColQwen
+    # version and corpus pipeline still differ, so retain the local-baseline label.
     ap.add_argument("--dense-model", default=DENSE_MODEL,
                     help="sentence-transformers model or local path for the "
                          "dense text arm (default: %(default)s). Vectors must "
@@ -472,9 +471,8 @@ def main():
             "visual_retriever": COLQWEN_LOCAL,
             "image_representation_for_bm25_dense": "VLM img_description text (NOT pixels)",
             "paper_models_not_reproduced": [
-                "the paper states no version for any retriever, so no "
-                "local model can be claimed to match it; only the model "
-                "family (BGE, ColQwen) is known"],
+                "paper Table 14 specifies BGE-large-en-v1.5 and ColQwen2-v0.1; "
+                "local ColQwen2-v1.0 and corpus/pool construction differ"],
             "n_questions": n_q, "n_documents": n_docs, "n_gold": n_gold,
             "n_unmapped_gold_counted_as_miss": n_unmapped,
             "n_questions_dropped_zero_gold": meta["n_no_gold"],

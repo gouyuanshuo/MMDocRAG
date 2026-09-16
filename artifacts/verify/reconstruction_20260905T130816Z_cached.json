@@ -1,0 +1,113 @@
+{
+  "status": "pass",
+  "tests": [
+    {
+      "suite": "runner",
+      "passed": 67,
+      "failed": 0,
+      "log": "artifacts/logs/continue-20260905-runner.log",
+      "log_sha256": "15ff09c7df50716d48bcde55e543b3522ff312317b4a32a397c909b5f574ccbe"
+    },
+    {
+      "suite": "source_bundle",
+      "passed": 25,
+      "failed": 0,
+      "log": "artifacts/logs/continue-20260905-source.log",
+      "log_sha256": "70f42d0e48d669415598e1cc4cf4929a1fcd0eafb65583e93bb742d19ea67f10"
+    },
+    {
+      "suite": "statistics",
+      "passed": 30,
+      "failed": 0,
+      "log": "artifacts/logs/continue-20260905-statistics-elevated.log",
+      "log_sha256": "d3d3b38cd753fc710810bd060da6ff6e8799c579a1c31e9524876e30e9a70448"
+    },
+    {
+      "suite": "phase3",
+      "passed": 35,
+      "failed": 0,
+      "log": "artifacts/logs/continue-20260905-phase3-elevated.log",
+      "log_sha256": "c79b34457e2ce6ae386cbb8482f6f731c5b10bd76ddbf0cb11f3aabdf940e21b"
+    }
+  ],
+  "total_passed": 157,
+  "total_failed": 0,
+  "source_run": "20260905T130816Z_cached",
+  "source_fingerprint": "d01cf3af0dcbaac9",
+  "current_source_matches_snapshot": true,
+  "source_files": 72,
+  "reconstruction": {
+    "status": "pass",
+    "n_pass": 72,
+    "n_total": 72,
+    "n_fail": 0,
+    "tree": "artifacts/test-runs/20260905T130816Z_cached-reconstruct/tree",
+    "tree_kept": false,
+    "tree_bytes": 4282459,
+    "tree_note": "removed after verification; the hash table in this record is the evidence. Regenerate with: python -m expkit.source reconstruct --run 20260905T130816Z_cached --into <dir>",
+    "steps": [
+      {
+        "step": "git archive <commit>",
+        "ok": true,
+        "files": 183,
+        "files_in_commit": 1978,
+        "skipped_not_source": 1795,
+        "skipped_bytes": 1037061806,
+        "skipped_why": "data, models and binaries are not under test here; see _wanted_in_tree",
+        "commit": "4f8f9ddf0d9ea7b98f19356c5917ee0f7c62729b"
+      },
+      {
+        "step": "restore patch preimages from Git blobs",
+        "ok": true,
+        "files": 32
+      },
+      {
+        "step": "git apply source.patch",
+        "ok": true,
+        "applied": 32,
+        "skipped": 0,
+        "error": null
+      },
+      {
+        "step": "restore hash-verified working-tree line endings",
+        "ok": true,
+        "files": []
+      },
+      {
+        "step": "unzip source_bundle.zip over the tree",
+        "ok": true,
+        "files": 72
+      }
+    ],
+    "failures": [],
+    "protocol": "git archive <commit> -> git apply source.patch -> unzip source_bundle.zip -> sha256 every manifest file"
+  },
+  "run_artifact_bytes": 1613585,
+  "citation_f1_delta": {
+    "experiment": "E29",
+    "title": "端到端：检索改进能否传导到生成质量",
+    "model": "gemini-3.6-flash",
+    "mode": "pure-text",
+    "k": 10,
+    "n_questions": 600,
+    "sample_unit": "document",
+    "n_documents": 220,
+    "bootstrap": 4000,
+    "estimator": "mean of per-question F1 (eval_all.final_f1)",
+    "scorer": "eval_all.extract_citations + get_scores",
+    "comparable_to_paper": false,
+    "name": "delta_final_f1[ours - paper]",
+    "value": 2.899044854927207,
+    "ci_low": 1.0146890759150826,
+    "ci_high": 4.77131963699744,
+    "significant": true,
+    "unit": "F1 points",
+    "bootstrap_unit": "document",
+    "p_two_sided": 0.0025,
+    "desc": "paired difference; same questions, gold, model and prompt -- only the retrieved candidate block differs"
+  },
+  "new_generation_api_calls": 0,
+  "e39_status": "prepared_not_generated",
+  "local_html_links_checked": 12,
+  "test_source_sha256": "954055200a7b80aec9a4b2c2721361bb1896f082d7da9ba5b10af0de2829aad8"
+}

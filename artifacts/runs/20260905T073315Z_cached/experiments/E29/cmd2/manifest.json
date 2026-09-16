@@ -1,0 +1,108 @@
+{
+  "name": "E29",
+  "created_utc": "2026-09-05T07:56:02Z",
+  "git": {
+    "commit": "4f8f9ddf0d9ea7b98f19356c5917ee0f7c62729b",
+    "branch": "phase3-query-conditioned-routing",
+    "dirty": true,
+    "dirty_files": [
+      "AGENTS.md",
+      "REPRODUCE.md",
+      "artifacts/derived/registry.json",
+      "artifacts/runs/20260905T073315Z_cached/",
+      "docs/2026-09-05-paper-appendix-correction.md",
+      "docs/ANSWER_EVALUATION_PROTOCOL.md",
+      "docs/HANDOFF.md",
+      "docs/RESEARCH_STATUS.md",
+      "docs/Research_Project_Proposal.docx",
+      "docs/artifacts-git-policy.md",
+      "docs/lab-notebook.html",
+      "docs/paper-baseline-audit.md",
+      "docs/research-status.html",
+      "eval_e29_paired.py",
+      "eval_e39_paired.py",
+      "experiments.py",
+      "expkit/artifacts.py",
+      "expkit/audit_inputs.py",
+      "expkit/cache_identity.py",
+      "expkit/paths.py",
+      "expkit/runner.py",
+      "expkit/source.py",
+      "gitignore",
+      "manifests/canonical/gate2_20260905T073440Z.json",
+      "manifests/canonical/gate2_failures.json",
+      "manifests/e27_canonical_k20_test.json",
+      "manifests/e27_selfbuilt_k10_test.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073348Z.json",
+      "manifests/eval_all/gemini-2.0-flash_multimodal_20_20260905T073402Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_oursk10_20260905T075600Z.json",
+      "manifests/eval_all/gemini-3.6-flash_pure-text_paperk10_20260905T075553Z.json",
+      "reproduce.py",
+      "requirements.txt",
+      "retrieval/nested_cv.py",
+      "retrieval/oof_family.py",
+      "retrieval/r2_target.py",
+      "router/actions.py",
+      "router/phase3_cells.py",
+      "router/prepare_e39.py",
+      "tests/test_phase3.py",
+      "tests/test_runner.py",
+      "tests/test_statistics.py"
+    ]
+  },
+  "env": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "nltk": "3.9.3",
+      "rouge_score": "0.1.2",
+      "tqdm": "4.67.1",
+      "numpy": "2.4.5",
+      "openai": "2.37.0",
+      "anthropic": null,
+      "google-genai": "2.19.0",
+      "torch": "2.6.0+cu124",
+      "transformers": "4.57.3",
+      "sentence-transformers": "5.4.1",
+      "pymupdf": "1.28.2",
+      "ms-swift": null
+    },
+    "cuda": {
+      "available": true,
+      "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "torch_cuda": "12.4"
+    }
+  },
+  "data": [],
+  "config": {
+    "experiment": "E29",
+    "run_id": "20260905T073315Z_cached",
+    "argv": [
+      "eval_e29_paired.py"
+    ],
+    "python": "D:\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "model": "gemini-3.6-flash",
+    "mode": "pure-text",
+    "k": 10,
+    "n_questions": 600,
+    "sample_unit": "document",
+    "n_documents": 220,
+    "bootstrap": 4000,
+    "estimator": "mean of per-question F1 (eval_all.final_f1)",
+    "scorer": "eval_all.extract_citations + get_scores",
+    "comparable_to_paper": false
+  },
+  "results": {
+    "final_f1_paper": 55.213314544932196,
+    "final_f1_ours": 58.1123593998594,
+    "delta_final_f1[ours - paper]": 2.899044854927207,
+    "delta_final_f1_question_bootstrap": 2.899044854927207,
+    "questions_better": 210.0,
+    "questions_worse": 156.0,
+    "questions_equal": 234.0
+  },
+  "argv": [
+    "eval_e29_paired.py"
+  ]
+}

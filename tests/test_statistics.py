@@ -213,6 +213,25 @@ def test_paired_contrast_keeps_the_pairing():
 
 
 def main():
+    import tempfile
+    from pathlib import Path
+    import json
+    from eval_e29_paired import score_arm
+    with tempfile.TemporaryDirectory() as tmp:
+        g, r = Path(tmp)/"gold.jsonl", Path(tmp)/"responses.jsonl"
+        g.write_text(json.dumps(dict(q_id=1, doc_name="d", gold_quotes=["text901"],
+                                   text_quotes=[dict(quote_id="text1", text="visible")],
+                                   img_quotes=[]))+"\n", encoding="utf-8")
+        r.write_text(json.dumps(dict(q_id=1, response="Invented citation [901]"))+"\n", encoding="utf-8")
+        check("unretrieved gold cannot earn credit from a hallucinated sentinel",
+              score_arm(str(g), str(r))[0][1] == 0)
+    from eval_e39_paired import paired_interval, noninferior
+    d = [1.0] * 100 + [-1.0] * 2
+    point, _, _ = paired_interval(d, ["big"] * 100 + ["small"] * 2)
+    check("E39 keeps the ratio-of-sums estimator", abs(point - 98/102) < 1e-12)
+    check("CI crossing zero is not sufficient for noninferiority", not noninferior(-4, 2))
+    check("CI touching the loss margin does not pass", not noninferior(-2, 2))
+    check("noninferiority can pass even when zero is inside the CI", noninferior(-1, 2))
     print("=" * 78)
     print("STATISTICAL MACHINERY")
     print("=" * 78)

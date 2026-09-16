@@ -1,0 +1,86 @@
+{
+  "created_utc": "2026-09-06T00:21:27.359411+00:00",
+  "task": "Chinese project implementation and experiment guide",
+  "status": "pass",
+  "checks": {
+    "unique_ids": 69,
+    "markdown_paragraphs_preserved": 272,
+    "markdown_tables_preserved": 12,
+    "external_runtime_dependencies": 0,
+    "local_links_and_fragments": 132,
+    "external_source_links": [
+      "https://arxiv.org/html/2505.16470v2",
+      "https://arxiv.org/html/2505.16470v2#A3.SS3",
+      "https://github.com/MMDocRAG/MMDocRAG"
+    ],
+    "registry_statuses_match": 41,
+    "svg_xml_valid": 4,
+    "javascript_syntax_and_search_logic": "pass; DOM stub only"
+  },
+  "tests": {
+    "runner": {
+      "passed": 67,
+      "failed": 0,
+      "log": "artifacts/logs/project-guide-20260906-runner.log"
+    },
+    "source": {
+      "passed": 25,
+      "failed": 0,
+      "log": "artifacts/logs/project-guide-20260906-source.log"
+    },
+    "statistics": {
+      "passed": 30,
+      "failed": 0,
+      "log": "artifacts/logs/project-guide-20260906-statistics.log"
+    },
+    "phase3": {
+      "passed": 35,
+      "failed": 0,
+      "log": "artifacts/logs/project-guide-20260906-phase3.log"
+    }
+  },
+  "tests_total_passed": 157,
+  "tests_total_failed": 0,
+  "new_api_calls": 0,
+  "evidence_run": "20260905T073315Z_cached",
+  "browser_render": "not performed; local HTML browser preview is blocked by session URL policy, no workaround used",
+  "docx": "not created; documents workspace dependency loader unavailable",
+  "outputs": [
+    {
+      "path": "docs/PROJECT_GUIDE.md",
+      "bytes": 83822,
+      "sha256": "ecf9b76b3bf55c6a88f23c2bd7d806b5fd2b5d493b8748c00ef2714cd3f330ae"
+    },
+    {
+      "path": "docs/project-guide.html",
+      "bytes": 125181,
+      "sha256": "6f5d6cb76888026639edaf67c57c7eb50e9f61b1c06f706cb4e52b7e315c9610"
+    },
+    {
+      "path": "docs/build_project_guide.py",
+      "bytes": 18542,
+      "sha256": "ac3ec660508321709358c17d262bb5769a93f38a2fe32f9d2d6fb78759562e0e"
+    },
+    {
+      "path": "docs/project-guide-assets/cascade.svg",
+      "bytes": 2568,
+      "sha256": "88e3f5087175a8efe358e9960a0dd51643861b38579c99f115ad6e70fd072cc5"
+    },
+    {
+      "path": "docs/project-guide-assets/pipeline.svg",
+      "bytes": 3672,
+      "sha256": "11f3b351de784c73c5346266b768c4b393615209b961478ca1bd1e881157c3a3"
+    },
+    {
+      "path": "docs/project-guide-assets/pools.svg",
+      "bytes": 2635,
+      "sha256": "91a437bf5001fd77503b270cb31590847a985104352e0e5205d3b27a76d1e63c"
+    },
+    {
+      "path": "docs/project-guide-assets/roadmap.svg",
+      "bytes": 3577,
+      "sha256": "970265943b15dc05fd1db5166ed3f3b70d5b7747aa5c4f9f4783b2354352e47c"
+    }
+  ],
+  "outputs_total_bytes": 239997
+}

@@ -352,6 +352,23 @@ def test_live_mode_is_off_and_costs_nothing_until_asked():
     check("a question outside the benchmark is never scored",
           scored["scored"] is False and "no gold" in scored["reason"])
 
+    # The live scorer must agree with the recorded one, which means passing the
+    # model's citations through unfiltered: a citation to a quote it was never
+    # given is a false positive, not something to drop. Filtering them would
+    # inflate precision and quietly stop this F1 meaning what E29's means.
+    quotes = [dict(evidenceId="e1", localId="text1", isGold=True),
+              dict(evidenceId="e2", localId="text2", isGold=False)]
+    benchmark = dict(questionUid="evaluation:0")
+    clean = engine._score(benchmark, {"text1"}, quotes, {"e1"})
+    check("a perfect answer scores 1.0", clean["f1"] == 1.0, str(clean["f1"]))
+    hallucinated = engine._score(benchmark, {"text1", "text9"}, quotes, {"e1"})
+    check("citing a quote that was never shown costs precision",
+          hallucinated["precision"] == 0.5 and hallucinated["recall"] == 1.0,
+          f"p={hallucinated['precision']} r={hallucinated['recall']}")
+    missed = engine._score(benchmark, {"text2"}, quotes, {"e1", "e3"})
+    check("gold that retrieval never surfaced stays in the denominator",
+          missed["recall"] == 0.0 and missed["goldTotal"] == 2, str(missed))
+
 
 def main():
     print("=" * 78)

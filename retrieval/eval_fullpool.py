@@ -304,8 +304,8 @@ def main():
     print("  visual retriever ranks text quotes -- so no text number appears.")
     print("  A CI containing the paper value means this implementation is")
     print("  consistent with theirs at that k; it does NOT mean the systems")
-    print("  are the same. Parsing, image extraction and the model version")
-    print("  (the paper names no version) all remain unverified.")
+    print("  are the same. Parsing and image extraction remain unaligned;")
+    print("  local ColQwen2-v1.0 differs from Table 14's ColQwen2-v0.1.")
     inside = [k for k in KS if metrics[k][1] <= metrics[k][4] <= metrics[k][2]]
     print()
     if len(inside) == len(KS):
@@ -382,8 +382,8 @@ def main():
                  "quotes, so any number put beside it would be invented.")
         res.note("Agreement here is a magnitude check on this implementation, "
                  "not a reproduction of the paper's system. Model version, "
-                 "PDF parsing and image extraction remain unverified, and the "
-                 "paper names no version for any retriever.")
+                 "PDF parsing and image extraction differ or remain unverified. "
+                 "Table 14 specifies ColQwen2-v0.1; this local index uses v1.0.")
     if args.metrics_out:
         print(f"\nwrote metrics to {args.metrics_out}")
 

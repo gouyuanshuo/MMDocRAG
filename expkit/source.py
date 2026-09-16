@@ -69,9 +69,9 @@ SECRET_PATH = re.compile(r"(\.env|credential|secret|\.key$|\.pem$|token)", re.I)
 
 # Always fingerprinted, whether or not a command touched them: they define what
 # a run means.
-ALWAYS = ["experiments.py", "manifest.py", "data_utils.py", "eval_all.py",
+ALWAYS = ["experiments.py", "reproduce.py", "manifest.py", "data_utils.py", "eval_all.py",
           "inference_api.py", "inference_wrapper.py"]
-ALWAYS_DIRS = ["expkit", "prompt_bank"]
+ALWAYS_DIRS = ["expkit", "prompt_bank", "retrieval", "router", "canonical"]
 
 # Data files whose content decides every number. Hashed via manifest.py's cache
 # so a 50 MB sqlite is not re-read on every run.
@@ -144,9 +144,12 @@ def _walk_dirs(dirs):
         if not os.path.isdir(root):
             continue
         for base, subs, files in os.walk(root):
-            subs[:] = [x for x in sorted(subs) if x != "__pycache__"]
+            subs[:] = [x for x in sorted(subs)
+                       if x not in ("__pycache__", "cache", "embeddings", "e2e")]
             for f in sorted(files):
-                if f.endswith((".py", ".txt", ".json")):
+                if (f.endswith(".py") or
+                    (d in ("expkit", "prompt_bank") and f.endswith((".txt", ".json"))) or
+                    (d == "router" and f == "prices.json")):
                     rels.append(os.path.relpath(
                         os.path.join(base, f), paths.REPO_ROOT).replace("\\", "/"))
     return rels
@@ -330,6 +333,28 @@ def restore(manifest, dest, bundle_path=None, patch_path=None, repo=None,
                       "error": "no commit recorded"})
 
     if apply_patch and patch_path and os.path.exists(patch_path):
+        # A diff's preimage is the Git blob, whereas archive may export an
+        # unpinned file with CRLF. One changed .gitignore then rejects the
+        # entire patch, including otherwise valid source hunks. Restore only
+        # the patch targets from their blobs; leave untouched files in the
+        # archive's working-tree representation.
+        targets = _patch_targets(patch_path)
+        preimages = 0
+        if commit:
+            for rel in sorted(targets):
+                target = os.path.abspath(os.path.join(dest, rel))
+                if os.path.commonpath([os.path.abspath(dest), target]) != os.path.abspath(dest):
+                    raise ValueError(f"patch target escapes restored tree: {rel}")
+                blob = subprocess.run(
+                    ["git", "cat-file", "blob", f"{commit}:{rel}"],
+                    cwd=repo, capture_output=True)
+                if blob.returncode == 0:
+                    os.makedirs(os.path.dirname(target), exist_ok=True)
+                    with open(target, "wb") as fh:
+                        fh.write(blob.stdout)
+                    preimages += 1
+        steps.append({"step": "restore patch preimages from Git blobs",
+                      "ok": True, "files": preimages})
         # `git apply` walks up from cwd looking for a repository. When `dest` is
         # inside this repo -- which it is by default, because the restored trees
         # live under artifacts/test-runs -- git finds THIS repo, treats the patch
@@ -344,8 +369,9 @@ def restore(manifest, dest, bundle_path=None, patch_path=None, repo=None,
         env.pop("GIT_WORK_TREE", None)
         # No repository here means no attributes, so the `-text` pins in the
         # restored tree's .gitattributes cannot take effect and core.autocrlf
-        # would rewrite every patched file. See the module note above: the
-        # patch only ever touches files this project owns and pins to LF.
+        # would rewrite every patched file, including byte-pinned sources.
+        # Apply in blob form, then recover a recorded LF/CRLF representation
+        # only when its complete SHA-256 matches the manifest.
         r = subprocess.run(["git", "-c", "core.autocrlf=false",
                             "-c", "core.eol=lf",
                             "apply", "--verbose", patch_path], cwd=dest,
@@ -363,6 +389,26 @@ def restore(manifest, dest, bundle_path=None, patch_path=None, repo=None,
                       "error": None if ok else
                                ("; ".join(skipped)[:400] if skipped else
                                 r.stderr.decode("utf-8", "replace")[:400] or None)})
+        if ok:
+            converted = []
+            for rel in sorted(targets & set(manifest.get("source_files", {}))):
+                want = manifest["source_files"][rel].get("sha256")
+                target = os.path.join(dest, rel)
+                if not want or not os.path.isfile(target):
+                    continue
+                with open(target, "rb") as fh:
+                    data = fh.read()
+                if hashlib.sha256(data).hexdigest() == want:
+                    continue
+                lf = data.replace(b"\r\n", b"\n")
+                for candidate in (lf, lf.replace(b"\n", b"\r\n")):
+                    if hashlib.sha256(candidate).hexdigest() == want:
+                        with open(target, "wb") as fh:
+                            fh.write(candidate)
+                        converted.append(rel)
+                        break
+            steps.append({"step": "restore hash-verified working-tree line endings",
+                          "ok": True, "files": converted})
     else:
         steps.append({"step": "git apply source.patch", "ok": None,
                       "error": "no patch recorded" if not patch_path else "skipped"})
