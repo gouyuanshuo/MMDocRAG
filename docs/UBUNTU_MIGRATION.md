@@ -246,7 +246,41 @@ Windows 上已验证：本次制包的成员回读哈希、私密包解密回读
 | `python experiments.py run-suite full-local --dry-run --offline --include-expensive` | 退出码 0；列出的依赖产物均为 `present/reuse`，没有构建 |
 
 本机仓库说明里的 25/48 是旧测试数量；以上为此次运行的实际数量。
-Ubuntu 上**尚未验证**：依赖安装、ColQwen 模型加载/显存、完整冷启动、历史 run 的
-源码重建与所有缓存复算。旧 `run.json` / manifest 里的 Windows 绝对路径是历史证据，
-不会批量改写；新运行应自行记录 Ubuntu 环境。Windows 修复了数据源默认目录、DAG 和
-实验注册中的 ColPali 解释器路径，以及登记表的跨机定位；这不等于 Linux 全链路通过。
+Ubuntu 上**尚未验证**：ColQwen 模型加载与显存、完整冷启动重建、私密包解密。
+旧 `run.json` / manifest 里的 Windows 绝对路径是历史证据，不会批量改写；新运行应自行记录
+Ubuntu 环境。Windows 修复了数据源默认目录、DAG 和实验注册中的 ColPali 解释器路径，
+以及登记表的跨机定位；这不等于 Linux 全链路通过。
+
+## 6. 2026-09-26 在这台 Ubuntu 上的实测
+
+这一节是实机结果，不是上一节的 Windows 记录。
+
+- 仓库快进到 `5f465afae0bc46719a66f50cd89e43ec86b5f07b`。包在
+  `/run/media/gys/My Passport/MMDocRAG-ubuntu-migration-20260925`。
+  `SHA256SUMS.txt` 13 个传输文件全部通过。`models.zip` 因移动硬盘只剩约 42 GB，
+  拼到本机 `/home/gys/mmdocrag-migration-stage/models.zip`，字节数 10,279,965,442，
+  SHA-256 `00daf2f4fb2e03db5d98c0532c4de4ce953d68a590e5df253770d3c85b63d60a`。
+- 仓库里原有一个 0 字节的 `canonical/mmdocrag.sqlite`。`unzip -n` 不会覆盖它，
+  所以先把它挪到 `artifacts/logs/`，再解出清单中的 49,606,656 字节文件。
+- 逐文件核对：assets 14827、derived 293、models 57 均为 missing 0 / changed 0。
+  private 23 个全部缺失（没有口令，没有猜测）。图片 14,826，PDF 220。
+  五份 SQLite `PRAGMA quick_check` 均为 `ok`。
+- `adapter_config.json` 在核对之后才改。旧哈希
+  `e3ade54c6e2c5e5799edeaac44d169a923bf3a2a9056395af83de20584deb034`，
+  新哈希 `2eaa0a9a80004cc090fa0500a260ef7fc92e9be5e3fd27f06652baa12ae7a72f`。
+- Python 3.13.7 的新建 `.venv`，`torch==2.6.0+cu124`，CUDA 可用。
+  GPU 是 RTX 4060 Laptop 8 GB，驱动 595.91.07。未装 Ollama，未建 `.venv-colpali`，
+  未启动 ColQwen 重建。
+- 换行修复后的测试：`test_ubuntu_migration` 3/3，`test_runner` 67/67，
+  `test_source_bundle` 23/23，`test_statistics` 30/30，`test_phase3` 35/35，
+  `test_demo` 61 通过 / 2 失败（缺 E39 的 `per_question.csv`）。
+- `reproduce.py --dry-run` 与 `run-suite replay --dry-run --offline` 退出码 0，
+  列出的依赖全部 `present/reuse`。
+- `python reproduce.py` 退出码 1。四组测试通过。缓存 run
+  `20260925T195521Z_cached`：失败 1（E42），已运行 14，仅日志 22。
+  `verify E27 --run 20260925T195521Z_cached` 为 61 pass / 0 FAIL；
+  `verify E24 --run` 同一 run 为 68/0。
+- `run-suite replay --offline` 退出码 0，run `20260925T202318Z_replay`，
+  7 项无失败。对这个 run 再执行 `verify E27 --run` 与 `verify E24 --run`，结果仍是 61/0 与 68/0。
+- 复算改写了已跟踪的历史 `manifests/e27_*` 和 `artifacts/runs/latest.json`
+  （平台、提交、命令路径）。这些工作区改动已还原，没有提交新的 run 目录、向量或日志。

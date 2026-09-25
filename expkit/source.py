@@ -325,6 +325,14 @@ def restore(manifest, dest, bundle_path=None, patch_path=None, repo=None,
                           "skipped_why": "data, models and binaries are not "
                                          "under test here; see _wanted_in_tree",
                           "commit": commit})
+            # A Windows checkout records unpinned upstream files as CRLF.
+            # `git archive` on Linux writes those blobs as LF, so the
+            # patch-only route then fails hashes it never had a chance to
+            # patch. Rewrite a file only when the LF or CRLF form matches
+            # the recorded SHA-256 exactly.
+            converted = _restore_recorded_newlines(dest, manifest)
+            steps.append({"step": "restore hash-verified archive line endings",
+                          "ok": True, "files": converted})
         else:
             steps.append({"step": "git archive <commit>", "ok": False,
                           "error": r.stderr.decode("utf-8", "replace")[:400]})
@@ -424,6 +432,28 @@ def restore(manifest, dest, bundle_path=None, patch_path=None, repo=None,
         steps.append({"step": "unzip source_bundle.zip over the tree",
                       "ok": False, "error": "bundle missing"})
     return steps
+
+
+def _restore_recorded_newlines(dest, manifest):
+    """Rewrite a restored file only when LF or CRLF matches its recorded hash."""
+    converted = []
+    for rel, info in sorted((manifest.get("source_files") or {}).items()):
+        want = info.get("sha256")
+        target = os.path.join(dest, rel)
+        if not want or not os.path.isfile(target):
+            continue
+        with open(target, "rb") as fh:
+            data = fh.read()
+        if hashlib.sha256(data).hexdigest() == want:
+            continue
+        lf = data.replace(b"\r\n", b"\n")
+        for candidate in (lf, lf.replace(b"\n", b"\r\n")):
+            if hashlib.sha256(candidate).hexdigest() == want:
+                with open(target, "wb") as fh:
+                    fh.write(candidate)
+                converted.append(rel)
+                break
+    return converted
 
 
 def verify_tree(manifest, tree):

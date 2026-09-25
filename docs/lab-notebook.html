@@ -3717,8 +3717,37 @@ python -m retrieval.eval_fullpool</code></pre>
   <p>修复了历史登记表的 Windows 绝对路径引用，以及构建 DAG 和实验注册中的
     ColPali 解释器路径；PDF/图片默认路径在 Ubuntu 指向仓库内恢复目录。
     <strong>Windows 上包成员及分卷 SHA-256 均已回读通过，测试 67/23/30/35/63，
-    新增迁移测试 3/3；Ubuntu 的依赖安装、完整冷启动和缓存复算仍待实机验证。</strong>
+    新增迁移测试 3/3。下面一节是 2026-09-26 的 Ubuntu 实测，不要把两节混成一次运行。</strong>
     E39 仍只是 prepared，未生成、未评分。</p>
+</section>
+<section class="callout" aria-labelledby="ubuntu-restore-20260926">
+  <h2 id="ubuntu-restore-20260926">2026-09-26 · Ubuntu 恢复与离线复验</h2>
+  <p>在 <code>5f465afa</code> 上恢复移动硬盘中的迁移包。传输文件 13/13 SHA-256 通过；
+    拼接后的 <code>models.zip</code> 哈希与清单一致。assets/derived/models 逐文件
+    缺失 0、改变 0。图片 14,826，PDF 220，五份 SQLite <code>quick_check</code> 为 ok。
+    私密包 23 个文件未解。ColQwen <code>adapter_config.json</code> 的基座路径从
+    <code>D:\Playground\MMDocRAG\models\colqwen2-base</code> 改为本机绝对路径；
+    修正前 SHA-256 <code>e3ade54c6e2c5e5799edeaac44d169a923bf3a2a9056395af83de20584deb034</code>，
+    修正后 <code>2eaa0a9a80004cc090fa0500a260ef7fc92e9be5e3fd27f06652baa12ae7a72f</code>。
+    该文件在 <code>models/</code> 下，不进 Git。</p>
+  <p>环境：Python 3.13.7 新建 <code>.venv</code>，<code>torch 2.6.0+cu124</code>，
+    RTX 4060 Laptop、驱动 595.91.07、<code>torch.cuda.is_available()</code> 为 True。
+    未安装 Ollama，未复制 Windows 虚拟环境，未重建 ColQwen，未调用 API。</p>
+  <p>测试（修正换行之后）：迁移 3/3，runner 67/67，source bundle 23/23，statistics 30/30，
+    phase3 35/35。demo 61/2，两处失败都是缺少私密包里的 E39
+    <code>per_question.csv</code>。修正前同一台机器上 source bundle 为 21/2、runner 为 66/1，
+    原因是 Linux <code>git archive</code> 写出 LF，而 2026-09-05 的 manifest 记录了 Windows CRLF；
+    修复只在候选字节的 SHA-256 与记录完全一致时写回。</p>
+  <p>Dry-run：cached 37 个全部 <code>reuse</code>，replay 7 个全部 <code>reuse</code>，没有
+    <code>missing</code> 或 <code>stale</code>，没有 <code>--force-rebuild</code>。
+    <code>reproduce.py</code> 的四组测试通过，缓存套件 run
+    <code>20260925T195521Z_cached</code> 失败 1（仅 E42），其余 36 项已运行。
+    <code>verify E27 --run 20260925T195521Z_cached</code> 61/0，
+    <code>verify E24 --run</code> 同一 run 68/0。
+    随后 <code>run-suite replay --offline</code> 为 run
+    <code>20260925T202318Z_replay</code>，7 项无失败；对这个 run 再验 E27 61/0、E24 68/0。
+    历史 <code>manifests/e27_*.json</code> 与 <code>latest.json</code> 被新运行改写过平台和提交字段，
+    已用 Git 恢复，不把这次复算写成对旧记录的替换。</p>
 </section>
 <footer>
   本记录随每次推进更新，URL 保持不变。

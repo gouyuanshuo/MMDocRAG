@@ -11,8 +11,17 @@
 
 **2026-09-25 迁移补记：**Windows 上的原始图片/PDF、已有 SQLite/向量/排名、模型权重和
 API 原始证据已分成仓库外迁移包，逐文件与分卷 SHA-256、Ubuntu 解包路径和剩余验证工作见
-[Ubuntu 迁移说明](UBUNTU_MIGRATION.md)。本次只修复跨平台路径/登记引用并核对包内容，
+[Ubuntu 迁移说明](UBUNTU_MIGRATION.md)。制包提交只修复跨平台路径/登记引用并核对包内容，
 不重算研究指标，不调用 API；不能把 Windows 打包与测试说成 Ubuntu 冷启动已通过。
+
+**2026-09-26 Ubuntu 实测：**包已在本机解出并逐文件核对（`private` 23 个文件未解，缺口令）。
+`reproduce.py --dry-run` 与 replay dry-run 把已恢复的 SQLite、向量和 ColQwen 排名全部标为
+`reuse`，没有 `missing`/`stale`。缓存复算 run `20260925T195521Z_cached` 只有 E42 失败，
+原因是 `artifacts/e39/20260905/router/per_question.csv` 在未解的私密包里；E39 仍是 prepared。
+对该 run 以及随后的 replay run `20260925T202318Z_replay`，`verify E27 --run` 为 61/0，
+`verify E24 --run` 为 68/0。Linux 上 `git archive` 把未钉住换行的上游文件写成 LF，
+而旧 manifest 记录的是 Windows CRLF；`expkit/source.py` 只在哈希完全吻合时改回记录的换行，
+源码包测试因此从 21/2 变为 23/23。没有重建 ColQwen，没有 API。
 
 先看面向项目作者的 [通俗说明](research-status.html) 或 [Markdown 版](RESEARCH_STATUS.md)。
 需要从头理解原论文、本地实现、实验动机和参数时，读 [项目实现与实验路线详解](project-guide.html)（[Markdown 源文](PROJECT_GUIDE.md)）。2026-09-06 新增，含 12 个主题章节、E1–E41 逐项解读、4 张路线与架构图，以及下一步研究验收条件。E40 主表直接读取指定保存运行；本文档不代表重新生成实验回答。静态配置协议按实际代码说明为文档分组外折与训练文档选参，不能把 `nested_cv.py` 文件名当作严格双层 CV。
