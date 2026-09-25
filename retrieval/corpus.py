@@ -38,7 +38,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_PDF_ROOT = r"D:\Dataset\MMDocRAG\doc_pdfs\doc_pdfs"
+from expkit import paths
+DEFAULT_PDF_ROOT = paths.pdf_root()
 DEFAULT_OCR_DB = os.path.join(REPO_ROOT, "canonical", "ocr_cache.sqlite")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "retrieval", "pages.sqlite")
 

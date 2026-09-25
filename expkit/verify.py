@@ -52,7 +52,7 @@ from expkit.results import atomic_json              # noqa: E402
 
 DB = os.path.join(paths.REPO_ROOT, "canonical", "mmdocrag.sqlite")
 COLQWEN = os.path.join(paths.REPO_ROOT, "retrieval", "colqwen_scores.sqlite")
-IMG_ROOT = os.path.join("D:", os.sep, "Dataset", "MMDocRAG", "images", "images")
+IMG_ROOT = os.path.join(paths.image_root(), "images")
 
 # The authoritative figures, independently confirmed 2026-08-28. Any drift here
 # means either the database changed or a script regressed; both need a human.

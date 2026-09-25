@@ -62,17 +62,25 @@ deliberately not in Git, because they are ~800 MB of vectors and databases:
 | `router/outcomes.sqlite` | 45 MB |
 | `retrieval/colqwen_scores.sqlite` | 8.6 MB |
 
-They are all regenerable from data that *is* in the clone, plus the image set
-below. If you ask for an experiment whose inputs are missing, the artifact
-layer refuses with the exact command that builds them rather than running on
-absent inputs.
+They are regenerable from the JSONL data in the clone **plus the PDF archive,
+cropped images and model weights outside Git**. The 2026-09-25 migration package
+preserves the existing derived bytes instead. If you ask for an experiment whose
+inputs are missing, the artifact layer refuses with the exact command that
+builds them rather than running on absent inputs.
 
 ## 2. Setup
 
-```bash
+For a clone restored from the 2026-09-25 Windows workspace, follow
+[`docs/UBUNTU_MIGRATION.md`](docs/UBUNTU_MIGRATION.md) first. It names the
+off-repository archives, checksums, exact Ubuntu extraction paths and the
+separate ColQwen environment. The commands below describe the original Windows
+environment and are **not** an Ubuntu cold-start validation.
+
+```powershell
 git clone git@github.com:gouyuanshuo/MMDocRAG.git
 cd MMDocRAG
-python -m venv .venv && . .venv/Scripts/activate   # Python 3.13.7 on Windows
+py -3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 python -m pip install torch==2.6.0+cu124 --index-url https://download.pytorch.org/whl/cu124
 python -m pip install -r requirements.txt
 ```
@@ -108,9 +116,11 @@ with a size record; inspect those backups before deliberately cleaning them.
 `--force-rebuild` is rejected in replay/cached suites.
 
 A complete cold build has **not** been validated in this audit. Supply the PDFs
-as well as cropped images; legacy builders default to `D:\Dataset\MMDocRAG`.
-Review each builder's `--help` to override source paths on another machine.
-`--offline` requires model weights already present. `full-local` also does not
+as well as cropped images. Builders use the existing `D:\Dataset\MMDocRAG`
+directory on this Windows machine and `<repo>/data` plus `<repo>/images` on
+Ubuntu; `MMDOCRAG_DATA_ROOT` and `MMDOCRAG_IMAGE_ROOT` override these defaults.
+See the [Ubuntu migration guide](docs/UBUNTU_MIGRATION.md) for the exact layout.
+An offline rebuild requires model weights already present. `full-local` also does not
 magically regenerate paid API responses. The granularity-sweep chunk databases
 must be prepared separately if absent:
 

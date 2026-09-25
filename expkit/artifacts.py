@@ -72,7 +72,7 @@ DAG = {
         "BGE-small vectors over self-built chunks", True),
     "indexes/colqwen-rankings": (
         ["corpora/canonical-db"],
-        [".venv-colpali/Scripts/python.exe", "-m", "retrieval.colqwen_index"],
+        [paths.colpali_python(), "-m", "retrieval.colqwen_index"],
         "ColQwen2 late-interaction rankings (GPU, ~62 min)", True),
     # The paper-baseline arm. bge-large is the closest local stand-in for the
     # paper's Table 14 BGE checkpoint; the full-pool index is the only one whose pool
@@ -94,7 +94,7 @@ DAG = {
         "BGE-large vectors over self-built chunks", True),
     "indexes/colqwen-fullpool": (
         ["corpora/canonical-db"],
-        [".venv-colpali/Scripts/python.exe", "-m", "retrieval.colqwen_index",
+        [paths.colpali_python(), "-m", "retrieval.colqwen_index",
          "--image-source", "fulldisk",
          "--out", "retrieval/colqwen_scores_fullpool.sqlite"],
         "ColQwen2 rankings over the FULL image pool (GPU, ~130 min)", True),
@@ -222,7 +222,7 @@ KNOWN_PRODUCERS = {
         "input_corpus": "every image file on disk for the 220 evaluation "
                         "documents (13,999 images, 63.6/doc), NOT the "
                         "candidate pool",
-        "produced_by_cmd": ".venv-colpali/Scripts/python.exe -m "
+        "produced_by_cmd": paths.colpali_python() + " -m "
                            "retrieval.colqwen_index --image-source fulldisk "
                            "--out retrieval/colqwen_scores_fullpool.sqlite"},
     "indexes/colqwen-rankings": {
@@ -232,7 +232,7 @@ KNOWN_PRODUCERS = {
         "normalized": "n/a -- late-interaction MaxSim scores, not vectors",
         "input_corpus": "corpora/canonical-db :: canonical_evidence (type<>'text')",
         "produced_by_cmd":
-            ".venv-colpali/Scripts/python.exe -m retrieval.colqwen_index"},
+            paths.colpali_python() + " -m retrieval.colqwen_index"},
 }
 
 
@@ -387,7 +387,15 @@ class Registry:
     def status(self, name):
         """Present / stale / missing / unregistered, for the runner's report."""
         e = self.entries.get(name)
-        target = e["abs_path"] if e else None
+        target = None
+        if e:
+            # Historical records include a Windows absolute path. The checked
+            # repo-relative path is authoritative after a clone on another OS.
+            rel = e.get("path", "").replace("\\", "/")
+            if rel and not rel.startswith("../") and not os.path.isabs(rel):
+                target = os.path.join(paths.REPO_ROOT, *rel.split("/"))
+            else:
+                target = e.get("abs_path")
         if target is None:
             for legacy_name, legacy_path in paths.LEGACY_ARTIFACTS.items():
                 if legacy_name == name:

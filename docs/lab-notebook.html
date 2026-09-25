@@ -3707,6 +3707,19 @@ python -m retrieval.eval_fullpool</code></pre>
 
 
 </details>
+<section class="callout" aria-labelledby="ubuntu-migration-20260925">
+  <h2 id="ubuntu-migration-20260925">2026-09-25 · Ubuntu 工作区迁移准备</h2>
+  <p>本次是产物迁移与运行环境准备，<strong>不是新实验，也没有重算任何研究指标或调用付费 API</strong>。
+    Windows 上将 14,826 张图片、220 份 PDF 的原始压缩包、现有 SQLite/向量/排名、
+    三组模型权重和未跟踪的逐题记录分别保存到仓库外的包；API 原始流量与 E39 冻结候选输入
+    放入独立加密包。各包成员、SHA-256、模型五分卷合并方法和 Ubuntu 恢复顺序见
+    <a href="UBUNTU_MIGRATION.md">Ubuntu 迁移说明</a>。</p>
+  <p>修复了历史登记表的 Windows 绝对路径引用，以及构建 DAG 和实验注册中的
+    ColPali 解释器路径；PDF/图片默认路径在 Ubuntu 指向仓库内恢复目录。
+    <strong>Windows 上包成员及分卷 SHA-256 均已回读通过，测试 67/23/30/35/63，
+    新增迁移测试 3/3；Ubuntu 的依赖安装、完整冷启动和缓存复算仍待实机验证。</strong>
+    E39 仍只是 prepared，未生成、未评分。</p>
+</section>
 <footer>
   本记录随每次推进更新，URL 保持不变。
   当前结论按指定运行与更正记录核对；历史原文供追溯，不作为未更正的最新结论。

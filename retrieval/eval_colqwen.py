@@ -104,6 +104,7 @@ from retrieval.bm25 import BM25                    # noqa: E402
 from retrieval.corpus import normalize, tokenize   # noqa: E402
 from retrieval.dense import load as load_dense     # noqa: E402
 from expkit.results import ExperimentResult, add_output_args   # noqa: E402
+from expkit import paths
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DB = os.path.join(REPO_ROOT, "canonical", "mmdocrag.sqlite")
@@ -143,7 +144,7 @@ def main():
 
     if not os.path.exists(args.scores):
         raise SystemExit(f"no ColQwen rankings at {args.scores}; run "
-                         f".venv-colpali/Scripts/python.exe -m retrieval.colqwen_index")
+                         f"{paths.colpali_python()} -m retrieval.colqwen_index")
 
     con = sqlite3.connect(args.db)
     imgs = con.execute(

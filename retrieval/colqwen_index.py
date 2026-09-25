@@ -33,6 +33,7 @@ single document's images is ever resident.
 Run (from the repo root):
     .venv-colpali/Scripts/python.exe -m retrieval.colqwen_index
     .venv-colpali/Scripts/python.exe -m retrieval.colqwen_index --limit-docs 3
+    .venv-colpali/bin/python -m retrieval.colqwen_index --limit-docs 3  # Linux
 """
 
 import argparse
@@ -48,7 +49,8 @@ if hasattr(sys.stdout, "reconfigure"):
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DB = os.path.join(REPO_ROOT, "canonical", "mmdocrag.sqlite")
-DEFAULT_IMG_ROOT = r"D:\Dataset\MMDocRAG\images"
+from expkit import paths
+DEFAULT_IMG_ROOT = paths.image_root()
 DEFAULT_OUT = os.path.join(REPO_ROOT, "retrieval", "colqwen_scores.sqlite")
 # Local directory, not a hub id. huggingface_hub cannot create the snapshot
 # symlinks on this Windows box without developer mode (WinError 1314), so the

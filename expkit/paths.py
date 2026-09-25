@@ -1,8 +1,10 @@
-"""Where everything lives, and the rules about what may live outside the project.
+"""Where artifacts and raw assets live on Windows and Linux.
 
 The artifact root defaults to `<repo>/artifacts` and can be moved with
-`--artifact-root` or `MMDOCRAG_ARTIFACT_ROOT`. Nothing else in this package is
-allowed to invent a path.
+`--artifact-root` or `MMDOCRAG_ARTIFACT_ROOT`. Raw PDFs default to the existing
+Windows corpus if present, otherwise `<repo>/data`; images default to that
+Windows corpus or `<repo>/images`. The two source roots can be overridden with
+`MMDOCRAG_DATA_ROOT` and `MMDOCRAG_IMAGE_ROOT`.
 
 Offline discipline
 ------------------
@@ -18,6 +20,42 @@ import os
 import time
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LEGACY_WINDOWS_DATA_ROOT = r"D:\Dataset\MMDocRAG"
+
+
+def data_root(*, platform_name=None, repo_root=None, environ=None):
+    """Raw PDF home: explicit override, existing Windows corpus, or repo data/."""
+    env = os.environ if environ is None else environ
+    override = env.get("MMDOCRAG_DATA_ROOT")
+    if override:
+        return os.path.abspath(override)
+    if (platform_name or os.name) == "nt" and os.path.isdir(LEGACY_WINDOWS_DATA_ROOT):
+        return LEGACY_WINDOWS_DATA_ROOT
+    return os.path.join(repo_root or REPO_ROOT, "data")
+
+
+def pdf_zip(**kwargs):
+    return os.path.join(data_root(**kwargs), "doc_pdfs.zip")
+
+
+def pdf_root(**kwargs):
+    return os.path.join(data_root(**kwargs), "doc_pdfs", "doc_pdfs")
+
+
+def image_root(*, platform_name=None, repo_root=None, environ=None):
+    env = os.environ if environ is None else environ
+    if env.get("MMDOCRAG_IMAGE_ROOT"):
+        return os.path.abspath(env["MMDOCRAG_IMAGE_ROOT"])
+    home = data_root(platform_name=platform_name, repo_root=repo_root, environ=env)
+    if home == LEGACY_WINDOWS_DATA_ROOT:
+        return os.path.join(home, "images")
+    return os.path.join(repo_root or REPO_ROOT, "images")
+
+
+def colpali_python(*, platform_name=None):
+    """Repo-relative executable for the separate ColQwen environment."""
+    return (".venv-colpali/Scripts/python.exe" if (platform_name or os.name) == "nt"
+            else ".venv-colpali/bin/python")
 
 # Artifacts that predate this package. They are registered as `legacy` rather
 # than copied: they are large, they are already reproducible from their own

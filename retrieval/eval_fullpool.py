@@ -55,6 +55,7 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from expkit.results import ExperimentResult, add_output_args     # noqa: E402
+from expkit import paths
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DB = os.path.join(REPO_ROOT, "canonical", "mmdocrag.sqlite")
@@ -118,7 +119,7 @@ def main():
     if not os.path.exists(args.scores):
         raise SystemExit(
             f"no full-pool rankings at {args.scores}. Build them with:\n"
-            f"  .venv-colpali/Scripts/python.exe -m retrieval.colqwen_index "
+            f"  {paths.colpali_python()} -m retrieval.colqwen_index "
             f"--image-source fulldisk --out {args.scores}")
 
     con = sqlite3.connect(args.db)

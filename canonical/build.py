@@ -347,7 +347,8 @@ def main():
     ap.add_argument("--db", default=DEFAULT_DB, help="output sqlite path")
     ap.add_argument("--data-root", default=os.path.join(REPO_ROOT, "dataset"),
                     help="directory holding the *_15/_20 jsonl files")
-    ap.add_argument("--pdf-zip", default=r"D:\Dataset\MMDocRAG\doc_pdfs.zip",
+    from expkit import paths
+    ap.add_argument("--pdf-zip", default=paths.pdf_zip(),
                     help="doc_pdfs.zip, used to flag which questions have a PDF")
     ap.add_argument("--no-manifest", action="store_true")
     args = ap.parse_args()

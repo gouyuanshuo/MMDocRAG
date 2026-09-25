@@ -63,6 +63,8 @@ router/cache/
 #   python -m retrieval.fetch_model BAAI/bge-large-en-v1.5 --check
 models/
 !models/*/fetch.json
+data/
+images/images/
 
 # Corpora, indexes and vectors, ~1.2 GB. Rebuilt by retrieval/corpus.py,
 # quote_corpus.py, dense.py and dense_chunks.py from canonical/ + the dataset.

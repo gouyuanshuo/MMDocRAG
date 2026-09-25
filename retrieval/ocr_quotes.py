@@ -38,7 +38,8 @@ if hasattr(sys.stdout, "reconfigure"):
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DB = os.path.join(REPO_ROOT, "canonical", "mmdocrag.sqlite")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "retrieval", "quote_ocr.sqlite")
-DEFAULT_IMG_ROOT = r"D:\Dataset\MMDocRAG\images"
+from expkit import paths
+DEFAULT_IMG_ROOT = paths.image_root()
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS quote_ocr (

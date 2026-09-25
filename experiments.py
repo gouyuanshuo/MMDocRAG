@@ -59,11 +59,14 @@ import subprocess
 import sys
 import time
 
+from expkit import paths
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 PY = sys.executable
+COLPALI_PY = paths.colpali_python()
 NOTEBOOK = "docs/lab-notebook.html"
 AUDIT = "docs/research-status.html"
 
@@ -345,7 +348,7 @@ dict(id="E38", phase="1B", status="neg",
 dict(id="E24", phase="1B", status="neg",
      title="ColQwen2 在本项目的池规模下不值它的 GPU 成本",
      asks="视觉检索器能否胜过打在 VLM 描述上的文本检索器？",
-     cmds=[".venv-colpali/Scripts/python.exe -m retrieval.colqwen_index",
+     cmds=[f"{COLPALI_PY} -m retrieval.colqwen_index",
            "{py} -m retrieval.eval_colqwen"],
      result="同一图片池 @20：BGE 0.935 / BM25 0.929 / ColQwen 0.929，三者打平。"
             "互补性 +0.095，但两个文本检索器已给 +0.081 → 视觉特有只剩 +0.014。",
@@ -877,7 +880,7 @@ dict(id="E34", phase="2", status="pos",
            "{py} -m retrieval.dense --model models/bge-large-en-v1.5 "
            "--image-repr vlm",
            "{py} -m retrieval.dense_chunks --model models/bge-large-en-v1.5",
-           ".venv-colpali/Scripts/python.exe -m retrieval.colqwen_index "
+           f"{COLPALI_PY} -m retrieval.colqwen_index "
            "--image-source fulldisk --out retrieval/colqwen_scores_fullpool.sqlite",
            "{py} -m retrieval.eval_fullpool"],
      expensive=True,

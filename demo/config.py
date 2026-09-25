@@ -32,12 +32,12 @@ def _p(*parts):
 CANONICAL_DB = _p("canonical", "mmdocrag.sqlite")
 EVAL_SPLIT = "evaluation"
 
-# Images are the one input that lives outside the repository (14,826 JPEGs,
-# ~1.5 GB). `images/README.md` documents the download; override the location
-# with MMDOCRAG_IMAGE_ROOT. `img_path` values are relative to this directory
-# and already start with "images/".
-IMAGE_ROOT = os.environ.get(
-    "MMDOCRAG_IMAGE_ROOT", os.path.join("D:", os.sep, "Dataset", "MMDocRAG", "images"))
+# The 14,826 images are outside Git. Ubuntu restoration places them under
+# <repo>/images/images; the existing Windows corpus remains the default there.
+# MMDOCRAG_IMAGE_ROOT can override either location. `img_path` values already
+# start with "images/" relative to this root.
+from expkit import paths
+IMAGE_ROOT = paths.image_root()
 
 
 # --- the recorded end-to-end run (E29) --------------------------------------

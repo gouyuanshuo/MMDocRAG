@@ -9,6 +9,11 @@
 
 ## 0. 当前状态（2026-09-05，优先于后面的历史摘要）
 
+**2026-09-25 迁移补记：**Windows 上的原始图片/PDF、已有 SQLite/向量/排名、模型权重和
+API 原始证据已分成仓库外迁移包，逐文件与分卷 SHA-256、Ubuntu 解包路径和剩余验证工作见
+[Ubuntu 迁移说明](UBUNTU_MIGRATION.md)。本次只修复跨平台路径/登记引用并核对包内容，
+不重算研究指标，不调用 API；不能把 Windows 打包与测试说成 Ubuntu 冷启动已通过。
+
 先看面向项目作者的 [通俗说明](research-status.html) 或 [Markdown 版](RESEARCH_STATUS.md)。
 需要从头理解原论文、本地实现、实验动机和参数时，读 [项目实现与实验路线详解](project-guide.html)（[Markdown 源文](PROJECT_GUIDE.md)）。2026-09-06 新增，含 12 个主题章节、E1–E41 逐项解读、4 张路线与架构图，以及下一步研究验收条件。E40 主表直接读取指定保存运行；本文档不代表重新生成实验回答。静态配置协议按实际代码说明为文档分组外折与训练文档选参，不能把 `nested_cv.py` 文件名当作严格双层 CV。
 说明文档收尾核验：四组测试 67/25/30/35，合计 157 通过、0 失败；132 个本地链接与锚点、41 项状态、Markdown/HTML 正文及表格一致性通过，旧记录 40 段历史正文保留。记录见 `artifacts/verify/project_guide_20260906.json`。浏览器本地预览受策略限制，未声称视觉验收；无新增 API。可用 `python -X utf8 docs/build_project_guide.py` 重建指南。

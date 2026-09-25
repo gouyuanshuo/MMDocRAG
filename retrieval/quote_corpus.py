@@ -61,7 +61,8 @@ from canonical.gate2 import normalize as g2_normalize, shingles  # noqa: E402
 from retrieval.corpus import normalize, tokenize                 # noqa: E402
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_PDF_ROOT = r"D:\Dataset\MMDocRAG\doc_pdfs\doc_pdfs"
+from expkit import paths
+DEFAULT_PDF_ROOT = paths.pdf_root()
 DEFAULT_DB = os.path.join(REPO_ROOT, "canonical", "mmdocrag.sqlite")
 DEFAULT_OCR = os.path.join(REPO_ROOT, "canonical", "ocr_cache.sqlite")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "retrieval", "quotes.sqlite")

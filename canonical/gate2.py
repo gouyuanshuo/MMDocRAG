@@ -48,7 +48,8 @@ if hasattr(sys.stdout, "reconfigure"):
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DB = os.path.join(REPO_ROOT, "canonical", "mmdocrag.sqlite")
-DEFAULT_PDF_ROOT = r"D:\Dataset\MMDocRAG\doc_pdfs\doc_pdfs"
+from expkit import paths
+DEFAULT_PDF_ROOT = paths.pdf_root()
 
 # MinerU wraps numbers and symbols in LaTeX: "$(52\%)$", "$\mathbf{46}$".
 _LATEX_CMD = re.compile(r"\\[a-zA-Z]+")
