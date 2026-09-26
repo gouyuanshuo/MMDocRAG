@@ -246,7 +246,7 @@ Windows 上已验证：本次制包的成员回读哈希、私密包解密回读
 | `python experiments.py run-suite full-local --dry-run --offline --include-expensive` | 退出码 0；列出的依赖产物均为 `present/reuse`，没有构建 |
 
 本机仓库说明里的 25/48 是旧测试数量；以上为此次运行的实际数量。
-Ubuntu 上**尚未验证**：ColQwen 模型加载与显存、完整冷启动重建、私密包解密。
+Ubuntu 上**尚未验证**：ColQwen 模型加载与显存、完整冷启动重建。私密包已在 2026-09-26 解开并核对。
 旧 `run.json` / manifest 里的 Windows 绝对路径是历史证据，不会批量改写；新运行应自行记录
 Ubuntu 环境。Windows 修复了数据源默认目录、DAG 和实验注册中的 ColPali 解释器路径，
 以及登记表的跨机定位；这不等于 Linux 全链路通过。
@@ -263,7 +263,10 @@ Ubuntu 环境。Windows 修复了数据源默认目录、DAG 和实验注册中�
 - 仓库里原有一个 0 字节的 `canonical/mmdocrag.sqlite`。`unzip -n` 不会覆盖它，
   所以先把它挪到 `artifacts/logs/`，再解出清单中的 49,606,656 字节文件。
 - 逐文件核对：assets 14827、derived 293、models 57 均为 missing 0 / changed 0。
-  private 23 个全部缺失（没有口令，没有猜测）。图片 14,826，PDF 220。
+  private 起初 23 个全部缺失。口令文件在同一块移动硬盘
+  `MMDocRAG-ubuntu-migration-private-key-20260925.txt`，不在 Git 里。
+  用它解开 `private.7z` 后，这 23 个文件 missing 0 / changed 0。
+  口令没有打印到日志。图片 14,826，PDF 220。
   五份 SQLite `PRAGMA quick_check` 均为 `ok`。
 - `adapter_config.json` 在核对之后才改。旧哈希
   `e3ade54c6e2c5e5799edeaac44d169a923bf3a2a9056395af83de20584deb034`，
@@ -273,7 +276,7 @@ Ubuntu 环境。Windows 修复了数据源默认目录、DAG 和实验注册中�
   未启动 ColQwen 重建。
 - 换行修复后的测试：`test_ubuntu_migration` 3/3，`test_runner` 67/67，
   `test_source_bundle` 23/23，`test_statistics` 30/30，`test_phase3` 35/35，
-  `test_demo` 61 通过 / 2 失败（缺 E39 的 `per_question.csv`）。
+  `test_demo` 在私密包解开前是 61 通过 / 2 失败；解开并核对后为 63/63。
 - `reproduce.py --dry-run` 与 `run-suite replay --dry-run --offline` 退出码 0，
   列出的依赖全部 `present/reuse`。
 - `python reproduce.py` 退出码 1。四组测试通过。缓存 run

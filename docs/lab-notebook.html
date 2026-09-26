@@ -3725,7 +3725,8 @@ python -m retrieval.eval_fullpool</code></pre>
   <p>在 <code>5f465afa</code> 上恢复移动硬盘中的迁移包。传输文件 13/13 SHA-256 通过；
     拼接后的 <code>models.zip</code> 哈希与清单一致。assets/derived/models 逐文件
     缺失 0、改变 0。图片 14,826，PDF 220，五份 SQLite <code>quick_check</code> 为 ok。
-    私密包 23 个文件未解。ColQwen <code>adapter_config.json</code> 的基座路径从
+    私密包最初未解。口令文件在移动硬盘上找到后，23 个文件全部解开且哈希与清单一致，
+    口令未写入 Git。ColQwen <code>adapter_config.json</code> 的基座路径从
     <code>D:\Playground\MMDocRAG\models\colqwen2-base</code> 改为本机绝对路径；
     修正前 SHA-256 <code>e3ade54c6e2c5e5799edeaac44d169a923bf3a2a9056395af83de20584deb034</code>，
     修正后 <code>2eaa0a9a80004cc090fa0500a260ef7fc92e9be5e3fd27f06652baa12ae7a72f</code>。
@@ -3734,8 +3735,9 @@ python -m retrieval.eval_fullpool</code></pre>
     RTX 4060 Laptop、驱动 595.91.07、<code>torch.cuda.is_available()</code> 为 True。
     未安装 Ollama，未复制 Windows 虚拟环境，未重建 ColQwen，未调用 API。</p>
   <p>测试（修正换行之后）：迁移 3/3，runner 67/67，source bundle 23/23，statistics 30/30，
-    phase3 35/35。demo 61/2，两处失败都是缺少私密包里的 E39
-    <code>per_question.csv</code>。修正前同一台机器上 source bundle 为 21/2、runner 为 66/1，
+    phase3 35/35。解开私密包之前 demo 为 61/2，两处失败都是缺少 E39
+    <code>per_question.csv</code>；解开并核对哈希之后 <code>test_demo</code> 为 63/63。
+    修正前同一台机器上 source bundle 为 21/2、runner 为 66/1，
     原因是 Linux <code>git archive</code> 写出 LF，而 2026-09-05 的 manifest 记录了 Windows CRLF；
     修复只在候选字节的 SHA-256 与记录完全一致时写回。</p>
   <p>Dry-run：cached 37 个全部 <code>reuse</code>，replay 7 个全部 <code>reuse</code>，没有

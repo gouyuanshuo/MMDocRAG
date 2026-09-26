@@ -14,10 +14,12 @@ API 原始证据已分成仓库外迁移包，逐文件与分卷 SHA-256、Ubunt
 [Ubuntu 迁移说明](UBUNTU_MIGRATION.md)。制包提交只修复跨平台路径/登记引用并核对包内容，
 不重算研究指标，不调用 API；不能把 Windows 打包与测试说成 Ubuntu 冷启动已通过。
 
-**2026-09-26 Ubuntu 实测：**包已在本机解出并逐文件核对（`private` 23 个文件未解，缺口令）。
+**2026-09-26 Ubuntu 实测：**包已在本机解出并逐文件核对。私密包随后用移动硬盘上的口令文件解开，
+23 个文件与清单哈希一致，口令没有写入 Git 或日志。`test_demo` 因此从 61/2 变为 63/63。
 `reproduce.py --dry-run` 与 replay dry-run 把已恢复的 SQLite、向量和 ColQwen 排名全部标为
-`reuse`，没有 `missing`/`stale`。缓存复算 run `20260925T195521Z_cached` 只有 E42 失败，
-原因是 `artifacts/e39/20260905/router/per_question.csv` 在未解的私密包里；E39 仍是 prepared。
+`reuse`，没有 `missing`/`stale`。缓存复算 run `20260925T195521Z_cached` 当时只有 E42 失败，
+原因是私密包尚未解开；该失败已由随后的 `test_demo` 63/63 覆盖，没有为此重跑整套缓存实验。
+E39 仍是 prepared，不是 generated。
 对该 run 以及随后的 replay run `20260925T202318Z_replay`，`verify E27 --run` 为 61/0，
 `verify E24 --run` 为 68/0。Linux 上 `git archive` 把未钉住换行的上游文件写成 LF，
 而旧 manifest 记录的是 Windows CRLF；`expkit/source.py` 只在哈希完全吻合时改回记录的换行，
